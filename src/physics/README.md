@@ -37,3 +37,16 @@ Authoring references reviewed 2026-09-09:
 - [OpenStax: Kepler's laws](https://openstax.org/books/university-physics-volume-1/pages/13-5-keplers-laws-of-planetary-motion)
 
 These sources establish the conservation laws and orbital assumptions; all code, explanations and tests here are original. Lesson-specific references supply the broader teaching context.
+
+## Scene sampling
+
+`sampleTrajectory(family, parameters)` from `scene.ts` returns `{points, bounds: {min, max}, duration}` in SI units. It samples 120 equal time intervals through the available physical duration, uses the exact terminal event time for ground impact, and uses one orbital period up to the gravity duration limit. Its primary path follows the first non-origin, non-central body; measurement and vectors instead return their static endpoints. Bounds include all sampled bodies (including both collision bodies), their radii and the origin. Every axis receives at least a 1 m extent so stationary scenes have usable camera bounds. These are bounds on sampled states, not a mathematical guarantee covering every point between samples; the rendering camera should retain ordinary framing padding.
+
+Measurement observations include the symmetric SI interval `lowerBound = length − uncertainty` and `upperBound = length + uncertainty`; converting the display scale leaves those SI bounds unchanged. A large uncertainty may cross zero because the displayed interval is not silently truncated; it then includes nonphysical candidate lengths and signals that the estimate is too imprecise near the length boundary.
+
+Additional sources reviewed 2026-09-09:
+
+- [OpenStax: measurement uncertainty](https://openstax.org/books/college-physics/pages/1-3-accuracy-precision-and-significant-figures) supports expressing uncertainty as an absolute interval and as a percentage of the measured value.
+- [OpenStax: pendulums](https://openstax.org/books/university-physics-volume-1/pages/15-4-pendulums) supplies the small-angle simple-pendulum model and its length/gravity dependence.
+
+The finite-input audit exercises every minimum/maximum control combination in every family at initial, midpoint and terminal time, checking all observations, positions, velocities and radii. The trajectory tests cover exact projectile landing, circular closure, long-period truncation, static vector endpoints, collision framing and nondegenerate bounds.

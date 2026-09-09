@@ -43,15 +43,21 @@ function validateIdList(value: unknown, validIds?: ReadonlySet<string>): value i
   return value.every((id) => SAFE_ID.test(id) && (!validIds || validIds.has(id)));
 }
 
-function validateAnswers(value: unknown): value is Record<string, number> {
+function validateAnswers(
+  value: unknown,
+  validAnswers?: Readonly<Record<string, number>>,
+): value is Record<string, number> {
   if (!isRecord(value)) return false;
-  return Object.keys(value).every((id) => SAFE_ID.test(id) && Number.isFinite(value[id]));
+  return Object.keys(value).every((id) => SAFE_ID.test(id)
+    && Number.isFinite(value[id])
+    && (!validAnswers || (Object.hasOwn(validAnswers, id) && value[id] === validAnswers[id])));
 }
 
 function parseAndValidate(
   json: string,
   validLessonIds?: readonly string[],
   validMathIds?: readonly string[],
+  validAnswers?: Readonly<Record<string, number>>,
 ): LearnerProgress {
   let value: unknown;
   try {
@@ -69,14 +75,16 @@ function parseAndValidate(
   if (value.version !== 1) throw new Error('Unsupported progress version.');
   if (!validateIdList(value.completed, lessons)) throw new Error('Completed lessons contain invalid or unknown IDs.');
   if (!validateIdList(value.mathCompleted, math)) throw new Error('Completed math tutorials contain invalid or unknown IDs.');
-  if (!validateAnswers(value.answers)) throw new Error('Assessment answers must have valid IDs and finite numeric values.');
+  if (!validateAnswers(value.answers, validAnswers)) throw new Error('Assessment answers contain invalid IDs or values.');
   if (typeof value.lastLesson !== 'string'
     || (value.lastLesson !== '' && (!SAFE_ID.test(value.lastLesson) || (lessons && !lessons.has(value.lastLesson))))) {
     throw new Error('Last lesson is invalid or unknown.');
   }
   if (value.theme !== 'dark' && value.theme !== 'light') throw new Error('Theme must be dark or light.');
-  if (typeof value.savedAt !== 'string' || Number.isNaN(Date.parse(value.savedAt))) {
-    throw new Error('Saved time must be a valid date.');
+  if (typeof value.savedAt !== 'string'
+    || Number.isNaN(Date.parse(value.savedAt))
+    || new Date(value.savedAt).toISOString() !== value.savedAt) {
+    throw new Error('Saved time must be a canonical ISO timestamp.');
   }
 
   return {
@@ -94,18 +102,29 @@ export function parseProgress(
   json: string,
   validLessonIds: string[],
   validMathIds: string[],
+  validAnswers?: Readonly<Record<string, number>>,
 ): LearnerProgress {
-  return parseAndValidate(json, validLessonIds, validMathIds);
+  return parseAndValidate(json, validLessonIds, validMathIds, validAnswers);
 }
 
-export function readProgress(): { progress: LearnerProgress; persistent: boolean } {
+export function readProgress(
+  validLessonIds?: readonly string[],
+  validMathIds?: readonly string[],
+  validAnswers?: Readonly<Record<string, number>>,
+): { progress: LearnerProgress; persistent: boolean } {
+  let stored: string | null;
   try {
     if (typeof localStorage === 'undefined') return { progress: createProgress(), persistent: false };
-    const stored = localStorage.getItem(STORAGE_KEY);
-    if (stored === null) return { progress: createProgress(), persistent: true };
-    return { progress: parseAndValidate(stored), persistent: true };
+    stored = localStorage.getItem(STORAGE_KEY);
   } catch {
     return { progress: createProgress(), persistent: false };
+  }
+
+  if (stored === null) return { progress: createProgress(), persistent: true };
+  try {
+    return { progress: parseAndValidate(stored, validLessonIds, validMathIds, validAnswers), persistent: true };
+  } catch {
+    return { progress: createProgress(), persistent: true };
   }
 }
 

@@ -20,10 +20,11 @@ Editorial cutoff 2026-09-09 is a target scope, not a claim of exhaustive researc
 See src/types.ts for LessonDefinition, MathTutorialDefinition, SimulationDefinition, LearnerProgress. Lesson IDs are stable kebab-case; family identifiers are measurement, vectors, motion, forces, energy, collisions, gravity, oscillations. Local progress version starts at 1.
 
 ## Execution ledger
-- Scaffold: in progress.
-- Curriculum: pending.
-- Models: pending.
-- Interface: pending.
-- Verification and deployment: pending.
+- Scaffold: complete.
+- Curriculum: complete — 24 lessons and 17 prerequisite math tutorials.
+- Models: complete — eight deterministic SI simulation families and trajectory sampling.
+- Interface: complete — responsive 3D laboratory, graphs, lessons, math, assessments, curriculum, and local progress.
+- Verification: complete locally — type checking, lint, 73 unit/content/scientific tests, eight browser journeys, and production build.
+- Deployment: GitHub Actions workflow committed; repository Pages source must be set to GitHub Actions before the first deployment can publish.
 
 Ruling: use the newly created dedicated project directory in place; no pre-existing checkout or changes need isolation. The approved static Vite/GitHub Pages architecture takes precedence over a hosted Sites scaffold.

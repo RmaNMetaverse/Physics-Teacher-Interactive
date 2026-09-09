@@ -42,7 +42,9 @@ describe('progress creation and import', () => {
 
   it('accepts a complete valid export and returns fresh data', () => {
     const json = JSON.stringify(validProgress());
-    const parsed = parseProgress(json, ['measurement-basics'], ['arithmetic']);
+    const parsed = parseProgress(json, ['measurement-basics'], ['arithmetic'], {
+      'measurement-basics-concept': 1,
+    });
 
     expect(parsed).toEqual(validProgress());
     expect(parsed).not.toBe(validProgress());
@@ -75,6 +77,13 @@ describe('progress creation and import', () => {
     expect(() => parseProgress('{"version":1,"completed":[],"answers":{"answer":1e999},"mathCompleted":[],"lastLesson":"","theme":"dark","savedAt":"2026-09-09T00:00:00.000Z"}', [], [])).toThrow();
     expect(() => parseProgress(JSON.stringify({ ...validProgress(), completed: ['measurement-basics', 'measurement-basics'] }), ['measurement-basics'], ['arithmetic'])).toThrow();
   });
+
+  it('rejects unknown assessment IDs and answers that are not the recorded correct value', () => {
+    expect(() => parseProgress(JSON.stringify(validProgress()), ['measurement-basics'], ['arithmetic'], {})).toThrow();
+    expect(() => parseProgress(JSON.stringify(validProgress()), ['measurement-basics'], ['arithmetic'], {
+      'measurement-basics-concept': 0,
+    })).toThrow();
+  });
 });
 
 describe('browser persistence', () => {
@@ -89,11 +98,22 @@ describe('browser persistence', () => {
   it('loads valid stored progress and falls back safely for invalid data', () => {
     const getItem = vi.fn(() => JSON.stringify(validProgress()));
     vi.stubGlobal('localStorage', { getItem, setItem: vi.fn() });
-    expect(readProgress()).toEqual({ progress: validProgress(), persistent: true });
+    expect(readProgress(['measurement-basics'], ['arithmetic'], {
+      'measurement-basics-concept': 1,
+    })).toEqual({ progress: validProgress(), persistent: true });
+
+    getItem.mockReturnValue(JSON.stringify({ ...validProgress(), completed: ['retired-lesson'] }));
+    expect(readProgress(['measurement-basics'], ['arithmetic'], {
+      'measurement-basics-concept': 1,
+    }).progress.completed).toEqual([]);
 
     getItem.mockReturnValue('{bad json');
-    expect(readProgress().persistent).toBe(false);
-    expect(readProgress().progress.completed).toEqual([]);
+    expect(readProgress(['measurement-basics'], ['arithmetic'], {
+      'measurement-basics-concept': 1,
+    }).persistent).toBe(true);
+    expect(readProgress(['measurement-basics'], ['arithmetic'], {
+      'measurement-basics-concept': 1,
+    }).progress.completed).toEqual([]);
   });
 
   it('falls back when reading throws and reports whether saving succeeded', () => {

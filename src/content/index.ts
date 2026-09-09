@@ -1,3 +1,5 @@
-import type { LessonDefinition, MathTutorialDefinition } from '../types';
-export const lessons: LessonDefinition[] = [];
-export const mathTutorials: MathTutorialDefinition[] = [];
+import { lessons as firstLessons } from './foundations';
+import { laterLessons } from './later';
+import { finalLessons } from './final';
+export { mathTutorials } from './math';
+export const lessons = [...firstLessons, ...laterLessons, ...finalLessons];

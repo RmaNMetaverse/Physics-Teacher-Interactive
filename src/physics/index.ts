@@ -28,6 +28,8 @@ export const simulations: Record<Family, SimulationDefinition> = {
     parameter('scale', 'Display units per meter (100 = cm)', 'units/m', 1, 1000, 1, 1),
   ], 10, (p, t) => ({ time: t, ended: false, bodies: [body('origin', 0, 0, .1, blue), body('measurement', p.length, 0)],
     observations: [obs('length', 'Length', p.length, 'm'), obs('uncertainty', 'Absolute uncertainty', p.uncertainty, 'm', orange),
+      obs('lowerBound', 'Lower uncertainty bound', p.length - p.uncertainty, 'm', blue),
+      obs('upperBound', 'Upper uncertainty bound', p.length + p.uncertainty, 'm', orange),
       obs('relative', 'Relative uncertainty', 100 * p.uncertainty / p.length, '%'),
       obs('converted', 'Converted length', p.length * p.scale, 'display units', blue),
       obs('convertedUncertainty', 'Converted uncertainty', p.uncertainty * p.scale, 'display units', orange)],

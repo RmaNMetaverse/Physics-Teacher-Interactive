@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { lessons, mathTutorials } from '../src/content';
+import katex from 'katex';
+import { simulations, evaluate, sanitizeParameters } from '../src/physics';
 
 describe('released foundations curriculum', () => {
   it('publishes all eight families with three complete lessons each', () => {
@@ -33,7 +35,7 @@ describe('released foundations curriculum', () => {
     for (const a of [...lessons.flatMap(l => l.assessments), ...mathTutorials.map(m => m.assessment)]) {
       expect(Number.isFinite(a.answer)).toBe(true);
       expect(a.hints.length).toBeGreaterThan(0);
-      expect(a.explanation.length).toBeGreaterThan(20);
+      expect(a.explanation.length, a.id + ": " + a.explanation).toBeGreaterThan(20);
       if (a.kind === 'concept') {
         expect(Number.isInteger(a.answer)).toBe(true);
         expect(a.answer).toBeGreaterThanOrEqual(0);
@@ -51,5 +53,52 @@ describe('released foundations curriculum', () => {
     expect(answer('kinetic-energy')).toBeCloseTo(25);
     expect(answer('momentum')).toBeCloseTo(-6);
     expect(answer('spring-period')).toBeCloseTo(Math.PI);
+  });
+});
+
+describe('curriculum rendering and laboratory contracts', () => {
+  it('renders every equation without broken escaping', () => {
+    for (const item of [...lessons, ...mathTutorials]) {
+      expect(item.equation, item.id).not.toContain('\\\\');
+      expect(() => katex.renderToString(item.equation, { throwOnError: true }), item.id).not.toThrow();
+    }
+  });
+  it('preserves every authored preset without clamping or dropping parameters', () => {
+    for (const lesson of lessons) {
+      const safe = sanitizeParameters(lesson.family, lesson.preset);
+      for (const [key, value] of Object.entries(lesson.preset)) {
+        expect(simulations[lesson.family].parameters.some(p => p.key === key), `${lesson.id}: ${key}`).toBe(true);
+        expect(safe[key], `${lesson.id}: ${key}`).toBe(value);
+      }
+    }
+  });
+  it('matches every experiment answer to an independently selected model observation', () => {
+    const fixtures: Record<string, [number, string, Record<string, number>?]> = {
+      'measurement-basics':[0,'length',{length:4}], 'unit-conversion':[0,'converted'], 'measurement-uncertainty':[0,'upperBound'],
+      'coordinates-displacement':[0,'resultant'], 'vector-components':[0,'ay'], 'vector-addition':[0,'resultant'],
+      'constant-velocity':[2,'x'], 'constant-acceleration':[2,'vx'], 'projectile-motion':[12,'x'],
+      inertia:[0,'acceleration'], 'net-force':[0,'acceleration'], friction:[0,'acceleration'],
+      work:[20,'work'], 'kinetic-energy':[20,'speed'], 'energy-conservation':[20,'thermal'],
+      momentum:[8,'momentum'], impulse:[8,'impulse'], 'collision-types':[8,'energyLost'],
+      'circular-motion':[0,'eccentricity'], orbits:[0,'eccentricity'], 'hookes-law':[0,'potential'],
+      'spring-period':[0,'period',{mass:4}], pendulum:[0,'period'],
+    };
+    for (const lesson of lessons) {
+      const assessment = lesson.assessments.find(a => a.kind === 'experiment')!;
+      if (lesson.id === 'universal-gravitation') {
+        const force = (mass: number) => evaluate('gravity', {...lesson.preset,mass},0).observations.find(o => o.key === 'force')!.value;
+        expect(force(2000)/force(1000)).toBeCloseTo(assessment.answer, 8);
+        continue;
+      }
+      const fixture = fixtures[lesson.id];
+      expect(fixture, lesson.id).toBeDefined();
+      const [time, key, overrides] = fixture;
+      const state = evaluate(lesson.family, {...lesson.preset,...overrides},time);
+      const value = state.observations.find(o => o.key === key)!.value;
+      expect(Math.abs(value-assessment.answer),lesson.id).toBeLessThanOrEqual(assessment.tolerance!);
+    }
+  });
+  it('contains no damaged Unicode replacement characters', () => {
+    expect(JSON.stringify([...lessons,...mathTutorials])).not.toContain('\uFFFD');
   });
 });

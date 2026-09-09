@@ -4,7 +4,7 @@ Contributions should improve the complete foundations release or clearly label w
 
 ## Development
 
-Use Node.js 22.12 or newer and install the locked dependencies with `npm ci`. Keep changes focused. Do not commit credentials, `.env` files, generated `dist/`, test reports, or unrelated work.
+Use Node.js 22.20 or newer and install the locked dependencies with `npm ci`. Keep changes focused. Do not commit credentials, `.env` files, generated `dist/`, test reports, or unrelated work.
 
 For a scientific calculation or behavioral change, first add a meaningful test that fails for the missing or incorrect behavior. Implement the change, then run:
 

@@ -23,7 +23,7 @@ Extended classical physics, modern physics, selected graduate treatments, and so
 
 ## Run locally
 
-Install Node.js 22.12 or newer, then run:
+Install Node.js 22.20 or newer, then run:
 
 ```sh
 npm ci

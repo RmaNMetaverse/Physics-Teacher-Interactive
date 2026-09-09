@@ -1,3 +1,5 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-ReactDOM.createRoot(document.getElementById('root')!).render(<React.StrictMode><main>Preparing physics laboratory</main></React.StrictMode>);
+import { App } from './App';
+import './styles.css';
+ReactDOM.createRoot(document.getElementById('root')!).render(<React.StrictMode><App /></React.StrictMode>);
