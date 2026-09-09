@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Approved the Balanced Science Adventure redesign and reusable mission-engine specification for a gamified 14-course learning platform.
+
 ## 0.1.0 — 2026-09-09
 
 - Released a 24-lesson foundations course across measurement, vectors, motion, forces, energy, momentum, gravity, and oscillations.
