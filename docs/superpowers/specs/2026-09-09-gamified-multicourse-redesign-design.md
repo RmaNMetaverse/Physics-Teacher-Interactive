@@ -25,6 +25,7 @@ The design draws on the clarity of visual learning paths and short practice loop
 - **One decision per screen.** Home lets the learner choose a course or resume the next mission. A mission presents one step at a time.
 - **Every course is open.** Recommendations show useful prerequisites, but no course is locked. Quantum physics can be selected on the first visit.
 - **Intuition before notation.** Learners predict and manipulate a model before receiving the mathematical explanation.
+- **Two-layer mathematics.** Experienced learners see a short equation explanation first. “Teach me the math” expands into a zero-assumption tutorial that defines every symbol and operation, demonstrates the concept visually, works an example one step at a time, and checks understanding before returning to the physics.
 - **Depth stays close.** Every mission includes optional derivations, prerequisite math, worked examples, sources, and limitations.
 - **Reward mastery.** XP, stars, badges, streaks, and course completion celebrate real actions and correct understanding.
 - **Scientific honesty.** Content distinguishes established results, active research, interpretations, and speculative proposals.
@@ -88,6 +89,8 @@ The simulation occupies the center of the relevant step. Essential controls are 
 
 The optional deep dive unfolds below the completed step and contains derivations, richer explanation, prerequisite mathematics, model assumptions, sources, and further experiments. Learners can preserve a quick rhythm without losing access to full treatment.
 
+Every equation step opens in a concise mode for learners who already understand its operations. Its “Teach me the math” control expands in place and starts from the earliest required idea, including arithmetic or symbol meaning when necessary. The expanded path never says “simply,” never assumes familiarity with notation, and lets the learner manipulate a visual example before attempting a small check. Completing or closing it returns to the same physics step without losing state.
+
 ### Progress
 
 Progress presents:
@@ -132,7 +135,7 @@ Course and mission content remain typed data, separate from React and scientific
 
 `MissionDefinition` owns objectives, estimated minutes, XP, steps, math requirements, simulation reference, checkpoint rules, scientific status, sources, and limitations.
 
-`MissionStep` is a discriminated union. Each step renderer receives the step definition, current answer, mission state, and narrow callbacks. Renderers do not mutate storage directly.
+`MissionStep` is a discriminated union. Each step renderer receives the step definition, current answer, mission state, and narrow callbacks. Renderers do not mutate storage directly. Math steps carry both a concise experienced-learner layer and an expandable zero-prior-knowledge layer; catalog validation rejects a math step missing either layer.
 
 The mission engine is a deterministic state machine. It controls current step, answer attempts, feedback, completion, earned XP, stars, and navigation. A learner can revisit every step. XP for a mission is awarded once; retries improve mastery without duplicating XP.
 
@@ -208,7 +211,7 @@ Large course content files are split by course. Shared UI components do not impo
 Meaningful tests cover:
 
 - course catalog IDs, starter-path completeness, source presence, scientific labels, and acyclic recommendations;
-- every required math reference and simulation reference;
+- every required math reference and simulation reference, including concise and zero-prior-knowledge layers for every equation;
 - mission state transitions, retries, one-time XP, stars, badges, daily goals, and streak day boundaries;
 - version-1 migration and catalog-aware version-2 validation;
 - new scientific calculations against independent analytic cases and conservation laws;
@@ -228,6 +231,7 @@ After implementation, project guidance will describe practical hosted architectu
 
 - A new learner can select Quantum Physics from the first screen and begin a real interactive starter mission.
 - The primary journey never requires choosing among lesson-section tabs.
+- Every equation provides a concise explanation first and an expandable zero-prior-knowledge tutorial with symbol definitions, visual manipulation, a worked example, and a check.
 - A learner can reach the next meaningful interaction with one prominent action per screen.
 - Every new starter course has five playable missions, a checkpoint, required math, sources, limitations, and a working simulation; Foundations retains its 24-topic path.
 - Foundations preserves the complete existing body of content through the mission structure.

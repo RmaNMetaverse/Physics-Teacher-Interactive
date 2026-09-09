@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-- Approved the Balanced Science Adventure redesign and reusable mission-engine specification for a gamified 14-course learning platform.
+- Approved the Balanced Science Adventure redesign and reusable mission-engine specification for a gamified 14-course learning platform with concise and expandable zero-prior-knowledge mathematics.
 
 ## 0.1.0 — 2026-09-09
 
