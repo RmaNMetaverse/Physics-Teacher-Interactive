@@ -22,11 +22,17 @@ export type MissionStep =
   | { id: string; kind: 'explain'; title: string; body: string[] }
   | { id: string; kind: 'recap'; takeaways: string[] };
 export interface CheckpointRules { badgeId: string; requiredMissionIds: string[] }
-export interface MissionDefinition {
-  id: string; kind: 'mission' | 'checkpoint'; title: string; summary: string; objectives: string[]; minutes: number; xp: number;
-  requiredMath: string[]; modelId?: ModelId; scienceStatus: ScienceStatus; equation: string; symbols: string; workedExample: { question: string; steps: string[]; answer: string }; reviewedAt: string; steps: MissionStep[]; sources: SourceReference[]; limitations: string[]; checkpoint?: CheckpointRules;
+interface MissionBase {
+  id: string; title: string; summary: string; objectives: string[]; minutes: number; xp: number;
+  requiredMath: string[]; modelId?: ModelId; scienceStatus: ScienceStatus; steps: MissionStep[]; sources: SourceReference[]; limitations: string[];
 }
-export interface CourseDefinition {
+export interface NormalMissionDefinition extends MissionBase {
+  kind: 'mission'; equation: string; symbols: string; workedExample: { question: string; steps: string[]; answer: string }; reviewedAt: string; checkpoint?: never;
+}
+export interface CheckpointMissionDefinition extends MissionBase {
+  kind: 'checkpoint'; checkpoint: CheckpointRules;
+}
+export type MissionDefinition = NormalMissionDefinition | CheckpointMissionDefinition;export interface CourseDefinition {
   id: string; title: string; description: string; group: CourseGroup; scope: string; color: string; recommendations: string[]; access: 'open'; estimatedMinutes: number;
   missions: MissionDefinition[]; sources: SourceReference[]; limitations: string[]; reviewedAt: string;
 }

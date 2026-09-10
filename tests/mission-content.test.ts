@@ -54,19 +54,19 @@ describe('Foundations mission content', () => {
     expect(foundationCourse.missions).toHaveLength(24);
     for (const legacy of lessons) {
       const mission = foundationCourse.missions.find(candidate => candidate.id === legacy.id);
-      expect(mission, legacy.id).toBeDefined();
-      expect(mission!.xp, legacy.id).toBe(60);
-      expect(mission!.equation, legacy.id).toBe(legacy.equation);
-      expect(mission!.symbols, legacy.id).toBe(legacy.symbols);
-      expect(mission!.workedExample, legacy.id).toEqual(legacy.workedExample);
-      expect(mission!.reviewedAt, legacy.id).toBe(legacy.reviewedAt);
-      expect(mission!.requiredMath, legacy.id).toEqual(legacy.math);
-      expect(mission!.sources, legacy.id).toEqual(legacy.references);
-      expect(mission!.limitations, legacy.id).toEqual(legacy.assumptions);
-      expect(mission!.steps.some(step => step.kind === 'simulate' && step.modelId === legacy.family && step.preset === legacy.preset), legacy.id).toBe(true);
-      expect(mission!.steps.find(step => step.kind === 'explain' && step.body === legacy.explanation), legacy.id).toBeDefined();
-      expect(mission!.steps.flatMap(step => step.kind === 'predict' || step.kind === 'check' ? [step.assessment] : []), legacy.id).toEqual(legacy.assessments);
-      const mathSteps = mission!.steps.filter(step => step.kind === 'math');
+      if (!mission || mission.kind !== 'mission') throw new Error(`Missing Foundations mission ${legacy.id}`);
+      expect(mission.xp, legacy.id).toBe(60);
+      expect(mission.equation, legacy.id).toBe(legacy.equation);
+      expect(mission.symbols, legacy.id).toBe(legacy.symbols);
+      expect(mission.workedExample, legacy.id).toEqual(legacy.workedExample);
+      expect(mission.reviewedAt, legacy.id).toBe(legacy.reviewedAt);
+      expect(mission.requiredMath, legacy.id).toEqual(legacy.math);
+      expect(mission.sources, legacy.id).toEqual(legacy.references);
+      expect(mission.limitations, legacy.id).toEqual(legacy.assumptions);
+      expect(mission.steps.some(step => step.kind === 'simulate' && step.modelId === legacy.family && step.preset === legacy.preset), legacy.id).toBe(true);
+      expect(mission.steps.find(step => step.kind === 'explain' && step.body === legacy.explanation), legacy.id).toBeDefined();
+      expect(mission.steps.flatMap(step => step.kind === 'predict' || step.kind === 'check' ? [step.assessment] : []), legacy.id).toEqual(legacy.assessments);
+      const mathSteps = mission.steps.filter(step => step.kind === 'math');
       expect(mathSteps.map(step => step.id.replace(`${legacy.id}-required-`, '')), legacy.id).toEqual(legacy.math);
       for (const step of mathSteps) {
         expect(step.layer.foundation.returnTo, step.id).toBe(step.id);

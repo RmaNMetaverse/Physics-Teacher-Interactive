@@ -8,6 +8,7 @@
 - Added concise expert math paths with expandable zero-prior-knowledge concepts, symbol definitions, prerequisite return links, visuals, worked examples, hints, and checks for all 17 tutorials.
 - Preserved each Foundations mission’s original equation, symbol glossary, worked example, and review date, and validated its math-step return links and visual identities.
 - Completed equation-level symbol and operation definitions for all 17 tutorials with exhaustive authored metadata.
+- Restored lightweight checkpoint missions by limiting legacy equation, glossary, worked-example, and review-date requirements to normal instructional missions.
 
 ## 0.1.0 — 2026-09-09
 

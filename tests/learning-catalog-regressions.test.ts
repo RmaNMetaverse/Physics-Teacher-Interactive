@@ -36,7 +36,7 @@ function normalMission(): MissionDefinition {
 function checkpoint(): MissionDefinition {
   return {
     id: 'instructional-checkpoint', kind: 'checkpoint', title: 'Checkpoint', summary: 'Confirm motion understanding.', objectives: ['Check core reasoning.'], minutes: 5, xp: 20,
-    requiredMath: [], scienceStatus: 'established', equation: 'x=x', symbols: 'x: test value.', workedExample: { question: 'What equals itself?', steps: ['Read both sides.'], answer: 'x' }, reviewedAt: '2026-09-09', checkpoint: { badgeId: 'instructional-badge', requiredMissionIds: ['instructional-motion'] },
+    requiredMath: [], scienceStatus: 'established', checkpoint: { badgeId: 'instructional-badge', requiredMissionIds: ['instructional-motion'] },
     steps: [
       { id: 'checkpoint-observe', kind: 'observe', title: 'Review', body: ['Recall the motion relationship.'] },
       { id: 'checkpoint-check', kind: 'check', assessment: assessment('checkpoint-check') },

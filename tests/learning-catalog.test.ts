@@ -38,7 +38,7 @@ function mission(id = 'motion-start'): MissionDefinition {
 function checkpoint(requiredMissionIds = ['motion-start'], id = 'motion-checkpoint'): MissionDefinition {
   return {
     id, kind: 'checkpoint', title: 'Motion checkpoint', summary: 'Show what you learned.', objectives: ['Check your motion reasoning.'], minutes: 5, xp: 20,
-    requiredMath: ['math-arithmetic'], scienceStatus: 'established', equation: 'x=x', symbols: 'x: test value.', workedExample: { question: 'What equals itself?', steps: ['Read both sides.'], answer: 'x' }, reviewedAt: '2026-09-09', checkpoint: { badgeId: 'motion-badge', requiredMissionIds },
+    requiredMath: ['math-arithmetic'], scienceStatus: 'established', checkpoint: { badgeId: 'motion-badge', requiredMissionIds },
     steps: [
       { id: 'observe-checkpoint', kind: 'observe', title: 'Review', body: ['Recall how speed changes.'] },
       { id: 'check-checkpoint', kind: 'check', assessment: assessment(`${id}-check`) },
@@ -93,7 +93,9 @@ describe('course catalog validation', () => {
   });
   it('rejects checkpoints without valid badge rules', () => {
     const malformedCheckpointCourse = course();
-    malformedCheckpointCourse.missions[1] = { ...malformedCheckpointCourse.missions[1], checkpoint: { badgeId: 'Motion Badge', requiredMissionIds: ['missing-mission'] } };
+    const checkpointMission = malformedCheckpointCourse.missions[1];
+    if (!checkpointMission || checkpointMission.kind !== 'checkpoint') throw new Error('Missing checkpoint fixture');
+    malformedCheckpointCourse.missions[1] = { ...checkpointMission, checkpoint: { badgeId: 'Motion Badge', requiredMissionIds: ['missing-mission'] } };
     expect(() => createCourseCatalog([malformedCheckpointCourse])).toThrow(/checkpoint/i);
   });
   it('rejects recommendation cycles while leaving recommendations non-blocking', () => {
@@ -106,5 +108,8 @@ describe('course catalog validation', () => {
     const unknownModel = course();
     unknownModel.missions[0] = { ...unknownModel.missions[0], modelId: 'not-a-model' as never };
     expect(() => createCourseCatalog([unknownModel])).toThrow(/model/i);
+  });
+  it('accepts a checkpoint without normal-mission presentation fields', () => {
+    expect(() => createCourseCatalog([course()])).not.toThrow();
   });
 });

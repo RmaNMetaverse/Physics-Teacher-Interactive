@@ -109,13 +109,15 @@ function validateCheckpoint(checkpoint: CheckpointRules | undefined, mission: Mi
   checkpoint.requiredMissionIds.forEach(requiredId => { requireId(requiredId, `checkpoint ${mission.id} required mission ID`); if (seen.has(requiredId) || !normalMissionIds.has(requiredId)) fail(`checkpoint ${mission.id} has invalid required mission IDs`); seen.add(requiredId); });
 }
 function validateMission(mission: MissionDefinition, normalMissionIds: Set<string>, assessmentIds: Set<string>): void {
-  requireId(mission?.id, 'mission ID'); if (mission.kind !== 'mission' && mission.kind !== 'checkpoint') fail(`mission ${mission.id} kind is invalid`);
+  requireId(mission?.id, 'mission ID'); const missionKind: unknown = mission.kind; if (missionKind !== 'mission' && missionKind !== 'checkpoint') fail(`mission ${mission.id} kind is invalid`);
   requireText(mission.title, `mission ${mission.id} title`); requireText(mission.summary, `mission ${mission.id} summary`); requireTextList(mission.objectives, `mission ${mission.id} objectives`); requireFinitePositive(mission.minutes, `mission ${mission.id} minutes`); requireFinitePositive(mission.xp, `mission ${mission.id} XP`, true);
   if (!Array.isArray(mission.requiredMath)) fail(`mission ${mission.id} math references must be an array`);
   const mathIds = new Set<string>(); mission.requiredMath.forEach(mathId => { requireId(mathId, `mission ${mission.id} math reference`); if (!validMathIds.has(mathId) || mathIds.has(mathId)) fail(`mission ${mission.id} references unknown or duplicate math`); mathIds.add(mathId); });
   if (mission.modelId !== undefined) validateModel(mission.modelId, `mission ${mission.id}`);
-  requireText(mission.equation, `mission ${mission.id} equation`); try { katex.renderToString(mission.equation, { throwOnError: true, output: 'htmlAndMathml' }); } catch { fail(`mission ${mission.id} equation is not valid KaTeX`); }
-  requireText(mission.symbols, `mission ${mission.id} symbols`); requireText(mission.workedExample?.question, `mission ${mission.id} worked example question`); requireTextList(mission.workedExample?.steps, `mission ${mission.id} worked example steps`); requireText(mission.workedExample?.answer, `mission ${mission.id} worked example answer`); requireText(mission.reviewedAt, `mission ${mission.id} review date`);
+  if (mission.kind === 'mission') {
+    requireText(mission.equation, `mission ${mission.id} equation`); try { katex.renderToString(mission.equation, { throwOnError: true, output: 'htmlAndMathml' }); } catch { fail(`mission ${mission.id} equation is not valid KaTeX`); }
+    requireText(mission.symbols, `mission ${mission.id} symbols`); requireText(mission.workedExample?.question, `mission ${mission.id} worked example question`); requireTextList(mission.workedExample?.steps, `mission ${mission.id} worked example steps`); requireText(mission.workedExample?.answer, `mission ${mission.id} worked example answer`); requireText(mission.reviewedAt, `mission ${mission.id} review date`);
+  }
   if (!['established', 'active-research', 'interpretation', 'speculative'].includes(mission.scienceStatus)) fail(`mission ${mission.id} science status is invalid`);
   validateSteps(mission, assessmentIds); validateSources(mission.sources, `mission ${mission.id}`); requireTextList(mission.limitations, `mission ${mission.id} limitations`); validateCheckpoint(mission.checkpoint, mission, normalMissionIds);
 }
