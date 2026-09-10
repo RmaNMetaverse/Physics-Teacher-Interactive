@@ -1,12 +1,12 @@
 import katex from 'katex';
 import { mathTutorials } from '../content/math';
-import { simulations } from '../physics';
+import { modelCatalog } from '../physics';
 import type { Assessment, Parameters } from '../types';
 import type { CheckpointRules, CourseCatalog, CourseDefinition, MathLayer, MissionDefinition, MissionStep, ModelId, SourceReference } from './types';
 
 const kebabCase = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const validMathIds = new Set(mathTutorials.map(tutorial => tutorial.id));
-const validModelIds = new Set(Object.keys(simulations) as ModelId[]);
+const validModelIds = new Set(Object.keys(modelCatalog) as ModelId[]);
 
 function fail(message: string): never { throw new Error(`Invalid course catalog: ${message}`); }
 function requireText(value: unknown, context: string): asserts value is string {
@@ -70,7 +70,7 @@ function validateModel(modelId: unknown, context: string): asserts modelId is Mo
 }
 function validatePreset(modelId: ModelId, preset: Parameters, context: string): void {
   if (!preset || typeof preset !== 'object') fail(`${context} preset is required`);
-  const keys = new Set(simulations[modelId].parameters.map(parameter => parameter.key));
+  const keys = new Set(modelCatalog[modelId].parameters.map(parameter => parameter.key));
   for (const [key, value] of Object.entries(preset)) if (!keys.has(key) || !Number.isFinite(value)) fail(`${context} preset is invalid`);
 }
 function validateSteps(mission: MissionDefinition, assessmentIds: Set<string>): void {
@@ -159,3 +159,4 @@ export function createCourseCatalog(courses: readonly CourseDefinition[]): Cours
     getMission: (courseId: string, missionId: string) => { const course = courseMap.get(courseId); if (!course) fail(`unknown course ${courseId}`); return course.missions.find(candidate => candidate.id === missionId) ?? fail(`unknown mission ${missionId} in course ${courseId}`); },
   };
 }
+
