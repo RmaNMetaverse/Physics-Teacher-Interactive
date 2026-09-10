@@ -11,7 +11,8 @@ function layer(checkId = 'math-check'): MathLayer {
     quick: { equation: 'x=x_0+vt', summary: 'Position changes with constant speed.', symbols: [{ symbol: 'x', meaning: 'position', unit: 'm' }] },
     foundation: {
       title: 'Position and speed', concepts: ['A signed position can be negative.'], explanation: ['Add the displacement to the starting position.'],
-      visual: { kind: 'number', min: 0, max: 10, step: 1, initial: 2, instruction: 'Move the position marker.' },
+      visual: { tutorialId: 'math-arithmetic', label: 'Position control', kind: 'number', min: 0, max: 10, step: 1, initial: 2, instruction: 'Move the position marker.' },
+      prerequisites: [], returnTo: 'instructional-math',
       workedExample: { question: 'Where is a cart after 2 m from x = 1 m?', steps: ['Add 1 m and 2 m.'], answer: '3 m' }, check: assessment(checkId),
     },
   };
@@ -19,7 +20,7 @@ function layer(checkId = 'math-check'): MathLayer {
 function normalMission(): MissionDefinition {
   return {
     id: 'instructional-motion', kind: 'mission', title: 'Instructional motion', summary: 'Build a motion explanation.', objectives: ['Connect position and speed.'],
-    minutes: 5, xp: 60, requiredMath: ['math-arithmetic'], modelId: 'motion', scienceStatus: 'established',
+    minutes: 5, xp: 60, requiredMath: ['math-arithmetic'], modelId: 'motion', scienceStatus: 'established', equation: 'x=x', symbols: 'x: test value.', workedExample: { question: 'What equals itself?', steps: ['Read both sides.'], answer: 'x' }, reviewedAt: '2026-09-09',
     steps: [
       { id: 'instructional-observe', kind: 'observe', title: 'Observe', body: ['A cart moves on a line.'] },
       { id: 'instructional-predict', kind: 'predict', assessment: assessment('prediction-check') },
@@ -35,7 +36,7 @@ function normalMission(): MissionDefinition {
 function checkpoint(): MissionDefinition {
   return {
     id: 'instructional-checkpoint', kind: 'checkpoint', title: 'Checkpoint', summary: 'Confirm motion understanding.', objectives: ['Check core reasoning.'], minutes: 5, xp: 20,
-    requiredMath: [], scienceStatus: 'established', checkpoint: { badgeId: 'instructional-badge', requiredMissionIds: ['instructional-motion'] },
+    requiredMath: [], scienceStatus: 'established', equation: 'x=x', symbols: 'x: test value.', workedExample: { question: 'What equals itself?', steps: ['Read both sides.'], answer: 'x' }, reviewedAt: '2026-09-09', checkpoint: { badgeId: 'instructional-badge', requiredMissionIds: ['instructional-motion'] },
     steps: [
       { id: 'checkpoint-observe', kind: 'observe', title: 'Review', body: ['Recall the motion relationship.'] },
       { id: 'checkpoint-check', kind: 'check', assessment: assessment('checkpoint-check') },
@@ -102,5 +103,18 @@ describe('catalog regression coverage', () => {
 
   it('keeps checkpoint validation separate from normal mission instructional requirements', () => {
     expect(() => createCourseCatalog([course()])).not.toThrow();
+  });
+  it('requires math visual identity and a prerequisite return target matching its containing step', () => {
+    const missingIdentity = course();
+    const missingIdentityMath = missingIdentity.missions[0].steps.find(step => step.kind === 'math');
+    if (!missingIdentityMath || missingIdentityMath.kind !== 'math') throw new Error('Missing math fixture');
+    delete (missingIdentityMath.layer.foundation.visual as { tutorialId?: string }).tutorialId;
+    expect(() => createCourseCatalog([missingIdentity])).toThrow(/tutorial ID/i);
+
+    const wrongReturn = course();
+    const wrongReturnMath = wrongReturn.missions[0].steps.find(step => step.kind === 'math');
+    if (!wrongReturnMath || wrongReturnMath.kind !== 'math') throw new Error('Missing math fixture');
+    wrongReturnMath.layer.foundation.returnTo = 'another-math-step';
+    expect(() => createCourseCatalog([wrongReturn])).toThrow(/return target/i);
   });
 });

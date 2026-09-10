@@ -13,7 +13,8 @@ function mathLayer(checkId: string): MathLayer {
     ] },
     foundation: {
       title: 'Division for speed', concepts: ['A rate compares one amount with another.'], explanation: ['Divide distance by elapsed time.'],
-      visual: { kind: 'ratio', min: 1, max: 10, step: 1, initial: 2, instruction: 'Move the control to compare rates.' },
+      visual: { tutorialId: 'math-arithmetic', label: 'Rate control', kind: 'ratio', min: 1, max: 10, step: 1, initial: 2, instruction: 'Move the control to compare rates.' },
+      prerequisites: [], returnTo: 'math-motion',
       workedExample: { question: 'What is 6 m divided by 2 s?', steps: ['Divide 6 by 2.'], answer: '3 m/s' }, check: assessment(checkId),
     },
   };
@@ -21,7 +22,7 @@ function mathLayer(checkId: string): MathLayer {
 function mission(id = 'motion-start'): MissionDefinition {
   return {
     id, kind: 'mission', title: 'Start with motion', summary: 'Observe a moving object.', objectives: ['Relate distance and time.'],
-    minutes: 5, xp: 60, requiredMath: ['math-arithmetic'], modelId: 'motion', scienceStatus: 'established',
+    minutes: 5, xp: 60, requiredMath: ['math-arithmetic'], modelId: 'motion', scienceStatus: 'established', equation: 'x=x', symbols: 'x: test value.', workedExample: { question: 'What equals itself?', steps: ['Read both sides.'], answer: 'x' }, reviewedAt: '2026-09-09',
     steps: [
       { id: 'observe-motion', kind: 'observe', title: 'Watch', body: ['A cart moves along a straight track.'] },
       { id: 'predict-motion', kind: 'predict', assessment: assessment(`${id}-prediction`) },
@@ -37,7 +38,7 @@ function mission(id = 'motion-start'): MissionDefinition {
 function checkpoint(requiredMissionIds = ['motion-start'], id = 'motion-checkpoint'): MissionDefinition {
   return {
     id, kind: 'checkpoint', title: 'Motion checkpoint', summary: 'Show what you learned.', objectives: ['Check your motion reasoning.'], minutes: 5, xp: 20,
-    requiredMath: ['math-arithmetic'], scienceStatus: 'established', checkpoint: { badgeId: 'motion-badge', requiredMissionIds },
+    requiredMath: ['math-arithmetic'], scienceStatus: 'established', equation: 'x=x', symbols: 'x: test value.', workedExample: { question: 'What equals itself?', steps: ['Read both sides.'], answer: 'x' }, reviewedAt: '2026-09-09', checkpoint: { badgeId: 'motion-badge', requiredMissionIds },
     steps: [
       { id: 'observe-checkpoint', kind: 'observe', title: 'Review', body: ['Recall how speed changes.'] },
       { id: 'check-checkpoint', kind: 'check', assessment: assessment(`${id}-check`) },

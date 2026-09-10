@@ -16,6 +16,8 @@ export function createMathLayer(tutorial: MathTutorialDefinition): MathLayer {
       prerequisites: tutorial.prerequisites.map(id => ({ id, returnTo: 'current-mission-step' as const })),
       returnTo: 'current-mission-step',
       visual: {
+        tutorialId: tutorial.id,
+        label: tutorial.interactive.label,
         kind: tutorial.interactive.kind,
         min: tutorial.interactive.min,
         max: tutorial.interactive.max,

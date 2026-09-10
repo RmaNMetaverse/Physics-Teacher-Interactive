@@ -8,9 +8,9 @@ export interface MathLayer {
   quick: { equation: string; summary: string; symbols: Array<{ symbol: string; meaning: string; unit?: string }> };
   foundation: {
     title: string; concepts: string[]; explanation: string[];
-    prerequisites?: Array<{ id: string; returnTo: 'current-mission-step' }>;
-    returnTo?: 'current-mission-step';
-    visual: { kind: 'number' | 'ratio' | 'graph' | 'triangle' | 'vector' | 'wave' | 'area'; min: number; max: number; step: number; initial: number; instruction: string };
+    prerequisites: Array<{ id: string; returnTo: string }>;
+    returnTo: string;
+    visual: { tutorialId: string; label: string; kind: 'number' | 'ratio' | 'graph' | 'triangle' | 'vector' | 'wave' | 'area'; min: number; max: number; step: number; initial: number; instruction: string };
     workedExample: { question: string; steps: string[]; answer: string }; check: Assessment;
   };
 }
@@ -24,7 +24,7 @@ export type MissionStep =
 export interface CheckpointRules { badgeId: string; requiredMissionIds: string[] }
 export interface MissionDefinition {
   id: string; kind: 'mission' | 'checkpoint'; title: string; summary: string; objectives: string[]; minutes: number; xp: number;
-  requiredMath: string[]; modelId?: ModelId; scienceStatus: ScienceStatus; steps: MissionStep[]; sources: SourceReference[]; limitations: string[]; checkpoint?: CheckpointRules;
+  requiredMath: string[]; modelId?: ModelId; scienceStatus: ScienceStatus; equation: string; symbols: string; workedExample: { question: string; steps: string[]; answer: string }; reviewedAt: string; steps: MissionStep[]; sources: SourceReference[]; limitations: string[]; checkpoint?: CheckpointRules;
 }
 export interface CourseDefinition {
   id: string; title: string; description: string; group: CourseGroup; scope: string; color: string; recommendations: string[]; access: 'open'; estimatedMinutes: number;

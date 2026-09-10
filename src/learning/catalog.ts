@@ -45,7 +45,7 @@ function validateAssessment(assessment: Assessment | undefined, context: string,
   requireText(assessment.prompt, `${context} assessment prompt`);
   if (!Number.isFinite(assessment.answer)) fail(`${context} assessment answer must be finite`);
 }
-function validateMathLayer(layer: MathLayer | undefined, context: string, assessmentIds: Set<string>): void {
+function validateMathLayer(layer: MathLayer | undefined, context: string, assessmentIds: Set<string>, stepId: string): void {
   if (!layer?.quick || !layer.foundation) fail(`${context} must provide quick and expanded math layers`);
   requireText(layer.quick.equation, `${context} quick equation`);
   requireText(layer.quick.summary, `${context} quick summary`);
@@ -56,9 +56,14 @@ function validateMathLayer(layer: MathLayer | undefined, context: string, assess
   requireText(foundation.title, `${context} expanded math title`); requireTextList(foundation.concepts, `${context} expanded math concepts`); requireTextList(foundation.explanation, `${context} expanded math explanation`);
   const visual = foundation.visual;
   if (!visual || !['number', 'ratio', 'graph', 'triangle', 'vector', 'wave', 'area'].includes(visual.kind)) fail(`${context} expanded math visual is invalid`);
+  requireId(visual.tutorialId, `${context} expanded math visual tutorial ID`); if (!validMathIds.has(visual.tutorialId)) fail(`${context} expanded math visual tutorial ID is unknown`); requireText(visual.label, `${context} expanded math visual label`);
   requireFinite(visual.min, `${context} expanded math visual minimum`); requireFinite(visual.max, `${context} expanded math visual maximum`); requireFinitePositive(visual.step, `${context} expanded math visual step`); requireFinite(visual.initial, `${context} expanded math visual initial`);
   if (visual.min > visual.max || visual.initial < visual.min || visual.initial > visual.max) fail(`${context} expanded math visual bounds are invalid`);
-  requireText(visual.instruction, `${context} expanded math visual instruction`); requireText(foundation.workedExample?.question, `${context} expanded math worked example question`); requireTextList(foundation.workedExample?.steps, `${context} expanded math worked example steps`); requireText(foundation.workedExample?.answer, `${context} expanded math worked example answer`); validateAssessment(foundation.check, `${context} expanded math`, assessmentIds);
+  requireText(visual.instruction, `${context} expanded math visual instruction`);
+  if (!Array.isArray(foundation.prerequisites)) fail(`${context} expanded math prerequisites are required`);
+  foundation.prerequisites.forEach((prerequisite, index) => { requireId(prerequisite?.id, `${context} expanded math prerequisite ${index}`); if (!validMathIds.has(prerequisite.id)) fail(`${context} expanded math prerequisite ${index} is unknown`); requireText(prerequisite.returnTo, `${context} expanded math prerequisite ${index} return target`); if (prerequisite.returnTo !== stepId) fail(`${context} expanded math prerequisite ${index} return target must match its math step`); });
+  requireText(foundation.returnTo, `${context} expanded math return target`); if (foundation.returnTo !== stepId) fail(`${context} expanded math return target must match its math step`);
+  requireText(foundation.workedExample?.question, `${context} expanded math worked example question`); requireTextList(foundation.workedExample?.steps, `${context} expanded math worked example steps`); requireText(foundation.workedExample?.answer, `${context} expanded math worked example answer`); validateAssessment(foundation.check, `${context} expanded math`, assessmentIds);
 }
 function validateModel(modelId: unknown, context: string): asserts modelId is ModelId {
   if (typeof modelId !== 'string' || !validModelIds.has(modelId as ModelId)) fail(`${context} references an unknown model`);
@@ -81,7 +86,7 @@ function validateSteps(mission: MissionDefinition, assessmentIds: Set<string>): 
       case 'explain': requireText(step.title, `mission ${mission.id} step ${step.id} title`); requireTextList(step.body, `mission ${mission.id} step ${step.id} body`); hasExplanation = true; break;
       case 'predict': case 'check': validateAssessment(step.assessment, `mission ${mission.id} step ${step.id}`, assessmentIds); assessmentCount += 1; hasLearnerAction = true; break;
       case 'simulate': validateModel(step.modelId, `mission ${mission.id} step ${step.id}`); requireText(step.prompt, `mission ${mission.id} step ${step.id} prompt`); validatePreset(step.modelId, step.preset, `mission ${mission.id} step ${step.id}`); hasLearnerAction = true; break;
-      case 'math': requireText(step.title, `mission ${mission.id} step ${step.id} title`); validateMathLayer(step.layer, `mission ${mission.id} step ${step.id}`, assessmentIds); assessmentCount += 1; hasEquation = true; hasWorkedExample = true; break;
+      case 'math': requireText(step.title, `mission ${mission.id} step ${step.id} title`); validateMathLayer(step.layer, `mission ${mission.id} step ${step.id}`, assessmentIds, step.id); assessmentCount += 1; hasEquation = true; hasWorkedExample = true; break;
       case 'recap': recapCount += 1; requireTextList(step.takeaways, `mission ${mission.id} step ${step.id} takeaways`); if (index !== mission.steps.length - 1) fail(`mission ${mission.id} recap must be final`); break;
       default: fail(`mission ${mission.id} has an unknown step kind`);
     }
@@ -109,6 +114,8 @@ function validateMission(mission: MissionDefinition, normalMissionIds: Set<strin
   if (!Array.isArray(mission.requiredMath)) fail(`mission ${mission.id} math references must be an array`);
   const mathIds = new Set<string>(); mission.requiredMath.forEach(mathId => { requireId(mathId, `mission ${mission.id} math reference`); if (!validMathIds.has(mathId) || mathIds.has(mathId)) fail(`mission ${mission.id} references unknown or duplicate math`); mathIds.add(mathId); });
   if (mission.modelId !== undefined) validateModel(mission.modelId, `mission ${mission.id}`);
+  requireText(mission.equation, `mission ${mission.id} equation`); try { katex.renderToString(mission.equation, { throwOnError: true, output: 'htmlAndMathml' }); } catch { fail(`mission ${mission.id} equation is not valid KaTeX`); }
+  requireText(mission.symbols, `mission ${mission.id} symbols`); requireText(mission.workedExample?.question, `mission ${mission.id} worked example question`); requireTextList(mission.workedExample?.steps, `mission ${mission.id} worked example steps`); requireText(mission.workedExample?.answer, `mission ${mission.id} worked example answer`); requireText(mission.reviewedAt, `mission ${mission.id} review date`);
   if (!['established', 'active-research', 'interpretation', 'speculative'].includes(mission.scienceStatus)) fail(`mission ${mission.id} science status is invalid`);
   validateSteps(mission, assessmentIds); validateSources(mission.sources, `mission ${mission.id}`); requireTextList(mission.limitations, `mission ${mission.id} limitations`); validateCheckpoint(mission.checkpoint, mission, normalMissionIds);
 }

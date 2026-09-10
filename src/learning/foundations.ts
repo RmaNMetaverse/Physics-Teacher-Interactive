@@ -9,7 +9,7 @@ import type { CourseDefinition, MathLayer, MissionDefinition, MissionStep } from
 const legacyLessons = [...firstLessons, ...laterLessons, ...finalLessons];
 const tutorialsById = new Map(mathTutorials.map(tutorial => [tutorial.id, tutorial]));
 
-function missionMathLayer(lessonId: string, mathId: string): MathLayer {
+function missionMathLayer(lessonId: string, mathId: string, stepId: string): MathLayer {
   const tutorial = tutorialsById.get(mathId);
   if (!tutorial) throw new Error(`Foundations lesson ${lessonId} references unavailable math tutorial ${mathId}`);
   const layer = createMathLayer(tutorial);
@@ -17,6 +17,8 @@ function missionMathLayer(lessonId: string, mathId: string): MathLayer {
     ...layer,
     foundation: {
       ...layer.foundation,
+      prerequisites: layer.foundation.prerequisites.map(prerequisite => ({ ...prerequisite, returnTo: stepId })),
+      returnTo: stepId,
       check: { ...layer.foundation.check, id: `${lessonId}-${layer.foundation.check.id}` },
     },
   };
@@ -29,12 +31,10 @@ function requireAssessment(lesson: LessonDefinition, index: number): Assessment 
 }
 
 function adaptLesson(lesson: LessonDefinition): MissionDefinition {
-  const mathSteps: MissionStep[] = lesson.math.map(mathId => ({
-    id: `${lesson.id}-required-${mathId}`,
-    kind: 'math',
-    title: `Math for ${lesson.title}: ${tutorialsById.get(mathId)?.title ?? mathId}`,
-    layer: missionMathLayer(lesson.id, mathId),
-  }));
+  const mathSteps: MissionStep[] = lesson.math.map(mathId => {
+    const id = `${lesson.id}-required-${mathId}`;
+    return { id, kind: 'math', title: `Math for ${lesson.title}: ${tutorialsById.get(mathId)?.title ?? mathId}`, layer: missionMathLayer(lesson.id, mathId, id) };
+  });
   return {
     id: lesson.id,
     kind: 'mission',
@@ -46,6 +46,10 @@ function adaptLesson(lesson: LessonDefinition): MissionDefinition {
     requiredMath: lesson.math,
     modelId: lesson.family,
     scienceStatus: 'established',
+    equation: lesson.equation,
+    symbols: lesson.symbols,
+    workedExample: lesson.workedExample,
+    reviewedAt: lesson.reviewedAt,
     steps: [
       { id: `${lesson.id}-observe`, kind: 'observe', title: 'Observe the question', body: [lesson.summary, lesson.prediction] },
       { id: `${lesson.id}-predict`, kind: 'predict', assessment: requireAssessment(lesson, 0) },
