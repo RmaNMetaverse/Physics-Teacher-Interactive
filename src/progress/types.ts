@@ -1,0 +1,32 @@
+export type StarCount = 1 | 2 | 3;
+
+export interface MissionCompletionInput {
+  courseId: string;
+  missionId: string;
+  stars: StarCount;
+}
+
+export interface LearnerProgressV2 {
+  version: 2;
+  selectedCourseId: string;
+  nextMissionByCourse: Record<string, string>;
+  completedMissions: string[];
+  missionStars: Record<string, StarCount>;
+  stepAttempts: Record<string, number>;
+  answers: Record<string, number | string>;
+  completedMathSteps: string[];
+  xpLedger: Record<string, number>;
+  totalXp: number;
+  streak: { current: number; longest: number; lastActiveDate: string };
+  dailyGoal: 1 | 3 | 5;
+  badges: string[];
+  settings: { theme: 'light' | 'dark'; sound: boolean; reducedMotion: boolean; celebrations: boolean };
+  savedAt: string;
+}
+
+export interface ProgressStepInput {
+  courseId: string;
+  missionId: string;
+  stepId: string;
+  answer?: number | string;
+}

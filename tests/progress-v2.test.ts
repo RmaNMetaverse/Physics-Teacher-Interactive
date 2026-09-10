@@ -1,0 +1,131 @@
+import { afterEach, describe, expect, it, vi } from 'vitest';
+import { foundationCourse } from '../src/learning/foundations';
+import { createCourseCatalog } from '../src/learning/catalog';
+import {
+  PROGRESS_V2_STORAGE_KEY,
+  completeMission,
+  createProgressV2,
+  parseProgressV2,
+  readProgressV2,
+  recordStep,
+  serializeProgressV2,
+} from '../src/progress/progress';
+import type { CourseDefinition, CourseCatalog, MissionDefinition } from '../src/learning/types';
+
+const now = new Date('2026-09-10T10:00:00.000Z');
+const tomorrow = new Date('2026-09-11T10:00:00.000Z');
+const afterMissedDay = new Date('2026-09-13T10:00:00.000Z');
+
+function mission(id: string, xp = 60): MissionDefinition {
+  return {
+    id, kind: 'mission', title: id, summary: 'A valid test mission.', objectives: ['Learn a test rule.'], minutes: 5, xp,
+    requiredMath: [], modelId: 'motion', scienceStatus: 'established', equation: 'x=x', symbols: 'x is a test value.',
+    workedExample: { question: 'What equals itself?', steps: ['Read the equation.'], answer: 'x' }, reviewedAt: '2026-09-10',
+    steps: [
+      { id: `${id}-observe`, kind: 'observe', title: 'Observe', body: ['Read the test mission.'] },
+      { id: `${id}-predict`, kind: 'predict', assessment: { id: `${id}-predict-answer`, kind: 'concept', prompt: 'Choose x.', options: ['x'], answer: 0, hints: ['Read the option.'], explanation: 'x equals x.' } },
+      { id: `${id}-simulate`, kind: 'simulate', modelId: 'motion', prompt: 'Run it.', preset: { mode: 0, speed: 1, angle: 45, acceleration: 0, height: 0, g: 9.81, mass: 1 } },
+      { id: `${id}-math`, kind: 'math', title: 'Math', layer: { quick: { equation: 'x=x', summary: 'Identity equation.', symbols: [{ symbol: 'x', meaning: 'test value' }] }, foundation: { title: 'Math', concepts: ['Equal values stay equal.'], explanation: ['Both sides have the same value.'], prerequisites: [], returnTo: `${id}-math`, visual: { tutorialId: 'math-arithmetic', label: 'Value', kind: 'number', min: 0, max: 1, step: 1, initial: 0, instruction: 'Move the value.' }, workedExample: { question: 'What equals x?', steps: ['Read x.'], answer: 'x' }, check: { id: `${id}-math-answer`, kind: 'concept', prompt: 'Choose x.', options: ['x'], answer: 0, hints: ['Read it.'], explanation: 'x equals x.' } } } },
+      { id: `${id}-explain`, kind: 'explain', title: 'Explain', body: ['Explain the test.'] },
+      { id: `${id}-check-one`, kind: 'check', assessment: { id: `${id}-check-one-answer`, kind: 'concept', prompt: 'Choose x.', options: ['x'], answer: 0, hints: ['Read it.'], explanation: 'x equals x.' } },
+      { id: `${id}-check-two`, kind: 'check', assessment: { id: `${id}-check-two-answer`, kind: 'concept', prompt: 'Choose x.', options: ['x'], answer: 0, hints: ['Read it.'], explanation: 'x equals x.' } },
+      { id: `${id}-recap`, kind: 'recap', takeaways: ['x equals x.'] },
+    ], sources: [{ label: 'OpenStax', url: 'https://openstax.org/' }], limitations: ['Test fixture only.'],
+  };
+}
+
+function catalog(): CourseCatalog {
+  const first = mission('quantum-light-quanta');
+  const second = mission('quantum-interference');
+  const checkpoint: MissionDefinition = {
+    id: 'quantum-checkpoint', kind: 'checkpoint', title: 'Checkpoint', summary: 'A valid test checkpoint.', objectives: ['Reflect.'], minutes: 2, xp: 0,
+    requiredMath: [], scienceStatus: 'established', checkpoint: { badgeId: 'quantum-badge', requiredMissionIds: [first.id, second.id] },
+    steps: [{ id: 'quantum-checkpoint-observe', kind: 'observe', title: 'Observe', body: ['Read.'] }, { id: 'quantum-checkpoint-recap', kind: 'recap', takeaways: ['Reflect.'] }],
+    sources: [{ label: 'OpenStax', url: 'https://openstax.org/' }], limitations: ['Test fixture only.'],
+  };
+  const course: CourseDefinition = { id: 'quantum', title: 'Quantum', description: 'A test course.', group: 'modern', scope: 'Test scope', color: '#000000', recommendations: [], access: 'open', estimatedMinutes: 12, missions: [first, second, checkpoint], sources: [{ label: 'OpenStax', url: 'https://openstax.org/' }], limitations: ['Test fixture only.'], reviewedAt: '2026-09-10' };
+  return createCourseCatalog([course]);
+}
+
+afterEach(() => vi.unstubAllGlobals());
+
+describe('version-2 learner progress', () => {
+  it('awards a mission XP once while a replay improves its stars', () => {
+    const courseCatalog = catalog();
+    const once = completeMission(createProgressV2(now), { courseId: 'quantum', missionId: 'quantum-light-quanta', stars: 2 }, courseCatalog, now);
+    const replay = completeMission(once, { courseId: 'quantum', missionId: 'quantum-light-quanta', stars: 3 }, courseCatalog, tomorrow);
+
+    expect(once.totalXp).toBe(60);
+    expect(replay.totalXp).toBe(60);
+    expect(replay.missionStars['quantum/quantum-light-quanta']).toBe(3);
+    expect(replay.xpLedger).toEqual({ 'quantum/quantum-light-quanta': 60 });
+  });
+
+  it('rejects unknown mission IDs and invalid stars rather than corrupting progress', () => {
+    const courseCatalog = catalog();
+    const progress = createProgressV2(now);
+
+    expect(() => completeMission(progress, { courseId: 'quantum', missionId: 'missing', stars: 2 }, courseCatalog, now)).toThrow(/unknown/i);
+    expect(() => completeMission(progress, { courseId: 'quantum', missionId: 'quantum-light-quanta', stars: 4 as 1 | 2 | 3 }, courseCatalog, now)).toThrow(/stars/i);
+  });
+
+  it('awards a checkpoint badge after its required missions are complete', () => {
+    const courseCatalog = catalog();
+    const first = completeMission(createProgressV2(now), { courseId: 'quantum', missionId: 'quantum-light-quanta', stars: 3 }, courseCatalog, now);
+    const second = completeMission(first, { courseId: 'quantum', missionId: 'quantum-interference', stars: 3 }, courseCatalog, now);
+    const checkpoint = completeMission(second, { courseId: 'quantum', missionId: 'quantum-checkpoint', stars: 3 }, courseCatalog, now);
+
+    expect(checkpoint.badges).toEqual(['quantum-badge']);
+    expect(checkpoint.totalXp).toBe(120);
+  });
+
+  it('records valid steps, accepts each supported daily goal, and advances local-day streaks without punishing missed days', () => {
+    const courseCatalog = catalog();
+    const initial = { ...createProgressV2(now), dailyGoal: 5 as const };
+    const first = recordStep(initial, { courseId: 'quantum', missionId: 'quantum-light-quanta', stepId: 'quantum-light-quanta-predict', answer: 0 }, courseCatalog, now);
+    const second = recordStep(first, { courseId: 'quantum', missionId: 'quantum-light-quanta', stepId: 'quantum-light-quanta-predict', answer: 0 }, courseCatalog, tomorrow);
+    const missed = recordStep(second, { courseId: 'quantum', missionId: 'quantum-light-quanta', stepId: 'quantum-light-quanta-predict', answer: 0 }, courseCatalog, afterMissedDay);
+
+    expect(first.stepAttempts['quantum/quantum-light-quanta/quantum-light-quanta-predict']).toBe(1);
+    expect(first.answers['quantum/quantum-light-quanta/quantum-light-quanta-predict']).toBe(0);
+    expect(first.streak).toEqual({ current: 1, longest: 1, lastActiveDate: '2026-09-10' });
+    expect(second.streak).toEqual({ current: 2, longest: 2, lastActiveDate: '2026-09-11' });
+    expect(missed.streak).toEqual({ current: 1, longest: 2, lastActiveDate: '2026-09-13' });
+    expect([1, 3, 5]).toContain(initial.dailyGoal);
+  });
+
+  it('migrates known version-1 Foundations history and gives its historical XP exactly once', () => {
+    const courseCatalog = createCourseCatalog([foundationCourse]);
+    const legacy = { version: 1, completed: ['measurement-basics'], answers: { 'measurement-basics-concept': 1 }, mathCompleted: ['math-arithmetic'], lastLesson: 'measurement-basics', theme: 'light', savedAt: '2026-09-09T00:00:00.000Z' };
+    const migrated = parseProgressV2(JSON.stringify(legacy), courseCatalog, now);
+
+    expect(migrated.completedMissions).toEqual(['foundations/measurement-basics']);
+    expect(migrated.xpLedger).toEqual({ 'foundations/measurement-basics': 60 });
+    expect(migrated.totalXp).toBe(60);
+    expect(migrated.answers['foundations/measurement-basics/measurement-basics-predict']).toBe(1);
+    expect(migrated.completedMathSteps).toContain('foundations/measurement-basics/measurement-basics-required-math-arithmetic');
+    expect(migrated.settings.theme).toBe('light');
+  });
+
+  it('rejects corrupt imports and unknown version-2 IDs while serializing a derived XP total', () => {
+    const courseCatalog = catalog();
+    const valid = completeMission(createProgressV2(now), { courseId: 'quantum', missionId: 'quantum-light-quanta', stars: 2 }, courseCatalog, now);
+    const tampered = { ...valid, totalXp: 99999 };
+
+    expect(() => parseProgressV2('{broken', courseCatalog, now)).toThrow(/JSON/i);
+    expect(parseProgressV2(JSON.stringify(tampered), courseCatalog, now).totalXp).toBe(60);
+    expect(JSON.parse(serializeProgressV2(valid)).totalXp).toBe(60);
+  });
+
+  it('recovers from blocked storage and corrupt saved data without throwing', () => {
+    const courseCatalog = catalog();
+    vi.stubGlobal('localStorage', { getItem: vi.fn(() => { throw new Error('blocked'); }) });
+    expect(readProgressV2(courseCatalog, now)).toMatchObject({ persistent: false, progress: { version: 2 } });
+
+    vi.stubGlobal('localStorage', { getItem: vi.fn(() => '{broken') });
+    expect(readProgressV2(courseCatalog, now)).toMatchObject({ persistent: true, progress: { version: 2 } });
+
+    vi.stubGlobal('localStorage', { getItem: vi.fn((key: string) => key === PROGRESS_V2_STORAGE_KEY ? null : '{broken') });
+    expect(readProgressV2(courseCatalog, now).progress.version).toBe(2);
+  });
+});

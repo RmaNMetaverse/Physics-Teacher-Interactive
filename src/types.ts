@@ -34,3 +34,5 @@ export interface LearnerProgress {
   version: 1; completed: string[]; answers: Record<string, number>; mathCompleted: string[];
   lastLesson: string; theme: 'dark' | 'light'; savedAt: string;
 }
+
+export type { LearnerProgressV2, MissionCompletionInput, ProgressStepInput, StarCount } from './progress/types';

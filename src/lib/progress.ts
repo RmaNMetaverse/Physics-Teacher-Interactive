@@ -1,6 +1,7 @@
 import type { LearnerProgress } from '../types';
 
 export const STORAGE_KEY = 'physics-teacher-interactive-progress-v1';
+export const LEGACY_STORAGE_KEY = STORAGE_KEY;
 
 const PROGRESS_KEYS = [
   'answers',
