@@ -117,6 +117,7 @@ describe('mission engine', () => {
       { type: 'next' }, { type: 'answer', stepId: 'check', value: 1 }, { type: 'next' },
     ]);
     expect(atRecap.currentStepIndex).toBe(6);
+    expect(atRecap.canAdvance).toBe(true);
     expect(atRecap.isComplete).toBe(false);
     const done = missionReducer(atRecap, { type: 'next' });
     expect(done.isComplete).toBe(true);
@@ -125,6 +126,16 @@ describe('mission engine', () => {
     expect(() => missionReducer(done, { type: 'next' })).toThrow(/already complete/i);
   });
 
+  it('reports recap advancement only while mission completion is currently possible', () => {
+    const incompleteRecap = missionReducer(createMissionSession(mission), { type: 'goto', index: 6 });
+    expect(incompleteRecap.canAdvance).toBe(false);
+    expect(() => missionReducer(incompleteRecap, { type: 'next' })).toThrow(/complete/i);
+
+    const complete = completeWith([]);
+    expect(complete.currentStepIndex).toBe(6);
+    expect(complete.canAdvance).toBe(false);
+    expect(() => missionReducer(complete, { type: 'next' })).toThrow(/already complete/i);
+  });
   it('awards three stars only for first-attempt unguided completion', () => {
     const complete = completeWith([]);
     expect(complete.isComplete).toBe(true);

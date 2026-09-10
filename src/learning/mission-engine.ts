@@ -109,11 +109,15 @@ function answerForRestore(value: unknown, step: MissionStep): MissionAnswer {
   return { attempts, value: answer, correct };
 }
 
+function completionReady(mission: MissionDefinition, saved: MissionSessionSaved): boolean {
+  return mission.steps.every(step =>
+    (!assessmentFor(step) || saved.answers[step.id]?.correct === true)
+    && (step.kind !== 'simulate' || saved.completedSimulationStepIds.includes(step.id))
+  );
+}
+
 function assertCompletionReady(mission: MissionDefinition, saved: MissionSessionSaved): void {
-  for (const step of mission.steps) {
-    if (assessmentFor(step) && !saved.answers[step.id]?.correct) throw new Error('Mission cannot complete before every scored step is correct.');
-    if (step.kind === 'simulate' && !saved.completedSimulationStepIds.includes(step.id)) throw new Error('Mission cannot complete before every simulation is complete.');
-  }
+  if (!completionReady(mission, saved)) throw new Error('Mission cannot complete before every scored step and simulation is complete.');
 }
 
 function validateSaved(mission: MissionDefinition, value: unknown): MissionSessionSaved {
@@ -142,6 +146,7 @@ function validateSaved(mission: MissionDefinition, value: unknown): MissionSessi
 
 function canAdvance(mission: MissionDefinition, saved: MissionSessionSaved): boolean {
   const step = stepAt(mission, saved.currentStepIndex), assessment = assessmentFor(step);
+  if (step.kind === 'recap') return !saved.recapCompleted && completionReady(mission, saved);
   if (assessment) return saved.answers[step.id]?.correct === true;
   if (step.kind === 'simulate') return saved.completedSimulationStepIds.includes(step.id);
   return true;
@@ -184,12 +189,12 @@ export function missionReducer(state: MissionSession, action: MissionAction): Mi
   const current = stepAt(state.mission, state.currentStepIndex);
   switch (action.type) {
     case 'next':
-      if (!state.canAdvance) throw new Error('The current mission step cannot advance yet.');
       if (current.kind === 'recap') {
         if (state.recapCompleted) throw new Error('Mission recap is already complete.');
         assertCompletionReady(state.mission, savedState(state));
         return replace(state, { recapCompleted: true });
       }
+      if (!state.canAdvance) throw new Error('The current mission step cannot advance yet.');
       return replace(state, { currentStepIndex: state.currentStepIndex + 1 });
     case 'back':
       if (state.currentStepIndex === 0) throw new Error('The first mission step has no previous step.');
