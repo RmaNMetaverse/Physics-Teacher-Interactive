@@ -1,4 +1,5 @@
 export type Family = 'measurement' | 'vectors' | 'motion' | 'forces' | 'energy' | 'collisions' | 'gravity' | 'oscillations';
+export type ModelId = Family;
 export type Parameters = Record<string, number>;
 export interface Assessment {
   id: string; kind: 'concept' | 'calculation' | 'experiment'; prompt: string;
