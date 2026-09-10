@@ -3,7 +3,7 @@
 ## Unreleased
 
 - Approved the Balanced Science Adventure redesign and reusable mission-engine specification for a gamified 14-course learning platform with concise and expandable zero-prior-knowledge mathematics.
-- Added typed, catalog-validated open courses and missions with source, limitation, math-layer, simulation, checkpoint, and recommendation-graph safeguards.
+- Added typed, catalog-validated open courses and missions with required instructional content, unique assessment IDs, signed math visuals, source, limitation, simulation, checkpoint, and recommendation-graph safeguards.
 
 ## 0.1.0 — 2026-09-09
 
