@@ -177,7 +177,7 @@ git push origin main
 - Modify: `CHANGELOG.md`
 
 **Interfaces:**
-- Produces: `LearnerProgressV2`, `createProgressV2(now)`, `readProgressV2(catalog,now)`, `parseProgressV2(json,catalog,now)`, `recordStep(progress,event,now)`, `completeMission(progress,result,catalog,now)`, and `serializeProgressV2(progress)`.
+- Produces: `LearnerProgressV2`, `createProgressV2(now)`, `readProgressV2(catalog,now)`, `parseProgressV2(json,catalog,now)`, `recordStep(progress,event,now)`, `completeMission(progress,result,catalog,now)`, and `serializeProgressV2(progress,catalog)` plus `saveProgressV2(progress,catalog)`.
 
 - [ ] **Step 1: Write failing progress tests**
 

@@ -9,9 +9,10 @@ import {
   readProgressV2,
   recordStep,
   serializeProgressV2,
+  saveProgressV2,
 } from '../src/progress/progress';
 import type { CourseDefinition, CourseCatalog, MissionDefinition } from '../src/learning/types';
-import type { MissionCompletionInput } from '../src/progress/types';
+import type { LearnerProgressV2, MissionCompletionInput } from '../src/progress/types';
 
 const now = new Date('2026-09-10T10:00:00.000Z');
 const tomorrow = new Date('2026-09-11T10:00:00.000Z');
@@ -115,7 +116,7 @@ describe('version-2 learner progress', () => {
 
     expect(() => parseProgressV2('{broken', courseCatalog, now)).toThrow(/JSON/i);
     expect(parseProgressV2(JSON.stringify(tampered), courseCatalog, now).totalXp).toBe(60);
-    expect(JSON.parse(serializeProgressV2(valid)).totalXp).toBe(60);
+    expect(JSON.parse(serializeProgressV2(valid, courseCatalog)).totalXp).toBe(60);
   });
 
   it('recovers from blocked storage and corrupt saved data without throwing', () => {
@@ -139,7 +140,7 @@ describe('version-2 learner progress', () => {
     const result = readProgressV2(courseCatalog, now);
 
     expect(result.progress.completedMissions).toEqual(['foundations/measurement-basics']);
-    expect(setItem).toHaveBeenCalledWith(PROGRESS_V2_STORAGE_KEY, serializeProgressV2(result.progress));
+    expect(setItem).toHaveBeenCalledWith(PROGRESS_V2_STORAGE_KEY, serializeProgressV2(result.progress, courseCatalog));
   });
 
   it('maps legacy math practice answers to their adapted mission step IDs', () => {
@@ -233,5 +234,77 @@ describe('version-2 learner progress', () => {
     expect(migrated.nextMissionByCourse).toEqual({});
     expect(migrated.xpLedger).toEqual({});
     expect(migrated.totalXp).toBe(0);
+  });
+
+  it('round-trips and persists only catalog-validated version-2 progress', () => {
+    const courseCatalog = catalog();
+    const valid = completeMission(createProgressV2(now), { courseId: 'quantum', missionId: 'quantum-light-quanta', stars: 2 }, courseCatalog, now);
+    const serialized = serializeProgressV2(valid, courseCatalog);
+    const setItem = vi.fn();
+    vi.stubGlobal('localStorage', { setItem });
+
+    expect(parseProgressV2(serialized, courseCatalog, tomorrow)).toEqual(valid);
+    expect(saveProgressV2(valid, courseCatalog)).toBe(true);
+    expect(setItem).toHaveBeenCalledWith(PROGRESS_V2_STORAGE_KEY, serialized);
+  });
+
+  it('does not persist an invalid version-2 object', () => {
+    const courseCatalog = catalog();
+    const valid = completeMission(createProgressV2(now), { courseId: 'quantum', missionId: 'quantum-light-quanta', stars: 2 }, courseCatalog, now);
+    const invalid = { ...valid, xpLedger: { 'quantum/quantum-light-quanta': 61 } };
+    const setItem = vi.fn();
+    vi.stubGlobal('localStorage', { setItem });
+
+    expect(saveProgressV2(invalid, courseCatalog)).toBe(false);
+    expect(setItem).not.toHaveBeenCalled();
+  });
+
+  it('rejects invalid shape, catalog IDs, ledgers, stars, and badges before serialization', () => {
+    const courseCatalog = catalog();
+    const valid = completeMission(createProgressV2(now), { courseId: 'quantum', missionId: 'quantum-light-quanta', stars: 2 }, courseCatalog, now);
+    const missionKey = 'quantum/quantum-light-quanta';
+    const second = completeMission(valid, { courseId: 'quantum', missionId: 'quantum-interference', stars: 2 }, courseCatalog, now);
+    const earnedBadge = completeMission(second, { courseId: 'quantum', missionId: 'quantum-checkpoint', stars: 2 }, courseCatalog, now);
+    const prematureCheckpoint = {
+      ...createProgressV2(now),
+      completedMissions: ['quantum/quantum-checkpoint'],
+      missionStars: { 'quantum/quantum-checkpoint': 2 as const },
+    };
+    const invalidCases: Array<[string, LearnerProgressV2]> = [
+      ['full shape', { ...valid, unexpected: true } as unknown as LearnerProgressV2],
+      ['selected course ID', { ...valid, selectedCourseId: 'missing' }],
+      ['next mission ID', { ...valid, nextMissionByCourse: { quantum: 'missing' } }],
+      ['completed mission ID', { ...valid, completedMissions: ['quantum/missing'], missionStars: { 'quantum/missing': 2 }, xpLedger: { 'quantum/missing': 60 } }],
+      ['step attempt ID', { ...valid, stepAttempts: { 'quantum/missing/missing-step': 1 } }],
+      ['answer ID', { ...valid, answers: { 'quantum/missing/missing-step': 0 } }],
+      ['math step ID', { ...valid, completedMathSteps: ['quantum/missing/missing-step'] }],
+      ['XP ledger ID', { ...valid, xpLedger: { ...valid.xpLedger, 'quantum/missing': 60 } }],
+      ['XP ledger amount', { ...valid, xpLedger: { [missionKey]: 61 } }],
+      ['XP ledger completeness', { ...valid, xpLedger: {} }],
+      ['star value', { ...valid, missionStars: { [missionKey]: 4 as 1 } }],
+      ['star alignment', { ...valid, missionStars: { ...valid.missionStars, 'quantum/quantum-interference': 2 } }],
+      ['badge ID', { ...valid, badges: ['missing-badge'] }],
+      ['badge eligibility', { ...valid, badges: ['quantum-badge'] }],
+      ['checkpoint prerequisites', prematureCheckpoint],
+      ['badge completeness', { ...earnedBadge, badges: [] }],
+    ];
+
+    for (const [label, progress] of invalidCases) {
+      expect(() => serializeProgressV2(progress, courseCatalog), label).toThrow();
+    }
+  });
+
+  it('rejects checkpoint completion until all required missions are complete', () => {
+    const courseCatalog = catalog();
+    const initial = createProgressV2(now);
+
+    expect(() => completeMission(initial, { courseId: 'quantum', missionId: 'quantum-checkpoint', stars: 3 }, courseCatalog, now)).toThrow(/required missions/i);
+    expect(initial.completedMissions).toEqual([]);
+
+    const first = completeMission(initial, { courseId: 'quantum', missionId: 'quantum-light-quanta', stars: 3 }, courseCatalog, now);
+    const second = completeMission(first, { courseId: 'quantum', missionId: 'quantum-interference', stars: 3 }, courseCatalog, now);
+    const checkpoint = completeMission(second, { courseId: 'quantum', missionId: 'quantum-checkpoint', stars: 3 }, courseCatalog, now);
+
+    expect(checkpoint.badges).toEqual(['quantum-badge']);
   });
 });

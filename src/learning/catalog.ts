@@ -130,7 +130,7 @@ function validateRecommendations(courses: CourseDefinition[]): void {
 }
 export function createCourseCatalog(courses: readonly CourseDefinition[]): CourseCatalog {
   if (!Array.isArray(courses) || courses.length === 0) fail('must contain at least one course');
-  const courseMap = new Map<string, CourseDefinition>(), missionMap = new Map<string, MissionDefinition>(), assessmentIds = new Set<string>();
+  const courseMap = new Map<string, CourseDefinition>(), missionMap = new Map<string, MissionDefinition>(), assessmentIds = new Set<string>(), badgeIds = new Set<string>();
   for (const course of courses) {
     requireId(course?.id, 'course ID'); if (courseMap.has(course.id)) fail(`duplicate course ID ${course.id}`);
     requireText(course.title, `course ${course.id} title`); requireText(course.description, `course ${course.id} description`); requireText(course.scope, `course ${course.id} scope`); requireText(course.color, `course ${course.id} color`);
@@ -140,7 +140,16 @@ export function createCourseCatalog(courses: readonly CourseDefinition[]): Cours
     if (!Array.isArray(course.missions) || course.missions.length === 0) fail(`course ${course.id} must contain missions`);
     validateSources(course.sources, `course ${course.id}`); requireTextList(course.limitations, `course ${course.id} limitations`); requireText(course.reviewedAt, `course ${course.id} review date`);
     const missions = course.missions as MissionDefinition[]; const normalMissionIds: Set<string> = new Set(missions.filter((mission: MissionDefinition) => mission.kind === 'mission').map((mission: MissionDefinition) => mission.id)); let hasSimulation = false;
-    for (const mission of missions) { if (missionMap.has(mission.id)) fail(`duplicate mission ID ${mission.id}`); validateMission(mission, normalMissionIds, assessmentIds); if (mission.modelId !== undefined || mission.steps.some((step: MissionStep) => step.kind === 'simulate')) hasSimulation = true; missionMap.set(mission.id, mission); }
+    for (const mission of missions) {
+      if (missionMap.has(mission.id)) fail('duplicate mission ID ' + mission.id);
+      validateMission(mission, normalMissionIds, assessmentIds);
+      if (mission.kind === 'checkpoint') {
+        if (badgeIds.has(mission.checkpoint.badgeId)) fail('duplicate badge ID ' + mission.checkpoint.badgeId);
+        badgeIds.add(mission.checkpoint.badgeId);
+      }
+      if (mission.modelId !== undefined || mission.steps.some((step: MissionStep) => step.kind === 'simulate')) hasSimulation = true;
+      missionMap.set(mission.id, mission);
+    }
     if (!hasSimulation) fail(`course ${course.id} must include a simulation`); courseMap.set(course.id, course);
   }
   const values = [...courseMap.values()]; validateRecommendations(values);

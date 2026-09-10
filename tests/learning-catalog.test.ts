@@ -38,7 +38,7 @@ function mission(id = 'motion-start'): MissionDefinition {
 function checkpoint(requiredMissionIds = ['motion-start'], id = 'motion-checkpoint'): MissionDefinition {
   return {
     id, kind: 'checkpoint', title: 'Motion checkpoint', summary: 'Show what you learned.', objectives: ['Check your motion reasoning.'], minutes: 5, xp: 20,
-    requiredMath: ['math-arithmetic'], scienceStatus: 'established', checkpoint: { badgeId: 'motion-badge', requiredMissionIds },
+    requiredMath: ['math-arithmetic'], scienceStatus: 'established', checkpoint: { badgeId: id + '-badge', requiredMissionIds },
     steps: [
       { id: 'observe-checkpoint', kind: 'observe', title: 'Review', body: ['Recall how speed changes.'] },
       { id: 'check-checkpoint', kind: 'check', assessment: assessment(`${id}-check`) },

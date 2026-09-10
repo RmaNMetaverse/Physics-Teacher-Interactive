@@ -117,4 +117,35 @@ describe('catalog regression coverage', () => {
     wrongReturnMath.layer.foundation.returnTo = 'another-math-step';
     expect(() => createCourseCatalog([wrongReturn])).toThrow(/return target/i);
   });
+
+  it('rejects duplicate checkpoint badge IDs across courses', () => {
+    const first = course();
+    const second = course();
+    second.id = 'second-course';
+    for (const mission of second.missions) {
+      mission.id = 'second-' + mission.id;
+      if (mission.kind === 'checkpoint') {
+        mission.checkpoint = {
+          ...mission.checkpoint,
+          requiredMissionIds: mission.checkpoint.requiredMissionIds.map(id => 'second-' + id),
+        };
+      }
+      for (const step of mission.steps) {
+        step.id = 'second-' + step.id;
+        if (step.kind === 'predict' || step.kind === 'check') {
+          step.assessment = { ...step.assessment, id: 'second-' + step.assessment.id };
+        }
+        if (step.kind === 'math') {
+          step.layer.foundation = {
+            ...step.layer.foundation,
+            returnTo: step.id,
+            prerequisites: step.layer.foundation.prerequisites.map(prerequisite => ({ ...prerequisite, returnTo: step.id })),
+            check: { ...step.layer.foundation.check, id: 'second-' + step.layer.foundation.check.id },
+          };
+        }
+      }
+    }
+
+    expect(() => createCourseCatalog([first, second])).toThrow(/duplicate badge/i);
+  });
 });

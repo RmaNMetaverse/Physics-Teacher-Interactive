@@ -116,8 +116,14 @@ function parseV2(value: unknown, catalog: CourseCatalog): LearnerProgressV2 {
   const streak = value.streak;
   if (!isRecord(streak) || !exactKeys(streak, STREAK_KEYS) || typeof streak.current !== 'number' || !Number.isSafeInteger(streak.current) || typeof streak.longest !== 'number' || !Number.isSafeInteger(streak.longest) || streak.current < 0 || streak.longest < streak.current || !(streak.lastActiveDate === '' || validDateKey(streak.lastActiveDate))) throw new Error('Streak is invalid.');
   if (value.dailyGoal !== 1 && value.dailyGoal !== 3 && value.dailyGoal !== 5) throw new Error('Daily goal must be 1, 3, or 5.');
+  const earnedBadgeIds = new Set<string>();
+  for (const [badgeId, rule] of index.badges) {
+    if (!completedMissions.includes(missionKey(rule.courseId, rule.missionId))) continue;
+    if (!rule.requiredMissionIds.every(id => completedMissions.includes(missionKey(rule.courseId, id)))) throw new Error('A completed checkpoint is missing required missions.');
+    earnedBadgeIds.add(badgeId);
+  }
   const badges = requireList(value.badges, new Set(index.badges.keys()), 'Badges');
-  for (const badge of badges) { const rule = index.badges.get(badge)!; if (!completedMissions.includes(missionKey(rule.courseId, rule.missionId)) || !rule.requiredMissionIds.every(id => completedMissions.includes(missionKey(rule.courseId, id)))) throw new Error('Badge has not been earned.'); }
+  if (badges.length !== earnedBadgeIds.size || !badges.every(badge => earnedBadgeIds.has(badge))) throw new Error('Badges must exactly match completed eligible checkpoints.');
   if (!isRecord(value.settings) || !exactKeys(value.settings, SETTINGS_KEYS) || (value.settings.theme !== 'light' && value.settings.theme !== 'dark') || typeof value.settings.sound !== 'boolean' || typeof value.settings.reducedMotion !== 'boolean' || typeof value.settings.celebrations !== 'boolean') throw new Error('Settings are invalid.');
   if (!canonicalIso(value.savedAt)) throw new Error('Saved time must be a canonical ISO timestamp.');
   return { version: 2, selectedCourseId: value.selectedCourseId, nextMissionByCourse, completedMissions, missionStars, stepAttempts, answers, completedMathSteps, xpLedger, totalXp: sum(xpLedger), streak: { current: streak.current, longest: streak.longest, lastActiveDate: streak.lastActiveDate }, dailyGoal: value.dailyGoal, badges, settings: { theme: value.settings.theme, sound: value.settings.sound, reducedMotion: value.settings.reducedMotion, celebrations: value.settings.celebrations }, savedAt: value.savedAt };
@@ -177,6 +183,10 @@ export function completeMission(progress: LearnerProgressV2, result: MissionComp
   const index = indexCatalog(catalog), key = missionKey(result.courseId, result.missionId), entry = index.missions.get(key);
   if (!entry) throw new Error('Mission is unknown.');
   const next = copy(parseV2(progress, catalog));
+  if (entry.mission.kind === 'checkpoint') {
+    const hasRequirements = entry.mission.checkpoint.requiredMissionIds.every(id => next.completedMissions.includes(missionKey(result.courseId, id)));
+    if (!hasRequirements) throw new Error('Checkpoint completion requires all required missions.');
+  }
   if (!next.completedMissions.includes(key)) { next.completedMissions.push(key); if (entry.mission.kind === 'mission') next.xpLedger[key] = entry.mission.xp; }
   next.missionStars[key] = Math.max(next.missionStars[key] ?? 0, result.stars) as StarCount;
   next.selectedCourseId = result.courseId;
@@ -186,7 +196,9 @@ export function completeMission(progress: LearnerProgressV2, result: MissionComp
   return saveAt(next, now);
 }
 
-export function serializeProgressV2(progress: LearnerProgressV2): string { return JSON.stringify({ ...copy(progress), totalXp: sum(progress.xpLedger) }); }
+export function serializeProgressV2(progress: LearnerProgressV2, catalog: CourseCatalog): string {
+  return JSON.stringify(parseV2(progress, catalog));
+}
 
 export function readProgressV2(catalog: CourseCatalog, now: Date): { progress: LearnerProgressV2; persistent: boolean } {
   let v2: string | null, v1: string | null;
@@ -196,7 +208,7 @@ export function readProgressV2(catalog: CourseCatalog, now: Date): { progress: L
   try {
     const progress = parseProgressV2(stored, catalog, now);
     if (v2 === null && v1 !== null) {
-      try { localStorage.setItem(PROGRESS_V2_STORAGE_KEY, serializeProgressV2(progress)); }
+      try { localStorage.setItem(PROGRESS_V2_STORAGE_KEY, serializeProgressV2(progress, catalog)); }
       catch { return { progress, persistent: false }; }
     }
     return { progress, persistent: true };
@@ -204,6 +216,6 @@ export function readProgressV2(catalog: CourseCatalog, now: Date): { progress: L
     return { progress: createProgressV2(now), persistent: true };
   }
 }
-export function saveProgressV2(progress: LearnerProgressV2): boolean {
-  try { if (typeof localStorage === 'undefined') return false; localStorage.setItem(PROGRESS_V2_STORAGE_KEY, serializeProgressV2(progress)); return true; } catch { return false; }
+export function saveProgressV2(progress: LearnerProgressV2, catalog: CourseCatalog): boolean {
+  try { if (typeof localStorage === 'undefined') return false; localStorage.setItem(PROGRESS_V2_STORAGE_KEY, serializeProgressV2(progress, catalog)); return true; } catch { return false; }
 }
