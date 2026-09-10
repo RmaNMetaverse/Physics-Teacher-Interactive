@@ -16,6 +16,7 @@ export interface LessonDefinition {
 }
 export interface MathTutorialDefinition {
   id: string; title: string; summary: string; prerequisites: string[];
+  concepts: string[]; symbols: Array<{ symbol: string; meaning: string; unit?: string }>;
   explanation: string[]; equation: string;
   interactive: { kind: 'number' | 'graph' | 'triangle' | 'vector' | 'wave' | 'area'; label: string; min: number; max: number; step: number; initial: number; instruction: string };
   workedExample: { question: string; steps: string[]; answer: string };

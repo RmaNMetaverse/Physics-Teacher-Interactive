@@ -8,6 +8,8 @@ export interface MathLayer {
   quick: { equation: string; summary: string; symbols: Array<{ symbol: string; meaning: string; unit?: string }> };
   foundation: {
     title: string; concepts: string[]; explanation: string[];
+    prerequisites?: Array<{ id: string; returnTo: 'current-mission-step' }>;
+    returnTo?: 'current-mission-step';
     visual: { kind: 'number' | 'ratio' | 'graph' | 'triangle' | 'vector' | 'wave' | 'area'; min: number; max: number; step: number; initial: number; instruction: string };
     workedExample: { question: string; steps: string[]; answer: string }; check: Assessment;
   };
