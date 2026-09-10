@@ -44,7 +44,11 @@ function canonicalIso(value: unknown): value is string {
 function missionKey(courseId: string, missionId: string): string { return `${courseId}/${missionId}`; }
 function stepKey(courseId: string, missionId: string, stepId: string): string { return `${courseId}/${missionId}/${stepId}`; }
 function star(value: unknown): value is StarCount { return value === 1 || value === 2 || value === 3; }
-function sum(ledger: Record<string, number>): number { return Object.values(ledger).reduce((total, value) => total + value, 0); }
+function sum(ledger: Record<string, number>): number {
+  const values = Object.values(ledger);
+  if (!values.every(value => typeof value === 'number' && Number.isFinite(value) && value >= 0)) throw new Error('XP ledger contains an invalid value.');
+  return values.reduce((total, value) => total + value, 0);
+}
 
 function indexCatalog(catalog: CourseCatalog): CatalogIndex {
   const index: CatalogIndex = { courses: new Set(), missions: new Map(), steps: new Set(), answerSteps: new Set(), mathSteps: new Set(), badges: new Map() };
@@ -101,18 +105,22 @@ function parseV2(value: unknown, catalog: CourseCatalog): LearnerProgressV2 {
   if (typeof value.selectedCourseId !== 'string' || (value.selectedCourseId !== '' && !index.courses.has(value.selectedCourseId))) throw new Error('Selected course is invalid or unknown.');
   const nextMissionByCourse = requireRecord(value.nextMissionByCourse, index.courses, 'Next missions', (missionId, courseId) => typeof missionId === 'string' && (missionId === '' || index.missions.has(missionKey(courseId, missionId)))) as Record<string, string>;
   const completedMissions = requireList(value.completedMissions, missionIds, 'Completed missions');
-  const missionStars = requireRecord(value.missionStars, missionIds, 'Mission stars', (value, key) => star(value) && completedMissions.includes(key)) as Record<string, StarCount>;
-  const stepAttempts = requireRecord(value.stepAttempts, index.steps, 'Step attempts', attempts => Number.isSafeInteger(attempts) && attempts > 0) as Record<string, number>;
+  const missionStars = requireRecord(value.missionStars, missionIds, 'Mission stars', (item, key) => star(item) && completedMissions.includes(key)) as Record<string, StarCount>;
+  if (Object.keys(missionStars).length !== completedMissions.length) throw new Error('Mission stars must contain one entry for every completed mission.');
+  const stepAttempts = requireRecord(value.stepAttempts, index.steps, 'Step attempts', attempts => typeof attempts === 'number' && Number.isSafeInteger(attempts) && attempts > 0) as Record<string, number>;
   const answers = requireRecord(value.answers, index.answerSteps, 'Answers', answer => typeof answer === 'string' || typeof answer === 'number' && Number.isFinite(answer)) as Record<string, number | string>;
   const completedMathSteps = requireList(value.completedMathSteps, index.mathSteps, 'Completed math steps');
   const xpLedger = requireRecord(value.xpLedger, missionIds, 'XP ledger', (xp, key) => { const entry = index.missions.get(key); return entry?.mission.kind === 'mission' && completedMissions.includes(key) && typeof xp === 'number' && Number.isFinite(xp) && xp === entry.mission.xp; }) as Record<string, number>;
-  if (!isRecord(value.streak) || !exactKeys(value.streak, STREAK_KEYS) || !Number.isSafeInteger(value.streak.current) || !Number.isSafeInteger(value.streak.longest) || value.streak.current < 0 || value.streak.longest < value.streak.current || !(value.streak.lastActiveDate === '' || validDateKey(value.streak.lastActiveDate))) throw new Error('Streak is invalid.');
+  const completedXpMissions = completedMissions.filter(key => index.missions.get(key)?.mission.kind === 'mission');
+  if (Object.keys(xpLedger).length !== completedXpMissions.length) throw new Error('XP ledger must contain one catalog-validated entry for every completed mission.');
+  const streak = value.streak;
+  if (!isRecord(streak) || !exactKeys(streak, STREAK_KEYS) || typeof streak.current !== 'number' || !Number.isSafeInteger(streak.current) || typeof streak.longest !== 'number' || !Number.isSafeInteger(streak.longest) || streak.current < 0 || streak.longest < streak.current || !(streak.lastActiveDate === '' || validDateKey(streak.lastActiveDate))) throw new Error('Streak is invalid.');
   if (value.dailyGoal !== 1 && value.dailyGoal !== 3 && value.dailyGoal !== 5) throw new Error('Daily goal must be 1, 3, or 5.');
   const badges = requireList(value.badges, new Set(index.badges.keys()), 'Badges');
   for (const badge of badges) { const rule = index.badges.get(badge)!; if (!completedMissions.includes(missionKey(rule.courseId, rule.missionId)) || !rule.requiredMissionIds.every(id => completedMissions.includes(missionKey(rule.courseId, id)))) throw new Error('Badge has not been earned.'); }
   if (!isRecord(value.settings) || !exactKeys(value.settings, SETTINGS_KEYS) || (value.settings.theme !== 'light' && value.settings.theme !== 'dark') || typeof value.settings.sound !== 'boolean' || typeof value.settings.reducedMotion !== 'boolean' || typeof value.settings.celebrations !== 'boolean') throw new Error('Settings are invalid.');
   if (!canonicalIso(value.savedAt)) throw new Error('Saved time must be a canonical ISO timestamp.');
-  return { version: 2, selectedCourseId: value.selectedCourseId, nextMissionByCourse, completedMissions, missionStars, stepAttempts, answers, completedMathSteps, xpLedger, totalXp: sum(xpLedger), streak: { current: value.streak.current, longest: value.streak.longest, lastActiveDate: value.streak.lastActiveDate }, dailyGoal: value.dailyGoal, badges, settings: { theme: value.settings.theme, sound: value.settings.sound, reducedMotion: value.settings.reducedMotion, celebrations: value.settings.celebrations }, savedAt: value.savedAt };
+  return { version: 2, selectedCourseId: value.selectedCourseId, nextMissionByCourse, completedMissions, missionStars, stepAttempts, answers, completedMathSteps, xpLedger, totalXp: sum(xpLedger), streak: { current: streak.current, longest: streak.longest, lastActiveDate: streak.lastActiveDate }, dailyGoal: value.dailyGoal, badges, settings: { theme: value.settings.theme, sound: value.settings.sound, reducedMotion: value.settings.reducedMotion, celebrations: value.settings.celebrations }, savedAt: value.savedAt };
 }
 
 function migrateV1(value: unknown, catalog: CourseCatalog, now: Date): LearnerProgressV2 {
@@ -132,7 +140,9 @@ function migrateV1(value: unknown, catalog: CourseCatalog, now: Date): LearnerPr
     if (typeof answer !== 'number' || !Number.isFinite(answer)) continue;
     for (const [key, entry] of index.missions) {
       if (!key.startsWith('foundations/')) continue;
-      const matched = [...entry.steps.values()].find(step => (step.kind === 'predict' || step.kind === 'check') && step.assessment.id === legacyAssessmentId);
+      const matched = [...entry.steps.values()].find(step =>
+        ((step.kind === 'predict' || step.kind === 'check') && step.assessment.id === legacyAssessmentId)
+        || (step.kind === 'math' && step.layer.foundation.check.id === entry.mission.id + '-' + legacyAssessmentId));
       if (matched) progress.answers[`${key}/${matched.id}`] = answer;
     }
   }
@@ -154,7 +164,7 @@ export function recordStep(progress: LearnerProgressV2, event: ProgressStepInput
   if (!index.steps.has(key)) throw new Error('Step is unknown.');
   if (event.answer !== undefined && !index.answerSteps.has(key)) throw new Error('Answers are only valid for scored steps.');
   if (event.answer !== undefined && typeof event.answer !== 'string' && (typeof event.answer !== 'number' || !Number.isFinite(event.answer))) throw new Error('Answer is invalid.');
-  const next = copy(progress);
+  const next = copy(parseV2(progress, catalog));
   next.stepAttempts[key] = (next.stepAttempts[key] ?? 0) + 1;
   if (event.answer !== undefined) next.answers[key] = event.answer;
   if (index.mathSteps.has(key) && !next.completedMathSteps.includes(key)) next.completedMathSteps.push(key);
@@ -166,7 +176,7 @@ export function completeMission(progress: LearnerProgressV2, result: MissionComp
   if (!star(result.stars)) throw new Error('Mission stars must be 1, 2, or 3.');
   const index = indexCatalog(catalog), key = missionKey(result.courseId, result.missionId), entry = index.missions.get(key);
   if (!entry) throw new Error('Mission is unknown.');
-  const next = copy(progress);
+  const next = copy(parseV2(progress, catalog));
   if (!next.completedMissions.includes(key)) { next.completedMissions.push(key); if (entry.mission.kind === 'mission') next.xpLedger[key] = entry.mission.xp; }
   next.missionStars[key] = Math.max(next.missionStars[key] ?? 0, result.stars) as StarCount;
   next.selectedCourseId = result.courseId;
@@ -183,7 +193,16 @@ export function readProgressV2(catalog: CourseCatalog, now: Date): { progress: L
   try { if (typeof localStorage === 'undefined') return { progress: createProgressV2(now), persistent: false }; v2 = localStorage.getItem(PROGRESS_V2_STORAGE_KEY); v1 = v2 === null ? localStorage.getItem(LEGACY_STORAGE_KEY) : null; } catch { return { progress: createProgressV2(now), persistent: false }; }
   const stored = v2 ?? v1;
   if (stored === null) return { progress: createProgressV2(now), persistent: true };
-  try { return { progress: parseProgressV2(stored, catalog, now), persistent: true }; } catch { return { progress: createProgressV2(now), persistent: true }; }
+  try {
+    const progress = parseProgressV2(stored, catalog, now);
+    if (v2 === null && v1 !== null) {
+      try { localStorage.setItem(PROGRESS_V2_STORAGE_KEY, serializeProgressV2(progress)); }
+      catch { return { progress, persistent: false }; }
+    }
+    return { progress, persistent: true };
+  } catch {
+    return { progress: createProgressV2(now), persistent: true };
+  }
 }
 export function saveProgressV2(progress: LearnerProgressV2): boolean {
   try { if (typeof localStorage === 'undefined') return false; localStorage.setItem(PROGRESS_V2_STORAGE_KEY, serializeProgressV2(progress)); return true; } catch { return false; }
