@@ -2,7 +2,12 @@
 
 ## Unreleased
 
-- Replaced the legacy lesson sidebar and tabbed shell with catalog-validated hash routes, a three-destination navigation, an open 14-course Explore gallery, accessible course mission paths, contextual back links, and announced invalid-route recovery.
+- Added a focused bite-sized `MissionPlayer` and `MissionPage` with close navigation, step progress, one prominent primary action, optional back action, and continuous local-storage resume state.
+- Added focused step renderers for observe, predict/check assessments, interactive simulations, layered math, physical explanations, and recap.
+- Implemented layered math in `MathStep` with a concise overview (equation, purpose, symbols) and expandable foundation mode revealing concepts, plain-language explanations, interactive visual manipulation, sequential worked steps, check assessments, prerequisite return navigation, and focus restoration.
+- Implemented `RecapStep` awarding one-time XP and 1–3 star mastery, offering Continue, Replay, and expandable tab-free `DeepDive` with derivations, explanations, limitations, experimental suggestions, and literature citations.
+- Enhanced `Equation` with accessible `role="math"`, `aria-label`, and optional inline display modes.
+- Added unit and component tests in `tests/math-layer.test.tsx` and end-to-end browser specifications in `tests/e2e/mission.spec.ts` covering Foundations and Quantum missions.
 
 - Corrected numeric-answer rounding allowance to scale with the answer magnitude, preventing zero or substantially wrong answers from passing tiny SI-energy checks with explicit scientific tolerances.
 

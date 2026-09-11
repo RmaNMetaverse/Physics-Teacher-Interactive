@@ -1,0 +1,162 @@
+import { expect, test } from '@playwright/test';
+
+test.describe('Mission player and layered math', () => {
+  test('plays through a Foundations mission with expanded math, deep dive, and completion', async ({ page }) => {
+    await page.goto('/#/mission/foundations/measurement-basics');
+
+    // Verify mission player header
+    await expect(page.getByRole('heading', { level: 1, name: 'Physical quantities and scale' })).toBeVisible();
+    await expect(page.locator('.mission-player-title .eyebrow')).toHaveText('Physics Foundations');
+
+    // Step 1: Observe
+    await expect(page.locator('.step-kind-badge', { hasText: 'Observe' })).toBeVisible();
+    const nextBtn = page.getByRole('button', { name: 'Next step' });
+    await expect(nextBtn).toBeEnabled();
+    await nextBtn.click();
+
+    // Step 2: Predict (assessment)
+    await expect(page.getByText('Prediction')).toBeVisible();
+    await expect(page.getByText('Which statement is a complete length measurement?')).toBeVisible();
+    await expect(nextBtn).toBeDisabled();
+
+    // Answer prediction
+    await page.getByRole('button', { name: /The rod is 2 m long/i }).click();
+    await page.getByRole('button', { name: 'Check answer' }).click();
+    await expect(page.getByRole('status')).toContainText("That's right");
+    await expect(nextBtn).toBeEnabled();
+    await nextBtn.click();
+
+    // Step 3: Simulate
+    await expect(page.getByText('Interactive simulation')).toBeVisible();
+    await expect(nextBtn).toBeDisabled();
+    await page.getByRole('button', { name: /Run simulation & record observation/i }).click();
+    await expect(page.getByRole('status')).toContainText('Observation complete');
+    await expect(nextBtn).toBeEnabled();
+    await nextBtn.click();
+
+    // Step 4: Math Step 1 (math-arithmetic)
+    await expect(page.getByText('Layered mathematics')).toBeVisible();
+    await expect(page.getByText('Symbol definitions')).toBeVisible();
+
+    // Expand "Teach me the math"
+    const teachMathBtn = page.getByRole('button', { name: /Teach me the math/i });
+    await expect(teachMathBtn).toBeVisible();
+    await teachMathBtn.click();
+
+    // Foundation view is expanded
+    await expect(page.getByRole('heading', { name: 'Core concepts' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Worked example' })).toBeVisible();
+
+    // Reveal next worked step
+    const revealStepBtn = page.locator('.reveal-step-button');
+    if (await revealStepBtn.isVisible()) {
+      await revealStepBtn.click();
+    }
+
+    // Answer the math check: prompt is "Evaluate 5 + 2 × 6." (answer 17)
+    const mathCheckInput = page.locator('.foundation-check input');
+    await mathCheckInput.fill('17');
+    await page.locator('.foundation-check button', { hasText: 'Check answer' }).click();
+
+    // Close foundation view
+    await page.getByRole('button', { name: 'Close math foundation' }).click();
+    await expect(teachMathBtn).toBeFocused();
+
+    // Advance to next step
+    await page.getByRole('button', { name: 'Next step' }).click();
+
+    // Step 5: Math Step 2 (math-decimals)
+    await page.getByRole('button', { name: /Teach me the math/i }).click();
+    // Prompt: "Evaluate 0.4 × 0.3." -> answer 0.12
+    const decimalInput = page.locator('.foundation-check input');
+    await decimalInput.fill('0.12');
+    await page.locator('.foundation-check button', { hasText: 'Check answer' }).click();
+    await page.getByRole('button', { name: 'Next step' }).click();
+
+    // Step 6: Explain
+    await expect(page.getByText('Explanation')).toBeVisible();
+    await page.getByRole('button', { name: 'Next step' }).click();
+
+    // Step 7: Calculation Check ("Four adjacent 0.75 m sections...") -> answer 3
+    const calcInput = page.locator('.numeric-answer input');
+    await calcInput.fill('3');
+    await page.getByRole('button', { name: 'Check answer' }).click();
+    await page.getByRole('button', { name: 'Next step' }).click();
+
+    // Step 8: Experiment Check ("Set length to 4 m...") -> answer 4
+    const expInput = page.locator('.numeric-answer input');
+    await expInput.fill('4');
+    await page.getByRole('button', { name: 'Check answer' }).click();
+    await page.getByRole('button', { name: 'Next step' }).click();
+
+    // Step 9: Recap
+    await expect(page.getByRole('heading', { name: /Mission complete/i })).toBeVisible();
+    await expect(page.getByText('Key takeaways')).toBeVisible();
+
+    // Complete mission
+    await page.getByRole('button', { name: 'Finish mission' }).click();
+
+    // Verify rewards
+    await expect(page.getByText(/3 \/ 3 Stars/i)).toBeVisible();
+    await expect(page.getByText('+60 XP')).toBeVisible();
+
+    // Explore Deep Dive without tabs
+    await page.getByRole('button', { name: /Explore deep dive/i }).click();
+    await expect(page.getByRole('heading', { name: 'Complete physical and mathematical treatment' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /Derivation & mathematical formulation/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /Model assumptions & physical limitations/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /Authoritative sources & literature/i })).toBeVisible();
+
+    // Continue to next mission
+    await page.getByRole('button', { name: 'Continue' }).click();
+    await expect(page).toHaveURL(/#\/mission\/foundations\/unit-conversion$/);
+  });
+
+  test('plays through a Quantum starter mission and persists progress across reload', async ({ page }) => {
+    await page.goto('/#/mission/quantum/quantum-light-quanta');
+
+    await expect(page.getByRole('heading', { level: 1, name: 'Light quanta' })).toBeVisible();
+    await expect(page.locator('.mission-player-title .eyebrow')).toHaveText('Quantum Physics');
+
+    // Step 1: Observe
+    await page.getByRole('button', { name: 'Next step', exact: true }).click();
+
+    // Step 2: Predict: "At fixed frequency, brighter monochromatic light changes what?" -> "Photon arrival rate"
+    await page.getByRole('button', { name: /Photon arrival rate/i }).click();
+    await page.getByRole('button', { name: 'Check answer' }).click();
+    await page.getByRole('button', { name: 'Next step', exact: true }).click();
+
+    // Step 3: Simulate
+    await page.getByRole('button', { name: /Run simulation & record observation/i }).click();
+    await page.getByRole('button', { name: 'Next step', exact: true }).click();
+
+    // Step 4: Explain
+    await expect(page.locator('.step-kind-badge', { hasText: 'Explanation' })).toBeVisible();
+    await page.getByRole('button', { name: 'Next step', exact: true }).click();
+
+    // Step 5: Math Step: Answer check "6e-19 J" (or expand)
+    await page.getByRole('button', { name: /Teach me the math/i }).click();
+    const mathInput = page.locator('.foundation-check input');
+    await mathInput.fill('6e-19');
+    await page.locator('.foundation-check button', { hasText: 'Check answer' }).click();
+    await page.getByRole('button', { name: 'Next step', exact: true }).click();
+
+    // Step 6: Check: "Which change raises photon energy?" -> "Increasing frequency"
+    await page.getByRole('button', { name: /Increasing frequency/i }).click();
+    await page.getByRole('button', { name: 'Check answer' }).click();
+    await page.getByRole('button', { name: 'Next step', exact: true }).click();
+
+    // Step 7: Recap
+    await page.getByRole('button', { name: 'Finish mission' }).click();
+    await expect(page.getByText(/3 \/ 3 Stars/i)).toBeVisible();
+
+    // Reload page to verify persistence without data loss
+    await page.reload();
+    await expect(page.getByRole('heading', { name: /Mission complete/i })).toBeVisible();
+    await expect(page.getByText(/3 \/ 3 Stars/i)).toBeVisible();
+
+    // Click exit to course
+    await page.getByRole('link', { name: /Back to Quantum Physics path/i }).first().click();
+    await expect(page).toHaveURL(/#\/course\/quantum$/);
+  });
+});

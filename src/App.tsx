@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { ArrowLeft, Clock3, Flame, Trophy } from 'lucide-react';
+import { Flame, Trophy } from 'lucide-react';
 import { AppShell } from './app/AppShell';
 import { isValidAppHash, parseHash, toHash, type AppRoute } from './app/router';
 import { courseCatalog, courses } from './learning/catalog';
@@ -7,23 +7,11 @@ import { readProgressV2, saveProgressV2 } from './progress/progress';
 import type { LearnerProgressV2 } from './progress/types';
 import { CoursePathPage } from './pages/CoursePathPage';
 import { ExplorePage } from './pages/ExplorePage';
+import { MissionPage } from './pages/MissionPage';
 
 function learnHash(progress: LearnerProgressV2): string {
   const course = courseCatalog.courses.get(progress.selectedCourseId) ?? courses[0];
   return toHash({ page: 'course', courseId: course.id });
-}
-
-function MissionPlaceholder({ route }: { route: Extract<AppRoute, { page: 'mission' }> }) {
-  const course = courseCatalog.getCourse(route.courseId);
-  const mission = courseCatalog.getMission(route.courseId, route.missionId);
-  return <section className="mission-placeholder">
-    <a className="contextual-back" href={`#/course/${course.id}`}><ArrowLeft aria-hidden="true" />Back to {course.title} path</a>
-    <p className="eyebrow">{mission.kind === 'checkpoint' ? 'Course checkpoint' : 'Mission'}</p>
-    <h1>{mission.title}</h1>
-    <p>{mission.summary}</p>
-    <div className="mission-placeholder-meta"><span><Clock3 aria-hidden="true" />{mission.minutes} min</span><span><Trophy aria-hidden="true" />{mission.xp} XP</span></div>
-    <div className="mission-placeholder-note" role="note"><strong>Mission preview</strong><p>The focused interactive player arrives in the next milestone. You can return to the course path and choose any mission.</p></div>
-  </section>;
 }
 
 function ProgressPlaceholder({ progress }: { progress: LearnerProgressV2 }) {
@@ -88,7 +76,18 @@ export function App() {
   let page;
   if (route.page === 'explore') page = <ExplorePage courses={courses} progress={progress} />;
   else if (route.page === 'course') page = <CoursePathPage course={courseCatalog.getCourse(route.courseId)} progress={progress} />;
-  else if (route.page === 'mission') page = <MissionPlaceholder route={route} />;
+  else if (route.page === 'mission') {
+    const course = courseCatalog.getCourse(route.courseId);
+    const mission = courseCatalog.getMission(route.courseId, route.missionId);
+    page = (
+      <MissionPage
+        course={course}
+        mission={mission}
+        progress={progress}
+        onProgressChange={setProgress}
+      />
+    );
+  }
   else page = <ProgressPlaceholder progress={progress} />;
 
   return <AppShell route={route} learnHash={learnHash(progress)} recoveryMessage={recoveryMessage} mainRef={mainRef}>{page}</AppShell>;
