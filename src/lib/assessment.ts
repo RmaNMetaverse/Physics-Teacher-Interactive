@@ -53,6 +53,6 @@ export function checkAnswer(assessment: Assessment, input: string | number): Ans
 
   const tolerance = assessment.tolerance ?? 1e-6;
   if (!Number.isFinite(tolerance) || tolerance < 0) return feedback(assessment, false);
-  const roundingAllowance = Number.EPSILON * Math.max(1, Math.abs(value), Math.abs(assessment.answer)) * 4;
+  const roundingAllowance = Number.EPSILON * Math.max(Math.abs(value), Math.abs(assessment.answer)) * 4;
   return feedback(assessment, Math.abs(value - assessment.answer) <= tolerance + roundingAllowance);
 }

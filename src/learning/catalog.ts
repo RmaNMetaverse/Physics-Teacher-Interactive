@@ -160,3 +160,22 @@ export function createCourseCatalog(courses: readonly CourseDefinition[]): Cours
   };
 }
 
+
+import { foundationCourse } from './foundations';
+import { classicalMechanicsCourse } from './courses/classical-mechanics';
+import { wavesSoundCourse } from './courses/waves-sound';
+import { thermodynamicsCourse } from './courses/thermodynamics';
+import { electromagnetismCourse } from './courses/electromagnetism';
+import { opticsCourse } from './courses/optics';
+import { relativityCourse } from './courses/relativity';
+import { quantumCourse } from './courses/quantum';
+import { atomicMolecularCourse } from './courses/atomic-molecular';
+import { nuclearCourse } from './courses/nuclear';
+import { particleCourse } from './courses/particle';
+import { condensedMatterCourse } from './courses/condensed-matter';
+import { astrophysicsCourse } from './courses/astrophysics';
+import { cosmologyFrontiersCourse } from './courses/cosmology-frontiers';
+
+/** Open access is independent of recommended preparation or prior completion. */
+export const courses: readonly CourseDefinition[] = [foundationCourse, classicalMechanicsCourse, wavesSoundCourse, thermodynamicsCourse, electromagnetismCourse, opticsCourse, relativityCourse, quantumCourse, atomicMolecularCourse, nuclearCourse, particleCourse, condensedMatterCourse, astrophysicsCourse, cosmologyFrontiersCourse];
+export const courseCatalog = createCourseCatalog(courses);

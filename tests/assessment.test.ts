@@ -58,3 +58,12 @@ describe('checkAnswer', () => {
     expect(checkAnswer(assessment, -2.000002).correct).toBe(false);
   });
 });
+
+it('keeps explicit scientific tolerances meaningful below one SI unit', () => {
+  const photonEnergy = { ...calculation, answer: 6e-19, tolerance: 9e-21, unit: 'J' };
+  expect(checkAnswer(photonEnergy, '6e-19 J').correct).toBe(true);
+  expect(checkAnswer(photonEnergy, '6.05e-19 J').correct).toBe(true);
+  expect(checkAnswer(photonEnergy, 0).correct).toBe(false);
+  expect(checkAnswer(photonEnergy, '9e-19 J').correct).toBe(false);
+  expect(checkAnswer({ ...photonEnergy, answer: -6e-19 }, 6e-19).correct).toBe(false);
+});

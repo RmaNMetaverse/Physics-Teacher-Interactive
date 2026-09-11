@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Corrected numeric-answer rounding allowance to scale with the answer magnitude, preventing zero or substantially wrong answers from passing tiny SI-energy checks with explicit scientific tolerances.
+
+- Authored thirteen open five-mission starter courses and thirteen checkpoints, bringing the validated catalog to fourteen courses and eighty-nine normal missions; Quantum is addressable from its first mission without completion gates.
+- Added distinctive explanations, equations, symbol definitions, worked examples, layered prerequisite math, three scored checks, source references, evidence labels, and explicit lab limitations to every starter mission.
+- Distinguished established quantum predictions from interpretations, active research on neutrino masses and cosmic components, and explicitly speculative quantum-gravity/multiverse proposals; documented starter scope and source review.
+
 - Added twelve pure SI classroom models across waves, thermal physics, electromagnetism, optics, relativity, quantum, atomic, nuclear, particle, condensed matter, astrophysics and cosmology, with analytic reference tests and documented approximation limits.
 - Added a shared 20-model registry for course validation and evaluation while retaining the legacy eight-family API; hardened new model input/time bounds, focal-lens singularity handling, normalized quantum probability bins and exponential stability.
 
