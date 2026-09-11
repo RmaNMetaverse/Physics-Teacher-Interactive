@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+- Implemented the full Balanced Science Adventure visual design system with semantic CSS tokens and modular stylesheets (`tokens.css`, `shell.css`, `explore.css`, `path.css`, `mission.css`, `progress.css`, `simulation.css`, `responsive.css`).
+- Introduced semantic color palettes and surfaces: warm off-white surfaces (`#fbfbfe` light, `#0d1117` / `#161b22` dark), deep navy text (`#0d192e`), violet journey accents, mint mastery, gold rewards, and coral feedback.
+- Enforced minimum 44px touch/click targets across primary controls, navigation links, filters, and call-to-action buttons.
+- Added high-contrast visible focus rings across interactive elements (`button`, `a`, `input`, `select`).
+- Designed fluid responsive layouts for Desktop (1440x900), Tablet (768x1024), and Mobile (320x700), eliminating horizontal page overflow and providing a 3-item persistent bottom navigation bar on mobile (`Explore`, `Learn`, `Progress`).
+- Displayed course mission path as a clean ordered list without connector lines.
+- Integrated dual reduced-motion support across both system `@media (prefers-reduced-motion: reduce)` and learner preference `data-reduced-motion="true"`, ensuring celebration animation duration is 0ms.
+- Added end-to-end browser specifications in `tests/e2e/navigation.spec.ts` and `tests/e2e/mission.spec.ts` covering 320x700, 768x1024, and 1440x900 viewports, no page overflow, mobile bottom nav, 44px targets, visible focus, and reduced-motion celebration duration.
+
 - Implemented `ProgressPage` providing a full mastery dashboard, level progression, streak tracking, daily goal controls, course mastery rings, checkpoint badge shelf, validated recent ledger activity, user preferences, and data backup controls.
 - Added accessible reward components: `XpBar` with `Math.floor(totalXp / 500) + 1` level derivation and singular/plural XP copy, `StreakCard` with longest streak tracking and flame visual, `MasteryRing` with accessible SVG ring and text equivalents, `BadgeShelf` displaying checkpoint achievement badges, and `Celebration` with a restrained SVG burst.
 - Guarded celebrations with user preferences and `prefers-reduced-motion` detection, ensuring zero duration under reduced motion and synthesized sound with zero network requests.

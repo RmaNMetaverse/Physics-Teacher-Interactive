@@ -159,4 +159,71 @@ test.describe('Mission player and layered math', () => {
     await page.getByRole('link', { name: /Back to Quantum Physics path/i }).first().click();
     await expect(page).toHaveURL(/#\/course\/quantum$/);
   });
+
+  test('responsive viewports have no overflow, one prominent 44px action, and reduced motion zeros celebration duration', async ({ page }) => {
+    const viewports = [
+      { width: 320, height: 700, name: 'mobile' },
+      { width: 768, height: 1024, name: 'tablet' },
+      { width: 1440, height: 900, name: 'desktop' },
+    ];
+
+    for (const vp of viewports) {
+      await page.setViewportSize({ width: vp.width, height: vp.height });
+      await page.goto('/#/mission/quantum/quantum-light-quanta');
+
+      // No horizontal page overflow
+      const overflow = await page.evaluate(() => {
+        return document.documentElement.scrollWidth > document.documentElement.clientWidth;
+      });
+      expect(overflow, `Horizontal overflow at ${vp.width}x${vp.height} in Mission`).toBe(false);
+
+      // One prominent mission action with min 44px height
+      const nextBtn = page.getByRole('button', { name: 'Next step', exact: true });
+      await expect(nextBtn).toBeVisible();
+      const nextBox = await nextBtn.boundingBox();
+      expect(nextBox).not.toBeNull();
+      expect(nextBox!.height, `Next button height at ${vp.name}`).toBeGreaterThanOrEqual(44);
+
+      // Visible focus on interactive primary action
+      await nextBtn.focus();
+      await expect(nextBtn).toBeFocused();
+      const btnFocus = await nextBtn.evaluate(el => {
+        const style = window.getComputedStyle(el);
+        return {
+          outlineStyle: style.outlineStyle,
+          outlineWidth: parseFloat(style.outlineWidth) || 0,
+          boxShadow: style.boxShadow,
+        };
+      });
+      const hasVisibleFocus = (btnFocus.outlineStyle !== 'none' && btnFocus.outlineWidth >= 2) || (btnFocus.boxShadow !== 'none' && !btnFocus.boxShadow.includes('rgba(0, 0, 0, 0)'));
+      expect(hasVisibleFocus, `Next button should display visible focus ring at ${vp.name}`).toBe(true);
+    }
+
+    // Emulate reduced motion
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await page.goto('/#/mission/quantum/quantum-light-quanta');
+
+    // Verify celebration duration is zero under reduced motion
+    const cssCelebrationDuration = await page.evaluate(() => {
+      const rootVal = getComputedStyle(document.documentElement).getPropertyValue('--celebration-duration').trim();
+      return rootVal;
+    });
+    expect(
+      cssCelebrationDuration === '0ms' || cssCelebrationDuration === '0s',
+      `Expected --celebration-duration to be 0ms under reduced motion, got '${cssCelebrationDuration}'`
+    ).toBe(true);
+
+    // Also verify data-reduced-motion="true" sets duration to zero
+    await page.evaluate(() => {
+      document.documentElement.setAttribute('data-reduced-motion', 'true');
+    });
+    const attrCelebrationDuration = await page.evaluate(() => {
+      return getComputedStyle(document.documentElement).getPropertyValue('--celebration-duration').trim();
+    });
+    expect(
+      attrCelebrationDuration === '0ms' || attrCelebrationDuration === '0s',
+      `Expected --celebration-duration to be 0ms with data-reduced-motion="true", got '${attrCelebrationDuration}'`
+    ).toBe(true);
+  });
 });
+

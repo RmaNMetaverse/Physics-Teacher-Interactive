@@ -60,3 +60,108 @@ test('skip navigation preserves the current hash route and focuses main content'
   await expect(page).toHaveURL(/#\/course\/quantum$/);
   await expect(page.locator('#main-content')).toBeFocused();
 });
+
+test('responsive viewports (320x700, 768x1024, 1440x900) have no horizontal page overflow, mobile bottom nav, and 44px targets', async ({ page }) => {
+  const viewports = [
+    { width: 320, height: 700, name: 'mobile' },
+    { width: 768, height: 1024, name: 'tablet' },
+    { width: 1440, height: 900, name: 'desktop' },
+  ];
+
+  for (const vp of viewports) {
+    await page.setViewportSize({ width: vp.width, height: vp.height });
+    await page.goto('/#/explore');
+
+    // Assert no horizontal page overflow
+    const overflow = await page.evaluate(() => {
+      return document.documentElement.scrollWidth > document.documentElement.clientWidth;
+    });
+    expect(overflow, `Horizontal overflow at ${vp.width}x${vp.height} on Explore`).toBe(false);
+
+    // Primary nav targets >= 44px
+    const navLinks = page.getByRole('navigation', { name: 'Main navigation' }).getByRole('link');
+    const navCount = await navLinks.count();
+    expect(navCount).toBe(3);
+    for (let i = 0; i < navCount; i++) {
+      const box = await navLinks.nth(i).boundingBox();
+      expect(box).not.toBeNull();
+      expect(box!.height, `Nav link ${i} height at ${vp.name}`).toBeGreaterThanOrEqual(44);
+      expect(box!.width, `Nav link ${i} width at ${vp.name}`).toBeGreaterThanOrEqual(44);
+    }
+
+    // Primary action target >= 44px
+    const continueAction = page.getByRole('link', { name: 'Continue learning' });
+    const continueBox = await continueAction.boundingBox();
+    expect(continueBox).not.toBeNull();
+    expect(continueBox!.height, `Continue action height at ${vp.name}`).toBeGreaterThanOrEqual(44);
+
+    // Filter chips have >= 44px touch height
+    const filterBtn = page.getByRole('button', { name: 'Modern' });
+    const filterBox = await filterBtn.boundingBox();
+    expect(filterBox).not.toBeNull();
+    expect(filterBox!.height, `Filter button height at ${vp.name}`).toBeGreaterThanOrEqual(44);
+
+    // Test Course Path at this viewport
+    await page.goto('/#/course/quantum');
+    const pathOverflow = await page.evaluate(() => {
+      return document.documentElement.scrollWidth > document.documentElement.clientWidth;
+    });
+    expect(pathOverflow, `Horizontal overflow at ${vp.width}x${vp.height} on Course Path`).toBe(false);
+
+    // Contextual back link has touch target >= 44px
+    const backLink = page.getByRole('link', { name: /Back to Explore/i });
+    const backBox = await backLink.boundingBox();
+    expect(backBox).not.toBeNull();
+    expect(backBox!.height, `Back link height at ${vp.name}`).toBeGreaterThanOrEqual(44);
+
+    // Verify mobile bottom nav positioning at 320x700
+    if (vp.width === 320) {
+      const nav = page.getByRole('navigation', { name: 'Main navigation' });
+      const navPosition = await nav.evaluate(el => {
+        const style = window.getComputedStyle(el);
+        return { position: style.position, bottom: style.bottom };
+      });
+      expect(navPosition.position).toBe('fixed');
+      expect(navPosition.bottom).toBe('0px');
+    }
+
+    // No legacy sidebar or lesson tabs at any viewport
+    await expect(page.locator('.sidebar')).toHaveCount(0);
+    await expect(page.locator('.lesson-tabs')).toHaveCount(0);
+  }
+});
+
+test('course path displays as an ordered list without connector lines and elements show visible focus', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto('/#/course/quantum');
+
+  // Verify path list has no connector line pseudo-element
+  const connectorLine = await page.evaluate(() => {
+    const list = document.querySelector('.mission-path');
+    if (!list) return null;
+    const before = window.getComputedStyle(list, '::before');
+    return {
+      content: before.content,
+      display: before.display,
+      width: before.width,
+    };
+  });
+  const hasLine = connectorLine && connectorLine.content !== 'none' && connectorLine.content !== '""' && connectorLine.display !== 'none' && parseFloat(connectorLine.width) > 0;
+  expect(hasLine, 'Course path should not have connector lines').toBe(false);
+
+  // Focus visible test: high-contrast visible focus ring
+  const firstNode = page.getByRole('list', { name: 'Quantum Physics mission path' }).getByRole('link').first();
+  await firstNode.focus();
+  await expect(firstNode).toBeFocused();
+  const focusRing = await firstNode.evaluate(el => {
+    const style = window.getComputedStyle(el);
+    return {
+      outlineStyle: style.outlineStyle,
+      outlineWidth: parseFloat(style.outlineWidth) || 0,
+      boxShadow: style.boxShadow,
+    };
+  });
+  const hasVisibleFocus = (focusRing.outlineStyle !== 'none' && focusRing.outlineWidth >= 2) || (focusRing.boxShadow !== 'none' && !focusRing.boxShadow.includes('rgba(0, 0, 0, 0)'));
+  expect(hasVisibleFocus, 'Interactive elements must display a visible focus indicator').toBe(true);
+});
+

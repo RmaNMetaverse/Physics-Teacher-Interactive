@@ -1,0 +1,143 @@
+/**
+ * Balanced Science Adventure - Design Tokens
+ * Defines semantic color palettes, surfaces, typography, elevations, focus indicators,
+ * touch targets, and motion variables for dark and light themes.
+ */
+
+:root {
+  /* Default: Dark Mode (Science Adventure Theme) */
+  --bg: #0d1117;
+  --panel: #161b22;
+  --raised: #21262d;
+  --sunken: #090d13;
+  --line: #30363d;
+  --line-subtle: #21262d;
+
+  /* Typography Colors */
+  --text: #f0f6fc;
+  --muted: #8b949e;
+  --text-subtle: #6e7681;
+
+  /* Brand & Journey Accent (Violet) */
+  --accent: #a78bfa;
+  --accent-hover: #c4b5fd;
+  --accent-soft: rgba(167, 139, 250, 0.14);
+  --journey-violet: #a78bfa;
+
+  /* Mastery (Mint) */
+  --teal: #34d399;
+  --mastery-mint: #34d399;
+  --mastery-soft: rgba(52, 211, 153, 0.14);
+
+  /* Rewards (Gold / Amber) */
+  --gold: #fbbf24;
+  --reward-gold: #fbbf24;
+  --reward-soft: rgba(251, 191, 36, 0.14);
+
+  /* Feedback (Coral / Alert) */
+  --coral: #fb7185;
+  --feedback-coral: #fb7185;
+  --feedback-soft: rgba(251, 113, 133, 0.14);
+
+  /* Elevation & Shadows */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.35);
+  --shadow: 0 8px 30px rgba(0, 0, 0, 0.55);
+  --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.65);
+
+  /* Radii */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-full: 9999px;
+
+  /* Touch & Controls */
+  --touch-target-min: 44px;
+
+  /* Focus Indicator */
+  --focus-ring-color: var(--accent);
+  --focus-ring-offset: 3px;
+  --focus-ring-width: 2px;
+  --focus-ring-shadow: 0 0 0 4px var(--accent-soft);
+
+  /* Motion & Celebrations */
+  --celebration-duration: 1200ms;
+  --transition-fast: 150ms ease;
+  --transition-normal: 250ms ease;
+
+  color-scheme: dark;
+}
+
+/* Warm Off-White Light Mode */
+[data-theme="light"] {
+  --bg: #fbfbfe;
+  --panel: #ffffff;
+  --raised: #f3f5fa;
+  --sunken: #eef1f8;
+  --line: #e2e8f0;
+  --line-subtle: #edf2f7;
+
+  /* Deep Navy Text */
+  --text: #0d192e;
+  --muted: #53647e;
+  --text-subtle: #76869e;
+
+  /* Journey Accent (Vibrant Violet) */
+  --accent: #7c3aed;
+  --accent-hover: #6d28d9;
+  --accent-soft: rgba(124, 58, 237, 0.10);
+  --journey-violet: #7c3aed;
+
+  /* Mastery (Mint Green) */
+  --teal: #059669;
+  --mastery-mint: #059669;
+  --mastery-soft: rgba(5, 150, 105, 0.10);
+
+  /* Rewards (Warm Gold) */
+  --gold: #d97706;
+  --reward-gold: #d97706;
+  --reward-soft: rgba(217, 119, 6, 0.12);
+
+  /* Feedback (Coral Red) */
+  --coral: #e05638;
+  --feedback-coral: #e05638;
+  --feedback-soft: rgba(224, 86, 56, 0.12);
+
+  /* Shadows for Light Surfaces */
+  --shadow-sm: 0 1px 3px rgba(13, 25, 46, 0.05);
+  --shadow: 0 8px 30px rgba(13, 25, 46, 0.08);
+  --shadow-lg: 0 16px 48px rgba(13, 25, 46, 0.12);
+
+  color-scheme: light;
+}
+
+/* Reduced Motion System Preference */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --celebration-duration: 0ms !important;
+    --transition-fast: 0ms !important;
+    --transition-normal: 0ms !important;
+  }
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Reduced Motion Data Attribute Preference */
+:root[data-reduced-motion="true"],
+[data-reduced-motion="true"] {
+  --celebration-duration: 0ms !important;
+  --transition-fast: 0ms !important;
+  --transition-normal: 0ms !important;
+}
+
+[data-reduced-motion="true"] *,
+[data-reduced-motion="true"] *::before,
+[data-reduced-motion="true"] *::after {
+  animation-duration: 0.001ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.001ms !important;
+  scroll-behavior: auto !important;
+}

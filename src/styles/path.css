@@ -1,0 +1,250 @@
+/**
+ * Balanced Science Adventure - Course Path Styles
+ * Vertical mission path, course path header, progress tracking,
+ * ordered node list without connector lines, and milestone checkpoints.
+ */
+
+/* Course Path Header */
+.course-path-header {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 20px;
+  align-items: flex-end;
+  margin-bottom: 24px;
+}
+
+/* Contextual Back Link */
+.contextual-back {
+  grid-column: 1 / -1;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  min-width: 44px;
+  padding: 8px 14px;
+  border-radius: var(--radius-md);
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  width: max-content;
+  transition: color var(--transition-fast), background-color var(--transition-fast);
+}
+
+.contextual-back:hover {
+  color: var(--text);
+  background: var(--raised);
+  text-decoration: none;
+}
+
+.contextual-back svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+.course-path-header h1 {
+  margin: 0;
+  font-size: clamp(24px, 3vw, 34px);
+  font-weight: 800;
+  letter-spacing: -0.4px;
+}
+
+.course-path-header dl {
+  display: flex;
+  gap: 28px;
+  margin: 0;
+}
+
+.course-path-header dl div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.course-path-header dt {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+
+.course-path-header dd {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+/* Path Progress Bar */
+.path-progress {
+  width: 100%;
+  height: 8px;
+  margin: 20px 0 10px 0;
+  border-radius: var(--radius-full);
+  accent-color: var(--teal);
+  background: var(--line);
+  overflow: hidden;
+}
+
+.path-guidance {
+  color: var(--muted);
+  font-size: 14px;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Mission Path List: Clean Ordered List Without Connector Lines */
+.mission-path {
+  position: relative;
+  max-width: 780px;
+  margin: 36px auto 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Explicitly Remove Any Connector Line Pseudo-Elements */
+.mission-path::before,
+.mission-path::after {
+  display: none !important;
+  content: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  border: none !important;
+}
+
+/* Mission Node Item */
+.mission-node {
+  position: relative;
+  margin-bottom: 16px;
+}
+
+.mission-node > a {
+  position: relative;
+  display: grid;
+  grid-template-columns: 60px minmax(0, 1fr) auto;
+  gap: 18px;
+  align-items: center;
+  min-height: 88px;
+  padding: 16px 20px 16px 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--panel);
+  color: var(--text);
+  text-decoration: none;
+  box-shadow: var(--shadow-sm);
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast), transform var(--transition-fast);
+}
+
+.mission-node > a:hover {
+  text-decoration: none;
+  border-color: var(--accent);
+  box-shadow: var(--shadow);
+  transform: translateY(-1px);
+}
+
+/* Node Number / Status Marker */
+.mission-node-marker {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
+  border: 2px solid var(--line);
+  border-radius: 50%;
+  background: var(--raised);
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.mission-node-marker svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* Node Text Content */
+.mission-node-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.mission-node-copy > span {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+
+.mission-node-copy strong {
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.mission-node-copy small {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+/* Reward Badge on Node */
+.mission-node-reward {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--gold);
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.mission-node-reward svg {
+  width: 15px;
+  height: 15px;
+}
+
+/* Next / Recommended Node Highlighting */
+.mission-node-next > a,
+.mission-node-recommended > a {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+.mission-node-next .mission-node-marker,
+.mission-node-recommended .mission-node-marker {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: #ffffff;
+}
+
+/* Completed Node */
+.mission-node-complete .mission-node-marker {
+  border-color: var(--teal);
+  background: var(--mastery-soft);
+  color: var(--teal);
+}
+
+/* Checkpoint Node */
+.mission-node-checkpoint > a {
+  border-style: dashed;
+  border-width: 2px;
+}
+
+.mission-node-checkpoint .mission-node-marker {
+  border-radius: var(--radius-md);
+  border-color: var(--gold);
+  color: var(--gold);
+  background: var(--reward-soft);
+}

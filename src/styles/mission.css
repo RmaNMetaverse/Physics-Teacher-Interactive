@@ -1,0 +1,593 @@
+/**
+ * Balanced Science Adventure - Mission Player Styles
+ * Focused mission sequence, one prominent action per screen, step renderers,
+ * two-layer mathematics, and optional deep dive treatment.
+ */
+
+/* Mission Player Container */
+.mission-player {
+  max-width: 820px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* Mission Player Header */
+.mission-player-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.mission-player-title h1 {
+  margin: 4px 0 0 0;
+  font-size: clamp(20px, 2.5vw, 26px);
+  font-weight: 800;
+  letter-spacing: -0.3px;
+  line-height: 1.25;
+}
+
+.eyebrow {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--teal);
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+}
+
+/* Mission Step Progress Indicator */
+.mission-progress-container {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+}
+
+.mission-step-progress {
+  flex: 1;
+  height: 8px;
+  border-radius: var(--radius-full);
+  accent-color: var(--teal);
+  background: var(--line);
+  overflow: hidden;
+}
+
+.mission-progress-text {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+/* Focused Mission Step Card */
+.mission-step {
+  padding: 28px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--panel);
+  box-shadow: var(--shadow-sm);
+}
+
+.step-header {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 22px;
+}
+
+.step-kind-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--accent);
+}
+
+.step-content p {
+  line-height: 1.8;
+  color: var(--text);
+  margin: 0 0 14px 0;
+  font-size: 15px;
+}
+
+/* Mission Player Footer & One Prominent Action */
+.mission-player-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding-top: 14px;
+}
+
+.mission-next-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-left: auto;
+}
+
+.mission-advance-hint {
+  font-size: 13px;
+  color: var(--muted);
+  font-style: italic;
+}
+
+/* Primary Action Buttons (Minimum 44px Height) */
+.mission-player-footer button,
+.mission-next-btn,
+.mission-complete-btn,
+.primary-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  min-width: 44px;
+  padding: 11px 22px;
+  border-radius: var(--radius-md);
+  background: var(--accent);
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 700;
+  border: none;
+  box-shadow: var(--shadow-sm);
+  transition: background-color var(--transition-fast), filter var(--transition-fast), transform var(--transition-fast);
+}
+
+.mission-player-footer button:hover:not(:disabled),
+.mission-next-btn:hover:not(:disabled),
+.mission-complete-btn:hover:not(:disabled),
+.primary-button:hover:not(:disabled) {
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+}
+
+.secondary-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  min-width: 44px;
+  padding: 10px 18px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.secondary-button:hover:not(:disabled) {
+  background: var(--raised);
+}
+
+/* Assessment & Check Answers */
+.assessment {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin: 18px 0;
+}
+
+.assessment-prompt {
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.answer-options {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.answer-option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 44px;
+  padding: 12px 18px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--panel);
+  color: var(--text);
+  font-size: 14px;
+  text-align: left;
+  transition: border-color var(--transition-fast), background-color var(--transition-fast);
+}
+
+.answer-option:hover {
+  border-color: var(--accent);
+  background: var(--raised);
+}
+
+.answer-option.selected,
+.answer-option[aria-checked="true"] {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--text);
+  font-weight: 600;
+}
+
+.option-letter {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--line);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--muted);
+  flex-shrink: 0;
+}
+
+/* Numeric & Text Answer Inputs */
+.numeric-answer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.numeric-answer input,
+.text-input {
+  min-height: 44px;
+  height: 44px;
+  padding: 8px 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--sunken);
+  color: var(--text);
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+.assessment-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.assessment-actions button {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+/* Assessment Feedback */
+.feedback {
+  padding: 14px 18px;
+  border-radius: var(--radius-md);
+  background: var(--feedback-soft);
+  border: 1px solid var(--feedback-coral);
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.feedback.correct {
+  background: var(--mastery-soft);
+  border-color: var(--teal);
+  color: var(--text);
+}
+
+/* Layered Mathematics */
+.equation-card {
+  padding: 22px 24px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--raised);
+  margin: 18px 0;
+  overflow-x: auto;
+}
+
+.equation-display {
+  font-size: 1.25rem;
+  text-align: center;
+  padding: 8px 0;
+  color: var(--text);
+}
+
+.math-symbols-list {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 10px;
+  margin: 14px 0;
+}
+
+.math-symbol-item {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 10px 14px;
+  background: var(--raised);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  font-size: 13px;
+}
+
+.math-symbol-item code {
+  font-weight: 700;
+  color: var(--accent);
+  font-family: monospace;
+}
+
+.math-expand-action {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.teach-math-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  min-width: 44px;
+  padding: 10px 20px;
+  border-radius: var(--radius-md);
+  background: var(--accent-soft);
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.teach-math-button:hover {
+  background: var(--accent);
+  color: #ffffff;
+}
+
+.math-expand-guidance {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+/* Expanded Foundation Mode */
+.math-foundation-mode {
+  margin-top: 24px;
+  padding: 26px;
+  border: 2px solid var(--accent);
+  border-radius: var(--radius-lg);
+  background: color-mix(in srgb, var(--panel) 92%, var(--accent) 8%);
+  box-shadow: var(--shadow);
+}
+
+.foundation-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.foundation-header h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 750;
+}
+
+.foundation-concepts ul {
+  padding-left: 20px;
+  line-height: 1.7;
+}
+
+.foundation-worked-example {
+  margin: 20px 0;
+  padding: 18px 20px;
+  background: var(--raised);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+}
+
+.worked-steps-list {
+  padding-left: 20px;
+  line-height: 1.7;
+}
+
+.foundation-check {
+  margin-top: 20px;
+  padding: 18px 20px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+}
+
+.foundation-check-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.math-check-badge {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  background: var(--raised);
+  color: var(--accent);
+}
+
+.math-quick-check {
+  margin-top: 20px;
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--raised);
+}
+
+.prereq-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 12px 0;
+}
+
+.prereq-chip {
+  padding: 6px 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-full);
+  background: var(--panel);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text);
+  cursor: pointer;
+  transition: border-color var(--transition-fast);
+}
+
+.prereq-chip:hover {
+  border-color: var(--accent);
+}
+
+.simulation-prompt-card {
+  padding: 16px 20px;
+  background: var(--raised);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  margin-bottom: 16px;
+}
+
+.foundation-check input {
+  min-height: 44px;
+  height: 44px;
+}
+
+.foundation-check button {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+/* Recap & Completion Rewards */
+.recap-rewards-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 22px 26px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--raised);
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.recap-stars {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.recap-stars-label {
+  margin-left: 10px;
+  font-weight: 700;
+  font-size: 15px;
+}
+
+.recap-xp-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--accent);
+}
+
+.recap-takeaways ul {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.recap-takeaways li {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  line-height: 1.6;
+  font-size: 15px;
+}
+
+.recap-takeaways li svg {
+  color: var(--teal);
+  margin-top: 3px;
+  flex-shrink: 0;
+}
+
+.recap-primary-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  margin-top: 26px;
+}
+
+.recap-primary-actions button,
+.recap-primary-actions a {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+/* Deep Dive Treatment */
+.deep-dive-section {
+  margin-top: 30px;
+  padding: 28px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--panel);
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.deep-dive-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--teal);
+}
+
+.deep-dive-block {
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+}
+
+.deep-dive-block h3 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0 0 12px 0;
+}
+
+.science-status-banner {
+  padding: 12px 16px;
+  border-radius: var(--radius-md);
+  background: var(--raised);
+  font-size: 13px;
+  line-height: 1.6;
+  margin-bottom: 16px;
+  border: 1px solid var(--line);
+}

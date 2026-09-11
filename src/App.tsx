@@ -57,7 +57,8 @@ export function App() {
 
   useEffect(() => {
     document.documentElement.dataset.theme = progress.settings.theme;
-    document.querySelector('meta[name=theme-color]')?.setAttribute('content', progress.settings.theme === 'dark' ? '#090e1a' : '#f5f7fb');
+    document.documentElement.dataset.reducedMotion = progress.settings.reducedMotion ? 'true' : 'false';
+    document.querySelector('meta[name=theme-color]')?.setAttribute('content', progress.settings.theme === 'dark' ? '#0d1117' : '#fbfbfe');
     saveProgressV2(progress, courseCatalog);
   }, [progress]);
 
