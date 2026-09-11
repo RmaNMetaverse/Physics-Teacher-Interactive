@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+- Integrated shared simulation engine across all 14 courses via `SimulationStep.tsx` and generalized `Lab.tsx`.
+- Implemented `SimulationBoundary.tsx` providing a resilient error boundary and reduced visual mode catching WebGL context, dynamic import, and scene rendering failures.
+- Preserved the active pure model loop during reduced visual mode: experiment controls, numerical observations, SVG graphs, accessible measurement data tables, and model descriptions remain fully interactive even when 3D rendering is unavailable.
+- Generalized `Lab`, `Scene`, and `GraphView` from legacy `Family` to universal `ModelId`, displaying at most three essential controls before an accessible "Explore further" disclosure.
+- Added keyboard operability for numeric inputs and sliders with arrow navigation and bounds checking.
+- Preserved play, pause, reset, step forward, playback speed controls, time scrubbing, and live numerical time display.
+- Relocated `Lab`, `Scene`, and `GraphView` to `src/components/simulation/`.
+- Added unit tests in `tests/simulation-boundary.test.tsx` and Playwright E2E browser specifications in `tests/e2e/simulations.spec.ts` covering forced fallback and representative simulation missions from all 14 courses.
+
 - Added a focused bite-sized `MissionPlayer` and `MissionPage` with close navigation, step progress, one prominent primary action, optional back action, and continuous local-storage resume state.
 - Added focused step renderers for observe, predict/check assessments, interactive simulations, layered math, physical explanations, and recap.
 - Implemented layered math in `MathStep` with a concise overview (equation, purpose, symbols) and expandable foundation mode revealing concepts, plain-language explanations, interactive visual manipulation, sequential worked steps, check assessments, prerequisite return navigation, and focus restoration.

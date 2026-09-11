@@ -1,5 +1,5 @@
 import { useReducer, useEffect, useCallback, useMemo, useRef } from 'react';
-import { ArrowLeft, ArrowRight, Check, Play, X, Zap } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Check, X } from 'lucide-react';
 import type { CourseDefinition, MissionDefinition } from '../../learning/types';
 import type { LearnerProgressV2 } from '../../progress/types';
 import { courseCatalog } from '../../learning/catalog';
@@ -15,6 +15,7 @@ import { AssessmentStep } from './AssessmentStep';
 import { MathStep } from './MathStep';
 import { ExplainStep } from './ExplainStep';
 import { RecapStep } from './RecapStep';
+import { SimulationStep } from '../simulation/SimulationStep';
 
 interface MissionPlayerProps {
   course: CourseDefinition;
@@ -195,53 +196,13 @@ export function MissionPlayer({ course, mission, progress, onProgressChange }: M
         )}
 
         {currentStep.kind === 'simulate' && (
-          <article className="mission-step mission-step-simulate">
-            <header className="step-header">
-              <span className="step-kind-badge">
-                <Play size={14} aria-hidden="true" />
-                Interactive simulation
-              </span>
-              <h2>Simulate physical model</h2>
-            </header>
-            <div className="simulation-prompt-card">
-              <p>{currentStep.prompt}</p>
-              {currentStep.preset && Object.keys(currentStep.preset).length > 0 && (
-                <div className="simulation-presets">
-                  <strong>Initial parameters:</strong>
-                  <ul>
-                    {Object.entries(currentStep.preset).map(([key, val]) => (
-                      <li key={key}>
-                        <code>{key}</code>: {String(val)}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-            </div>
-
-            <div className="simulation-boundary-box">
-              {state.completedSimulationStepIds.includes(currentStep.id) ? (
-                <div className="simulation-completed-banner" role="status">
-                  <Check size={20} aria-hidden="true" />
-                  <strong>Observation complete.</strong>
-                  <p>You have observed the physical behavior and are ready to continue.</p>
-                </div>
-              ) : (
-                <div className="simulation-action-prompt">
-                  <button
-                    type="button"
-                    className="primary-button run-simulation-button"
-                    onClick={() =>
-                      dispatch({ type: 'complete-simulation', stepId: currentStep.id })
-                    }
-                  >
-                    <Zap size={16} aria-hidden="true" />
-                    Run simulation & record observation
-                  </button>
-                </div>
-              )}
-            </div>
-          </article>
+          <SimulationStep
+            step={currentStep}
+            isCompleted={state.completedSimulationStepIds.includes(currentStep.id)}
+            onComplete={() =>
+              dispatch({ type: 'complete-simulation', stepId: currentStep.id })
+            }
+          />
         )}
 
         {currentStep.kind === 'math' && (
