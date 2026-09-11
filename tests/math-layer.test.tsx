@@ -4,7 +4,11 @@ import { cleanup, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom/vitest';
 import { MathStep } from '../src/components/mission/MathStep';
+import { MissionPlayer } from '../src/components/mission/MissionPlayer';
+import { RecapStep } from '../src/components/mission/RecapStep';
 import { createMissionSession } from '../src/learning/mission-engine';
+import { courseCatalog } from '../src/learning/catalog';
+import { createProgressV2 } from '../src/progress/progress';
 import type { MissionDefinition, MissionStep } from '../src/learning/types';
 
 const mathMission: MissionDefinition = {
@@ -95,6 +99,8 @@ const mathMission: MissionDefinition = {
 describe('MathStep component', () => {
   afterEach(() => {
     cleanup();
+    localStorage.clear();
+    sessionStorage.clear();
   });
 
   const mathStep = mathMission.steps[0] as Extract<MissionStep, { kind: 'math' }>;
@@ -217,5 +223,183 @@ describe('MathStep component', () => {
 
     expect(screen.queryByText(mathStep.layer.foundation.title)).not.toBeInTheDocument();
     expect(screen.getByRole('button', { name: /teach me the math/i })).toHaveFocus();
+  });
+
+  it('allows answering math check directly in quick mode without expanding foundation', async () => {
+    const user = userEvent.setup();
+    const state = createMissionSession(mathMission);
+    const dispatch = vi.fn();
+    const onAnswered = vi.fn();
+
+    render(<MathStep step={mathStep} state={state} dispatch={dispatch} onAnswered={onAnswered} />);
+
+    // Foundation mode title should not be visible
+    expect(screen.queryByText(mathStep.layer.foundation.title)).not.toBeInTheDocument();
+
+    // Check assessment is directly visible in quick mode
+    expect(screen.getByText('Confirm your understanding')).toBeVisible();
+    expect(screen.getByText(mathStep.layer.foundation.check.prompt)).toBeVisible();
+
+    // Enter answer and submit
+    const input = screen.getByRole('textbox', { name: /your answer/i });
+    await user.type(input, '5');
+
+    const checkButton = screen.getByRole('button', { name: /check answer/i });
+    await user.click(checkButton);
+
+    expect(dispatch).toHaveBeenCalledWith({ type: 'answer', stepId: 'step-math', value: 5 });
+    expect(onAnswered).toHaveBeenCalledWith('step-math', 5);
+  });
+
+  it('resets player state cleanly when switching missions using key', async () => {
+    const user = userEvent.setup();
+    const course = courseCatalog.getCourse('foundations');
+    const m1 = courseCatalog.getMission('foundations', 'measurement-basics');
+    const m2 = courseCatalog.getMission('foundations', 'unit-conversion');
+    const progress = createProgressV2(new Date('2026-09-10T12:00:00Z'));
+
+    const { rerender } = render(
+      <MissionPlayer
+        key={`${course.id}:${m1.id}`}
+        course={course}
+        mission={m1}
+        progress={progress}
+      />
+    );
+
+    // Initial state: Mission 1, Observe step (step 1)
+    expect(screen.getByRole('heading', { level: 1, name: m1.title })).toBeVisible();
+    expect(screen.getByText('Observe')).toBeVisible();
+
+    // Advance to Step 2 (predict)
+    const nextBtn = screen.getByRole('button', { name: /next step/i });
+    await user.click(nextBtn);
+    expect(screen.getByText('Prediction')).toBeVisible();
+
+    // Switch mission with reconciliation key
+    rerender(
+      <MissionPlayer
+        key={`${course.id}:${m2.id}`}
+        course={course}
+        mission={m2}
+        progress={progress}
+      />
+    );
+
+    // Should cleanly reset to Step 1 of Mission 2 without retaining Mission 1's Step 2 state
+    expect(screen.getByRole('heading', { level: 1, name: m2.title })).toBeVisible();
+    expect(screen.getByText('Observe')).toBeVisible();
+    expect(screen.queryByText('Prediction')).not.toBeInTheDocument();
+  });
+
+  it('calculates 3 stars for recap when mission has no scored steps prior to completion', () => {
+    const unscoredMission: MissionDefinition = {
+      id: 'unscored-mission',
+      kind: 'mission',
+      title: 'Unscored Mission',
+      summary: 'Testing star calculation.',
+      objectives: ['Observe.'],
+      minutes: 2,
+      xp: 10,
+      requiredMath: [],
+      modelId: 'motion',
+      scienceStatus: 'established',
+      equation: 'v = x / t',
+      symbols: 'v: speed',
+      workedExample: {
+        question: 'What is 10 / 2?',
+        steps: ['10 / 2 = 5'],
+        answer: '5',
+      },
+      reviewedAt: '2026-09-10',
+      sources: [{ label: 'Physics', url: 'https://example.com' }],
+      limitations: ['Classical model only.'],
+      steps: [
+        {
+          id: 'step-observe',
+          kind: 'observe',
+          title: 'Observe something',
+          body: ['Just look at the universe.'],
+        },
+        {
+          id: 'step-recap',
+          kind: 'recap',
+          takeaways: ['Done!'],
+        },
+      ],
+    };
+
+    const session = createMissionSession(unscoredMission);
+    render(
+      <RecapStep
+        step={unscoredMission.steps[1] as Extract<MissionStep, { kind: 'recap' }>}
+        state={session}
+        mission={unscoredMission}
+        courseId="foundations"
+        onContinue={() => {}}
+        onReplay={() => {}}
+      />
+    );
+
+    expect(screen.getByLabelText(/Earned 3 of 3 stars/i)).toBeInTheDocument();
+  });
+
+  it('gating ref prevents multiple onProgressChange calls upon mission completion', async () => {
+    const user = userEvent.setup();
+    const course = courseCatalog.getCourse('foundations');
+    const mission = courseCatalog.getMission('foundations', 'measurement-basics');
+    const progress = createProgressV2(new Date('2026-09-10T12:00:00Z'));
+    const onProgressChange = vi.fn();
+
+    // Prepare a session already at the recap step with all scored steps answered correctly
+    const sessionKey = `physics-mission-session-${course.id}-${mission.id}`;
+    const savedState = {
+      currentStepIndex: 8, // Recap step (step 9)
+      answers: {
+        'measurement-basics-predict': { attempts: 1, correct: true, value: 1 },
+        'measurement-basics-required-math-arithmetic': { attempts: 1, correct: true, value: 17 },
+        'measurement-basics-required-math-decimals': { attempts: 1, correct: true, value: 0.12 },
+        'measurement-basics-calculation-check': { attempts: 1, correct: true, value: 3 },
+        'measurement-basics-experiment-check': { attempts: 1, correct: true, value: 4 },
+      },
+      hintedStepIds: [],
+      expandedMathStepIds: [],
+      completedSimulationStepIds: ['measurement-basics-simulate'],
+      recapCompleted: false,
+    };
+    localStorage.setItem(sessionKey, JSON.stringify(savedState));
+
+    const { rerender } = render(
+      <MissionPlayer
+        key={`${course.id}:${mission.id}`}
+        course={course}
+        mission={mission}
+        progress={progress}
+        onProgressChange={onProgressChange}
+      />
+    );
+
+    // Finish mission
+    const finishBtn = screen.getByRole('button', { name: /finish mission/i });
+    await user.click(finishBtn);
+
+    expect(onProgressChange).toHaveBeenCalledTimes(1);
+
+    // Simulate parent re-render with updated progress
+    const updatedProgress = onProgressChange.mock.calls[0][0];
+    rerender(
+      <MissionPlayer
+        key={`${course.id}:${mission.id}`}
+        course={course}
+        mission={mission}
+        progress={updatedProgress}
+        onProgressChange={onProgressChange}
+      />
+    );
+
+    // Should NOT call onProgressChange again
+    expect(onProgressChange).toHaveBeenCalledTimes(1);
+
+    localStorage.removeItem(sessionKey);
   });
 });

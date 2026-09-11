@@ -1,4 +1,4 @@
-import { useReducer, useEffect, useCallback, useMemo } from 'react';
+import { useReducer, useEffect, useCallback, useMemo, useRef } from 'react';
 import { ArrowLeft, ArrowRight, Check, Play, X, Zap } from 'lucide-react';
 import type { CourseDefinition, MissionDefinition } from '../../learning/types';
 import type { LearnerProgressV2 } from '../../progress/types';
@@ -59,6 +59,7 @@ export function MissionPlayer({ course, mission, progress, onProgressChange }: M
   }, [course.id, mission]);
 
   const [state, dispatch] = useReducer(missionReducer, initialSession);
+  const completedSessionRef = useRef<string | null>(null);
 
   // Persist session state outside the reducer
   useEffect(() => {
@@ -76,6 +77,12 @@ export function MissionPlayer({ course, mission, progress, onProgressChange }: M
   // Handle mission completion and award XP / stars
   useEffect(() => {
     if (state.isComplete) {
+      const sessionKey = `${course.id}:${mission.id}:${state.recapCompleted}`;
+      if (completedSessionRef.current === sessionKey) {
+        return;
+      }
+      completedSessionRef.current = sessionKey;
+
       try {
         const completion = createMissionCompletion(state, course.id);
         const updatedProgress = completeMission(progress, completion, courseCatalog, new Date());
@@ -85,7 +92,7 @@ export function MissionPlayer({ course, mission, progress, onProgressChange }: M
         // Already recorded or validation caught
       }
     }
-  }, [state.isComplete, state, course.id, progress, onProgressChange]);
+  }, [state.isComplete, state, course.id, mission.id, progress, onProgressChange]);
 
   const handleAnswered = useCallback(
     (stepId: string, answer: number | string) => {
@@ -121,6 +128,7 @@ export function MissionPlayer({ course, mission, progress, onProgressChange }: M
   }, [course, mission.id]);
 
   const handleReplay = useCallback(() => {
+    completedSessionRef.current = null;
     const initial: MissionSessionSaved = {
       currentStepIndex: 0,
       answers: {},
@@ -273,15 +281,28 @@ export function MissionPlayer({ course, mission, progress, onProgressChange }: M
         )}
 
         {currentStep.kind !== 'recap' && (
-          <button
-            type="button"
-            className="primary-button mission-next-btn"
-            disabled={!state.canAdvance}
-            onClick={() => dispatch({ type: 'next' })}
-          >
-            Next step
-            <ArrowRight size={16} aria-hidden="true" />
-          </button>
+          <div className="mission-next-wrapper">
+            {!state.canAdvance && (
+              <span className="mission-advance-hint" role="status">
+                {currentStep.kind === 'predict' || currentStep.kind === 'check'
+                  ? 'Answer the question above to continue'
+                  : currentStep.kind === 'math'
+                  ? 'Complete the math check above to continue'
+                  : currentStep.kind === 'simulate'
+                  ? 'Run the simulation to continue'
+                  : 'Complete this step to continue'}
+              </span>
+            )}
+            <button
+              type="button"
+              className="primary-button mission-next-btn"
+              disabled={!state.canAdvance}
+              onClick={() => dispatch({ type: 'next' })}
+            >
+              Next step
+              <ArrowRight size={16} aria-hidden="true" />
+            </button>
+          </div>
         )}
 
         {currentStep.kind === 'recap' && !state.isComplete && (

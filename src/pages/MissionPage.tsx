@@ -12,6 +12,7 @@ interface MissionPageProps {
 export function MissionPage({ course, mission, progress, onProgressChange }: MissionPageProps) {
   return (
     <MissionPlayer
+      key={`${course.id}:${mission.id}`}
       course={course}
       mission={mission}
       progress={progress}

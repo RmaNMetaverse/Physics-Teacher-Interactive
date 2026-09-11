@@ -38,10 +38,18 @@
 .step-content p{line-height:1.8;color:var(--text);margin:0 0 12px}
 .mission-player-footer{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-top:12px}
 .mission-player-footer .mission-next-btn,.mission-player-footer .mission-complete-btn{margin-left:auto}
+.mission-next-wrapper{display:flex;align-items:center;gap:12px;margin-left:auto}
+.mission-advance-hint{font-size:12px;color:var(--muted);font-style:italic}
 .math-symbols-list{list-style:none;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px;margin:12px 0}
 .math-symbol-item{display:flex;align-items:baseline;gap:8px;padding:8px 12px;background:var(--raised);border-radius:8px;font-size:13px}
 .math-symbol-item code{font-weight:bold;color:var(--accent)}
-.teach-math-button{margin-top:16px;display:inline-flex;align-items:center;gap:8px;padding:10px 16px;border-radius:8px}
+.math-expand-action{display:flex;flex-direction:column;align-items:flex-start;gap:8px;margin-top:16px}
+.teach-math-button{display:inline-flex;align-items:center;gap:8px;padding:10px 16px;border-radius:8px}
+.math-expand-guidance{font-size:13px;color:var(--muted);line-height:1.5}
+.foundation-check-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.foundation-check-header h4{margin:0}
+.math-check-badge{font-size:11px;font-weight:600;padding:2px 8px;border-radius:12px;background:var(--raised);color:var(--accent)}
+.math-quick-check{margin-top:20px;padding:20px;border:1px solid var(--line);border-radius:10px;background:var(--raised)}
 .math-foundation-mode{margin-top:20px;padding:24px;border:1px solid var(--accent);border-radius:12px;background:color-mix(in srgb,var(--panel) 90%,var(--accent) 10%)}
 .foundation-header{display:flex;align-items:center;justify-content:space-between}
 .foundation-header h3{margin:0;font-size:18px}

@@ -81,6 +81,7 @@ export function App() {
     const mission = courseCatalog.getMission(route.courseId, route.missionId);
     page = (
       <MissionPage
+        key={`${course.id}:${mission.id}`}
         course={course}
         mission={mission}
         progress={progress}

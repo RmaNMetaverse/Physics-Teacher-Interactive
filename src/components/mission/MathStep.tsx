@@ -115,6 +115,109 @@ export function MathStep({ step, state, dispatch, onAnswered }: MathStepProps) {
   const visualDef = layer.foundation.visual;
   const visualTutorial = mathTutorials.find(t => t.id === visualDef.tutorialId);
 
+  const renderCheckAssessment = (isQuickMode: boolean) => (
+    <div className={`foundation-check ${isQuickMode ? 'math-quick-check' : ''}`}>
+      <div className="foundation-check-header">
+        <h4>Confirm your understanding</h4>
+        {!checkResult?.correct && (
+          <span className="math-check-badge">Required to advance</span>
+        )}
+      </div>
+      <p>{checkAssessment.prompt}</p>
+
+      {checkAssessment.kind === 'concept' && checkAssessment.options && (
+        <div className="answer-options" role="group" aria-label={checkAssessment.prompt}>
+          {checkAssessment.options.map((option, idx) => {
+            const isSelected = checkSelectedOption === idx;
+            return (
+              <button
+                key={idx}
+                type="button"
+                className={`answer-option ${isSelected ? 'selected' : ''}`}
+                aria-pressed={isSelected}
+                onClick={() => setCheckSelectedOption(idx)}
+              >
+                <span className="option-letter">{String.fromCharCode(65 + idx)}</span>
+                <span className="option-text">{option}</span>
+              </button>
+            );
+          })}
+        </div>
+      )}
+
+      {checkAssessment.kind !== 'concept' && (
+        <div className="numeric-answer">
+          <label htmlFor={`check-input-${step.id}`} className="sr-only">
+            Your answer
+          </label>
+          <input
+            id={`check-input-${step.id}`}
+            type="text"
+            inputMode="decimal"
+            placeholder="Your answer"
+            value={checkInput}
+            onChange={e => setCheckInput(e.target.value)}
+            onKeyDown={e => {
+              if (e.key === 'Enter') handleCheckSubmit();
+            }}
+            autoComplete="off"
+          />
+          {checkAssessment.unit && (
+            <span className="unit-label">{checkAssessment.unit}</span>
+          )}
+        </div>
+      )}
+
+      <div className="assessment-actions">
+        <button
+          type="button"
+          className="primary-button check-answer-button"
+          onClick={handleCheckSubmit}
+          disabled={
+            checkAssessment.kind === 'concept'
+              ? checkSelectedOption === null
+              : checkInput.trim() === ''
+          }
+        >
+          Check answer <ArrowRight size={14} aria-hidden="true" />
+        </button>
+
+        {checkAssessment.hints && checkAssessment.hints.length > 0 && (
+          <button
+            type="button"
+            className="text-button hint-button"
+            onClick={handleRequestCheckHint}
+            disabled={checkHints >= checkAssessment.hints.length}
+          >
+            <Lightbulb size={14} aria-hidden="true" />
+            {checkHints > 0 ? 'Another hint' : 'Give me a hint'}
+          </button>
+        )}
+      </div>
+
+      {checkHints > 0 && checkAssessment.hints && (
+        <div className="assessment-hints">
+          {checkAssessment.hints.slice(0, checkHints).map((hint, idx) => (
+            <p key={idx} className="hint-message">
+              <strong>Hint {idx + 1}:</strong> {hint}
+            </p>
+          ))}
+        </div>
+      )}
+
+      {checkResult && (
+        <div
+          role="status"
+          className={`feedback ${checkResult.correct ? 'correct' : 'incorrect'}`}
+          aria-live="polite"
+        >
+          <strong>{checkResult.correct ? "That's right! " : 'Keep exploring. '}</strong>
+          <span>{checkResult.message}</span>
+        </div>
+      )}
+    </div>
+  );
+
   return (
     <article ref={articleRef} className="mission-step mission-step-math" aria-labelledby={`math-title-${step.id}`}>
       <header className="step-header">
@@ -148,17 +251,24 @@ export function MathStep({ step, state, dispatch, onAnswered }: MathStepProps) {
         </div>
 
         {!isExpanded && (
-          <div className="math-expand-action">
-            <button
-              ref={teachButtonRef}
-              type="button"
-              className="secondary-button teach-math-button"
-              onClick={handleOpenFoundation}
-            >
-              <Sparkles size={16} aria-hidden="true" />
-              Teach me the math
-            </button>
-          </div>
+          <>
+            <div className="math-expand-action">
+              <button
+                ref={teachButtonRef}
+                type="button"
+                className="secondary-button teach-math-button"
+                onClick={handleOpenFoundation}
+              >
+                <Sparkles size={16} aria-hidden="true" />
+                Teach me the math
+              </button>
+              <span className="math-expand-guidance">
+                Need a deeper refresher? Open the foundation tutorial for concepts and worked examples, or verify your understanding directly below to advance.
+              </span>
+            </div>
+
+            {renderCheckAssessment(true)}
+          </>
         )}
       </section>
 
@@ -304,101 +414,7 @@ export function MathStep({ step, state, dispatch, onAnswered }: MathStepProps) {
               </div>
 
               {/* Check Assessment */}
-              <div className="foundation-check">
-                <h4>Confirm your understanding</h4>
-                <p>{checkAssessment.prompt}</p>
-
-                {checkAssessment.kind === 'concept' && checkAssessment.options && (
-                  <div className="answer-options" role="group" aria-label={checkAssessment.prompt}>
-                    {checkAssessment.options.map((option, idx) => {
-                      const isSelected = checkSelectedOption === idx;
-                      return (
-                        <button
-                          key={idx}
-                          type="button"
-                          className={`answer-option ${isSelected ? 'selected' : ''}`}
-                          aria-pressed={isSelected}
-                          onClick={() => setCheckSelectedOption(idx)}
-                        >
-                          <span className="option-letter">{String.fromCharCode(65 + idx)}</span>
-                          <span className="option-text">{option}</span>
-                        </button>
-                      );
-                    })}
-                  </div>
-                )}
-
-                {checkAssessment.kind !== 'concept' && (
-                  <div className="numeric-answer">
-                    <label htmlFor={`check-input-${step.id}`} className="sr-only">
-                      Your answer
-                    </label>
-                    <input
-                      id={`check-input-${step.id}`}
-                      type="text"
-                      inputMode="decimal"
-                      placeholder="Your answer"
-                      value={checkInput}
-                      onChange={e => setCheckInput(e.target.value)}
-                      onKeyDown={e => {
-                        if (e.key === 'Enter') handleCheckSubmit();
-                      }}
-                      autoComplete="off"
-                    />
-                    {checkAssessment.unit && (
-                      <span className="unit-label">{checkAssessment.unit}</span>
-                    )}
-                  </div>
-                )}
-
-                <div className="assessment-actions">
-                  <button
-                    type="button"
-                    className="primary-button"
-                    onClick={handleCheckSubmit}
-                    disabled={
-                      checkAssessment.kind === 'concept'
-                        ? checkSelectedOption === null
-                        : checkInput.trim() === ''
-                    }
-                  >
-                    Check answer <ArrowRight size={14} aria-hidden="true" />
-                  </button>
-
-                  {checkAssessment.hints && checkAssessment.hints.length > 0 && (
-                    <button
-                      type="button"
-                      className="text-button hint-button"
-                      onClick={handleRequestCheckHint}
-                      disabled={checkHints >= checkAssessment.hints.length}
-                    >
-                      <Lightbulb size={14} aria-hidden="true" />
-                      {checkHints > 0 ? 'Another hint' : 'Give me a hint'}
-                    </button>
-                  )}
-                </div>
-
-                {checkHints > 0 && checkAssessment.hints && (
-                  <div className="assessment-hints">
-                    {checkAssessment.hints.slice(0, checkHints).map((hint, idx) => (
-                      <p key={idx} className="hint-message">
-                        <strong>Hint {idx + 1}:</strong> {hint}
-                      </p>
-                    ))}
-                  </div>
-                )}
-
-                {checkResult && (
-                  <div
-                    role="status"
-                    className={`feedback ${checkResult.correct ? 'correct' : 'incorrect'}`}
-                    aria-live="polite"
-                  >
-                    <strong>{checkResult.correct ? "That's right! " : 'Keep exploring. '}</strong>
-                    <span>{checkResult.message}</span>
-                  </div>
-                )}
-              </div>
+              {renderCheckAssessment(false)}
 
               <div className="foundation-footer">
                 <button
