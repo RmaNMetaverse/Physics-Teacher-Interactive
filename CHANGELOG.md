@@ -8,6 +8,7 @@
 - Added daily learning goal controls (1, 3, 5 missions/day), theme appearance toggles ('light' | 'dark'), and preference switches for sound, reduced motion, and celebratory animations.
 - Implemented robust data management: export to validated version-2 JSON file, import validated via `parseProgressV2` with error alerts, and progress reset with confirmation that strictly preserves user settings.
 - Added unique key to `<Lab />` in `SimulationStep.tsx` ensuring clean simulation scene reset between mission steps.
+- Mounted `<Celebration />` in `RecapStep` upon mission completion, honoring learner preferences (`settings.celebrations`, `settings.sound`, `settings.reducedMotion`) and ensuring safe cleanup of Web Audio contexts.
 - Replaced `ProgressPlaceholder` in `App.tsx` with `<ProgressPage progress={progress} onProgressChange={setProgress} />`.
 - Added comprehensive unit and component tests in `tests/rewards.test.tsx` and end-to-end browser specifications in `tests/e2e/progress-v2.spec.ts`.
 

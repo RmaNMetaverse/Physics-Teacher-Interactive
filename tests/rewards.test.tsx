@@ -8,6 +8,8 @@ import { StreakCard } from '../src/components/rewards/StreakCard';
 import { MasteryRing } from '../src/components/rewards/MasteryRing';
 import { BadgeShelf } from '../src/components/rewards/BadgeShelf';
 import { Celebration } from '../src/components/rewards/Celebration';
+import { RecapStep } from '../src/components/mission/RecapStep';
+import { createMissionSession } from '../src/learning/mission-engine';
 import { ProgressPage } from '../src/pages/ProgressPage';
 import { completeMission, createProgressV2, serializeProgressV2 } from '../src/progress/progress';
 import { courseCatalog } from '../src/learning/catalog';
@@ -221,6 +223,46 @@ describe('Rewards: Celebration', () => {
     );
     expect(fetchSpy).not.toHaveBeenCalled();
   });
+
+  it('supports settings prop and suppresses burst when settings.celebrations is false', () => {
+    render(
+      <Celebration
+        active={true}
+        settings={{ celebrations: false, sound: false, reducedMotion: false, theme: 'dark' }}
+      />
+    );
+    expect(screen.queryByTestId('celebration-burst')).not.toBeInTheDocument();
+  });
+});
+
+describe('Mission Completion: RecapStep with Celebration', () => {
+  it('mounts Celebration burst on complete recap when celebrations are enabled', () => {
+    const recapStep = {
+      id: 'quantum-light-quanta-recap',
+      kind: 'recap' as const,
+      takeaways: ['Key takeaway.'],
+    };
+    const mission = courseCatalog.getMission('quantum', 'quantum-light-quanta');
+    const completedSession = {
+      ...createMissionSession(mission),
+      isComplete: true,
+      canAdvance: false,
+    };
+
+    render(
+      <RecapStep
+        step={recapStep}
+        state={completedSession}
+        mission={mission}
+        courseId="quantum"
+        settings={{ theme: 'dark', sound: false, reducedMotion: false, celebrations: true }}
+        onContinue={vi.fn()}
+        onReplay={vi.fn()}
+      />
+    );
+
+    expect(screen.getByTestId('celebration-burst')).toBeInTheDocument();
+  });
 });
 
 describe('ProgressPage: Dashboard, Settings, and Backup Controls', () => {
@@ -326,13 +368,18 @@ describe('ProgressPage: Dashboard, Settings, and Backup Controls', () => {
     );
   });
 
-  it('displays recent activity from validated ledger events', () => {
+  it('displays recent activity from validated ledger events with newest first', () => {
     const progress = makeProgress();
     render(<ProgressPage progress={progress} />);
 
     expect(screen.getByRole('heading', { name: /Recent activity/i })).toBeInTheDocument();
     expect(screen.getByText(/Light quanta/i)).toBeInTheDocument();
     expect(screen.getAllByText(/\+60 XP/i).length).toBeGreaterThanOrEqual(1);
+
+    const items = screen.getAllByRole('listitem');
+    expect(items.length).toBeGreaterThanOrEqual(2);
+    // The newest activity completed in makeProgress was relativity-energy-momentum ("Energy-momentum")
+    expect(items[0]).toHaveTextContent(/Energy-momentum/i);
   });
 
   it('resets progress while strictly preserving user settings', async () => {

@@ -91,18 +91,20 @@ export function ProgressPage({ progress, onProgressChange }: ProgressPageProps) 
   const completedCount = progress.completedMissions.length;
   const completedMissionsCopy = `${completedCount} ${completedCount === 1 ? 'mission completed' : 'missions completed'}`;
 
-  // Resolve recent activity from xpLedger
-  const ledgerEntries = Object.entries(progress.xpLedger).map(([key, xp]) => {
-    const [courseId, missionId] = key.split('/');
-    const course = courseCatalog.courses.get(courseId);
-    const mission = course?.missions.find(m => m.id === missionId);
-    return {
-      key,
-      title: mission?.title ?? missionId,
-      courseTitle: course?.title ?? courseId,
-      xp,
-    };
-  });
+  // Resolve recent activity from xpLedger (newest first)
+  const ledgerEntries = Object.entries(progress.xpLedger)
+    .reverse()
+    .map(([key, xp]) => {
+      const [courseId, missionId] = key.split('/');
+      const course = courseCatalog.courses.get(courseId);
+      const mission = course?.missions.find(m => m.id === missionId);
+      return {
+        key,
+        title: mission?.title ?? missionId,
+        courseTitle: course?.title ?? courseId,
+        xp,
+      };
+    });
 
   return (
     <div className="progress-page-container">

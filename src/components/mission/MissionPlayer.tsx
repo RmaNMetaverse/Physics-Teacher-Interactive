@@ -222,6 +222,7 @@ export function MissionPlayer({ course, mission, progress, onProgressChange }: M
             state={state}
             mission={mission}
             courseId={course.id}
+            settings={progress.settings}
             onContinue={handleContinue}
             onReplay={handleReplay}
           />

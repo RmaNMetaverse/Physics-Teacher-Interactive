@@ -1,10 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
+import type { LearnerProgressV2 } from '../../progress/types';
 
 export interface CelebrationProps {
   active?: boolean;
   celebrationsEnabled?: boolean;
   reducedMotionEnabled?: boolean;
   soundEnabled?: boolean;
+  settings?: Partial<LearnerProgressV2['settings']>;
   durationMs?: number;
   onComplete?: () => void;
   className?: string;
@@ -15,7 +17,7 @@ function checkSystemReducedMotion(): boolean {
   return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 }
 
-function playSynthesizedSound(): void {
+function playSynthesizedSound(): (() => void) | void {
   if (typeof window === 'undefined') return;
   const AudioCtx = window.AudioContext || (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
   if (!AudioCtx) return;
@@ -37,20 +39,32 @@ function playSynthesizedSound(): void {
 
     osc.start();
     osc.stop(ctx.currentTime + 0.3);
+
+    const closeTimer = window.setTimeout(() => {
+      ctx.close().catch(() => {});
+    }, 350);
+
+    return () => {
+      window.clearTimeout(closeTimer);
+      ctx.close().catch(() => {});
+    };
   } catch {
     // Audio contexts may be blocked by autoplay policies
   }
 }
 
-export function Celebration({
-  active = true,
-  celebrationsEnabled = true,
-  reducedMotionEnabled = false,
-  soundEnabled = false,
-  durationMs = 1200,
-  onComplete,
-  className = '',
-}: CelebrationProps) {
+export function Celebration(props: CelebrationProps) {
+  const {
+    active = true,
+    durationMs = 1200,
+    onComplete,
+    className = '',
+  } = props;
+
+  const celebrationsEnabled = props.settings?.celebrations ?? props.celebrationsEnabled ?? true;
+  const reducedMotionEnabled = props.settings?.reducedMotion ?? props.reducedMotionEnabled ?? false;
+  const soundEnabled = props.settings?.sound ?? props.soundEnabled ?? false;
+
   const [isVisible, setIsVisible] = useState(false);
   const soundPlayedRef = useRef(false);
 
@@ -71,9 +85,10 @@ export function Celebration({
 
     setIsVisible(true);
 
+    let closeAudio: (() => void) | void;
     if (soundEnabled && !soundPlayedRef.current) {
       soundPlayedRef.current = true;
-      playSynthesizedSound();
+      closeAudio = playSynthesizedSound();
     }
 
     const timer = window.setTimeout(() => {
@@ -81,7 +96,10 @@ export function Celebration({
       onComplete?.();
     }, durationMs);
 
-    return () => window.clearTimeout(timer);
+    return () => {
+      window.clearTimeout(timer);
+      closeAudio?.();
+    };
   }, [active, isAllowed, soundEnabled, durationMs, onComplete]);
 
   if (!isAllowed || !isVisible) {

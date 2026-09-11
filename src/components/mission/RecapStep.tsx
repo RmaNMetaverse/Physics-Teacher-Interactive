@@ -3,6 +3,8 @@ import { Award, CheckCircle2, ChevronDown, ChevronUp, RotateCcw, Star, Trophy, A
 import type { MissionSession } from '../../learning/mission-engine';
 import { calculateStars } from '../../learning/mission-engine';
 import type { MissionDefinition, MissionStep } from '../../learning/types';
+import type { LearnerProgressV2 } from '../../progress/types';
+import { Celebration } from '../rewards/Celebration';
 import { DeepDive } from './DeepDive';
 
 interface RecapStepProps {
@@ -10,11 +12,12 @@ interface RecapStepProps {
   state: MissionSession;
   mission: MissionDefinition;
   courseId: string;
+  settings?: LearnerProgressV2['settings'];
   onContinue: () => void;
   onReplay: () => void;
 }
 
-export function RecapStep({ step, state, mission, courseId, onContinue, onReplay }: RecapStepProps) {
+export function RecapStep({ step, state, mission, courseId, settings, onContinue, onReplay }: RecapStepProps) {
   const [showDeepDive, setShowDeepDive] = useState(false);
 
   let stars: 1 | 2 | 3 = 3;
@@ -35,6 +38,7 @@ export function RecapStep({ step, state, mission, courseId, onContinue, onReplay
 
   return (
     <article className="mission-step mission-step-recap" aria-labelledby={`recap-title-${step.id}`}>
+      <Celebration active={state.isComplete} settings={settings} />
       <header className="step-header">
         <span className="step-kind-badge">
           <Award size={14} aria-hidden="true" />
