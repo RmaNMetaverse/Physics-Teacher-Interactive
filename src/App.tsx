@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Flame, Trophy } from 'lucide-react';
 import { AppShell } from './app/AppShell';
 import { isValidAppHash, parseHash, toHash, type AppRoute } from './app/router';
 import { courseCatalog, courses } from './learning/catalog';
@@ -8,22 +7,11 @@ import type { LearnerProgressV2 } from './progress/types';
 import { CoursePathPage } from './pages/CoursePathPage';
 import { ExplorePage } from './pages/ExplorePage';
 import { MissionPage } from './pages/MissionPage';
+import { ProgressPage } from './pages/ProgressPage';
 
 function learnHash(progress: LearnerProgressV2): string {
   const course = courseCatalog.courses.get(progress.selectedCourseId) ?? courses[0];
   return toHash({ page: 'course', courseId: course.id });
-}
-
-function ProgressPlaceholder({ progress }: { progress: LearnerProgressV2 }) {
-  return <section className="progress-placeholder">
-    <p className="eyebrow">Your learning record</p><h1>Progress</h1>
-    <div className="progress-summary-cards">
-      <article><Trophy aria-hidden="true" /><strong>{progress.totalXp}</strong><span>Total XP</span></article>
-      <article><Flame aria-hidden="true" /><strong>{progress.streak.current}</strong><span>Day streak</span></article>
-      <article><strong>{progress.completedMissions.length}</strong><span>Missions complete</span></article>
-    </div>
-    <p>Your full mastery dashboard, badges, preferences, and backup controls arrive in a later milestone.</p>
-  </section>;
 }
 
 function initialRoute(): { route: AppRoute; recoveryMessage: string } {
@@ -88,8 +76,9 @@ export function App() {
         onProgressChange={setProgress}
       />
     );
+  } else {
+    page = <ProgressPage progress={progress} onProgressChange={setProgress} />;
   }
-  else page = <ProgressPlaceholder progress={progress} />;
 
   return <AppShell route={route} learnHash={learnHash(progress)} recoveryMessage={recoveryMessage} mainRef={mainRef}>{page}</AppShell>;
 }

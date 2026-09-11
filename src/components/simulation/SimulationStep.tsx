@@ -43,6 +43,7 @@ export function SimulationStep({
 
       <div className="simulation-lab-container">
         <Lab
+          key={`${step.modelId}:${step.id}`}
           modelId={step.modelId}
           preset={step.preset}
           forceSceneError={forceSceneError}

@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+- Implemented `ProgressPage` providing a full mastery dashboard, level progression, streak tracking, daily goal controls, course mastery rings, checkpoint badge shelf, validated recent ledger activity, user preferences, and data backup controls.
+- Added accessible reward components: `XpBar` with `Math.floor(totalXp / 500) + 1` level derivation and singular/plural XP copy, `StreakCard` with longest streak tracking and flame visual, `MasteryRing` with accessible SVG ring and text equivalents, `BadgeShelf` displaying checkpoint achievement badges, and `Celebration` with a restrained SVG burst.
+- Guarded celebrations with user preferences and `prefers-reduced-motion` detection, ensuring zero duration under reduced motion and synthesized sound with zero network requests.
+- Added daily learning goal controls (1, 3, 5 missions/day), theme appearance toggles ('light' | 'dark'), and preference switches for sound, reduced motion, and celebratory animations.
+- Implemented robust data management: export to validated version-2 JSON file, import validated via `parseProgressV2` with error alerts, and progress reset with confirmation that strictly preserves user settings.
+- Added unique key to `<Lab />` in `SimulationStep.tsx` ensuring clean simulation scene reset between mission steps.
+- Replaced `ProgressPlaceholder` in `App.tsx` with `<ProgressPage progress={progress} onProgressChange={setProgress} />`.
+- Added comprehensive unit and component tests in `tests/rewards.test.tsx` and end-to-end browser specifications in `tests/e2e/progress-v2.spec.ts`.
+
 - Integrated shared simulation engine across all 14 courses via `SimulationStep.tsx` and generalized `Lab.tsx`.
 - Implemented `SimulationBoundary.tsx` providing a resilient error boundary and reduced visual mode catching WebGL context, dynamic import, and scene rendering failures.
 - Preserved the active pure model loop during reduced visual mode: experiment controls, numerical observations, SVG graphs, accessible measurement data tables, and model descriptions remain fully interactive even when 3D rendering is unavailable.
