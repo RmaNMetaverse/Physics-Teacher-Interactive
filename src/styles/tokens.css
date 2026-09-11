@@ -20,6 +20,7 @@
 
   /* Brand & Journey Accent (Violet) */
   --accent: #a78bfa;
+  --accent-contrast: #0d1117;
   --accent-hover: #c4b5fd;
   --accent-soft: rgba(167, 139, 250, 0.14);
   --journey-violet: #a78bfa;
@@ -83,6 +84,7 @@
 
   /* Journey Accent (Vibrant Violet) */
   --accent: #7c3aed;
+  --accent-contrast: #ffffff;
   --accent-hover: #6d28d9;
   --accent-soft: rgba(124, 58, 237, 0.10);
   --journey-violet: #7c3aed;

@@ -89,7 +89,7 @@ summary:focus-visible,
   align-items: center;
   justify-content: center;
   background: var(--accent);
-  color: #ffffff;
+  color: var(--accent-contrast);
   font-weight: 700;
   font-size: 14px;
   border-radius: var(--radius-md);

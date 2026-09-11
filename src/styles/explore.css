@@ -97,7 +97,7 @@
   padding: 12px 22px;
   border-radius: var(--radius-md);
   background: var(--accent);
-  color: #ffffff;
+  color: var(--accent-contrast);
   font-weight: 700;
   font-size: 14px;
   white-space: nowrap;
@@ -355,7 +355,7 @@
 .course-card > a:hover {
   text-decoration: none;
   background: var(--accent);
-  color: #ffffff;
+  color: var(--accent-contrast);
 }
 
 .course-card > a svg {

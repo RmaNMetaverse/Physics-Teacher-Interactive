@@ -1,8 +1,8 @@
 # Curriculum sources and editorial scope
 
-The released foundations course contains 24 original physics lessons and 17 original mathematics tutorials. The review date is **2026-09-09**. This is an editorial cutoff for this release, not a claim that all research published by that date has been surveyed.
+Physics Teacher Interactive contains 14 open courses: the complete 24-mission Foundations course, thirteen five-mission starter courses, thirteen culminating checkpoints (102 missions total), and 17 layered mathematics tutorials. The review date is **2026-09-09**, and the comprehensive source link and reference validation audit was completed on **2026-09-11**. This defines the editorial cutoff for this release, not a claim that all research published by that date has been surveyed.
 
-The explanations, questions, numerical examples, hints, and laboratory instructions were written for this application. They do not reproduce textbook passages, illustrations, or end-of-chapter exercises. Each physics lesson provides a direct further-reading link to a consulted primary educational reference: **OpenStax, University Physics Volume 1**, by Samuel J. Ling, Jeff Sanny, and William Moebs. Section availability and attribution were checked on the review date. Source licensing and attribution terms are available on the linked pages; linking a source does not relicense its content as part of this repository.
+The explanations, questions, numerical examples, hints, and laboratory instructions were written for this application. They do not reproduce textbook passages, illustrations, or end-of-chapter exercises. Each physics mission provides direct further-reading links to consulted primary educational references: OpenStax (*University Physics Volumes 1, 2, and 3*, *Astronomy 2e*), CERN educational publications, NASA astrophysics databases, ESA Planck mission portals, and the Max Planck Institute Einstein Online repository. Section availability and attribution were audited on the review date; linking a source does not relicense its content as part of this repository.
 
 ## Lesson reference map
 

@@ -13,19 +13,31 @@ Scientific correctness is a release gate. Tests and review establish that each m
 
 Use tolerances that reflect the calculation and discretization, and explain any tolerance broad enough to mask visible error. A reference test should fail if a sign, unit factor, force term, or conservation rule is removed.
 
-## First-release approximation limits
+## Multi-course model approximations & boundaries
 
-- Measurement examples model stated random resolution/variation and do not infer an instrument's full calibration error.
-- Vector constructions use Euclidean Cartesian coordinates.
-- Kinematics treats bodies as particles; the basic projectile model uses uniform gravity and omits drag, lift, wind, and Earth's curvature.
-- Force and friction models use idealized rigid bodies and simplified static/kinetic coefficients.
-- Energy models count only the represented conservative forces and transfers.
-- Collision models are one-dimensional and idealize contact using the declared restitution behavior.
-- Gravity models use point or spherical masses and Newtonian gravity; relativistic effects and multi-body perturbations are outside scope.
-- Spring motion uses an ideal linear Hooke law. The basic pendulum period uses the small-angle regime where stated and omits distributed mass, drag, and pivot friction.
+The expanded 20-model registry includes twelve focused analytical models supporting the starter paths:
 
-Each lesson narrows these general statements to the exact experiment. Parameters must stay inside the range where the stated model is educationally defensible.
+- **Waves and Sound**: 1D transverse wave equation and point-source spherical sound attenuation ($1/r^2$). Bounded against zero-distance singularities.
+- **Thermodynamics**: Classical ideal gas equation of state ($PV = Nk_BT$) and Carnot cycle efficiency bounds ($\eta = 1 - T_C/T_H$). Does not model real-gas phase transitions.
+- **Electromagnetism**: Coulomb's electrostatic force law and the magnetic Lorentz force ($\mathbf{F} = q\mathbf{v}\times\mathbf{B}$). Electric and magnetic fields are treated quasi-statically; radiative retardation is omitted.
+- **Optics**: Thin-lens imaging equation ($1/f = 1/d_o + 1/d_i$) and Young's two-slit interference pattern ($I = I_0 \cos^2\beta$). Bounded against exact focal point division-by-zero singularities.
+- **Relativity**: Special-relativistic kinematic transformations, light-clock proper time dilation, and relativistic energy-momentum invariant ($E^2 = (pc)^2 + (mc^2)^2$). Velocities are strictly clamped to $|v| < c$.
+- **Quantum Physics**: 1D free-particle Gaussian wavepacket spreading and rectangular potential barrier transmission ($T \approx e^{-2\kappa L}$). Probabilities are strictly normalized across discrete bins; potential steps do not model complex resonance poles.
+- **Atomic and Molecular**: Bohr model energy states ($E_n = -13.6\,\text{eV}/n^2$) and Rydberg transition photon wavelengths. Spin-orbit coupling, fine structure, and multi-electron screening are omitted.
+- **Nuclear Physics**: Semi-empirical liquid drop binding energy formula and statistical radioactive decay ($N(t) = N_0 e^{-\lambda t}$). Decay is calculated as expected averages, not discrete Poisson events.
+- **Particle Physics**: Relativistic energy-momentum kinematics and invariant mass reconstruction. S-matrix field-theoretic loop corrections are omitted.
+- **Condensed Matter**: Fermi-Dirac distribution function ($f(E) = 1/(e^{(E-E_F)/k_BT} + 1)$) and BCS superconductivity zero-temperature gap ratio ($\Delta(0) \approx 1.764\,k_B T_c$). Density of states is treated as constant near the Fermi surface.
+- **Astrophysics**: Stefan-Boltzmann stellar blackbody luminosity ($L = 4\pi R^2 \sigma T^4$) and Schwarzschild event horizon radius ($r_s = 2GM/c^2$). Emitting surfaces are modeled as spherical blackbodies; rotation and magnetic fields are omitted.
+- **Cosmology and Frontiers**: Linear Hubble expansion velocity ($v = H_0 d$) and simplified cosmic scale factor evolution. Distinguishes confirmed cosmic expansion from speculative quantum-gravity and multiverse proposals.
+
+## Scientific consensus tiers
+
+Every mission carries an explicit `scienceStatus` classification:
+- **`established`**: Consensus physics supported by overwhelming, reproducible empirical evidence across established experimental domains.
+- **`active-research`**: Subject of rigorous ongoing observation and theoretical modeling with competing candidate hypotheses (e.g. neutrino masses, nature of dark matter and dark energy).
+- **`interpretation`**: Theoretical interpretive frameworks that make identical observable predictions in standard regimes (e.g. quantum measurement interpretations).
+- **`speculative`**: Mathematical proposals and frontier ideas without empirical confirmation (e.g. string theory, loop quantum gravity, multiverse models).
 
 ## Review record
 
-The editorial cutoff is 2026-09-09. It defines the target evidence review for the first release; it is not a claim of exhaustive research coverage. Later reviews update individual lesson dates and sources when the scientific explanation or model changes. Frontier surveys and theoretical proposals belong to later releases and require explicit evidence-status labels.
+The editorial cutoff is **2026-09-09**, and the source link and reference validation audit was completed on **2026-09-11**. Every mission, math layer, and simulation is independently tested against analytical reference standards. Grading uses an explicit 1.5% relative tolerance (with a 1e-40 guard at zero), preventing floating-point inaccuracies while rejecting unphysical answers.

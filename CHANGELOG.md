@@ -1,6 +1,11 @@
 # Changelog
 
-## Unreleased
+## 0.2.0 — 2026-09-11
+
+- Completed legacy UI cleanup by removing retired `MathModal.tsx` and `AssessmentCard.tsx` and stripping obsolete selectors from `src/styles.css`.
+- Added `--accent-contrast` semantic token in `src/styles/tokens.css` (`#ffffff` light, `#0d1117` dark) ensuring WCAG AA compliance across primary accent buttons in Explore, Mission Player, and Shell.
+- Replaced legacy browser tests in `tests/e2e/learning.spec.ts` and `tests/e2e/release.spec.ts` with comprehensive coverage of Explore discovery, Quantum starter mission flow, one-time XP, replay without duplication, course switching, version-1 progress migration, forced 3D fallback mode, version-2 JSON export, unknown route recovery, and subpath reload safety.
+- Updated all project guides and architectural documentation for the Balanced Science Adventure multi-course system.
 
 - Implemented the full Balanced Science Adventure visual design system with semantic CSS tokens and modular stylesheets (`tokens.css`, `shell.css`, `explore.css`, `path.css`, `mission.css`, `progress.css`, `simulation.css`, `responsive.css`).
 - Introduced semantic color palettes and surfaces: warm off-white surfaces (`#fbfbfe` light, `#0d1117` / `#161b22` dark), deep navy text (`#0d192e`), violet journey accents, mint mastery, gold rewards, and coral feedback.

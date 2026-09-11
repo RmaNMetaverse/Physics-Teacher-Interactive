@@ -1,57 +1,55 @@
 # Physics Teacher Interactive
 
-Physics Teacher Interactive is a free, static foundations course for learning physics by predicting, experimenting, calculating, and explaining. It combines 24 authored lessons, prerequisite mathematics, deterministic Three.js experiments, accessible equations, and progress stored only in the learner's browser.
+Physics Teacher Interactive is a free, static, open-source physics adventure for learning physics by predicting, experimenting, calculating, and explaining. It combines 14 open courses, 89 interactive missions, 13 checkpoints, 20 deterministic SI physics models, 17 layered mathematics tutorials, accessible equations, and client-only local progress stored securely in the learner's browser.
 
-## First release
+## Multi-Course Architecture
 
-The released course covers eight foundations families:
+The platform provides open access to 14 structured physics courses:
 
-1. measurement, units, and uncertainty;
-2. coordinates, components, and vector addition;
-3. velocity, acceleration, and projectiles;
-4. inertia, net force, and friction;
-5. work, energy, and conservation;
-6. momentum, impulse, and collisions;
-7. circular motion, gravitation, and orbits;
-8. Hooke's law, springs, and pendulums.
+- **Physics Foundations (Complete Course)**: A complete 24-mission foundations course covering measurement, vector geometry, kinematics, Newton's laws of motion, work and mechanical energy, linear momentum and collisions, gravitation and orbital mechanics, and harmonic oscillations.
+- **Thirteen Starter Paths**: Five-mission starter courses with culminating four-step checkpoints across Classical Mechanics, Waves and Sound, Thermodynamics, Electromagnetism, Optics, Relativity, Quantum Physics, Atomic and Molecular, Nuclear Physics, Particle Physics, Condensed Matter, Astrophysics, and Cosmology and Frontiers. Deeper treatments beyond these bounded starter paths are planned future extensions.
 
-Each family has an independently tested interactive experiment. Every lesson has objectives, prerequisites, original explanations, an equation with accessible text, a worked example, concept/calculation/experiment assessments, sources, and explicit model limitations. Charts have a table fallback, simulation controls are bounded, and the interface supports keyboard use and desktop, tablet, and phone layouts.
+All courses are immediately accessible from the **Explore** gallery with search and category filtering; prerequisites provide learning guidance without hard completion gates.
 
-The math library covers arithmetic, signed numbers, fractions, decimals, ratios, scientific notation, powers, algebra, coordinates, functions, geometry, trigonometry, vectors, rates, accumulation, sine, and uncertainty. The prerequisite graph is closed and acyclic: a released lesson never requires an unavailable tutorial.
+## Balanced Science Adventure
 
-Extended classical physics, modern physics, selected graduate treatments, and sourced frontier surveys are planned later releases. Those topics are not part of the supported first-release course. See [Curriculum](docs/CURRICULUM.md).
+- **Focused Mission Player**: Bite-sized missions structured into consistent active learning steps: *Observe*, *Predict*, *Simulate*, *Explain*, *Layered Math*, *Check*, and *Recap*.
+- **Layered Mathematics**: Every equation offers a concise *Quick Mode* for experienced learners (compact formula, symbol definitions, immediate check) and an expandable *Foundation Mode* for zero-prior-knowledge mastery (core concepts, plain-English explanations, interactive visual manipulation, sequential worked steps, and prerequisite return navigation).
+- **Explicit Scientific Status**: Every mission clearly labels its scientific consensus tier:
+  - `established`: Reproducible empirical consensus (e.g., Newtonian mechanics, Maxwellian electromagnetism, standard quantum mechanics).
+  - `active-research`: Areas with active experimental and theoretical investigation (e.g., neutrino masses, dark matter, dark energy).
+  - `interpretation`: Theoretical interpretative frameworks (e.g., Copenhagen, Many-Worlds).
+  - `speculative`: Theoretical proposals at physics frontiers (e.g., string theory, loop quantum gravity, multiverse).
+- **Deterministic SI Simulations & Resilient Fallback**: 20 pure SI physics calculation models independent of React and Three.js. If WebGL context loss or hardware rendering failures occur, the application seamlessly transitions to **Reduced Visual Mode**—keeping all physics controls, parameter sliders, SVG plots, accessible measurement data tables, and model descriptions fully functional.
+- **Local Progress & Rewards (Version 2)**: Level progression, daily streaks, customizable daily goals (1, 3, 5 missions/day), course mastery rings, and checkpoint achievement badges. Mission XP is awarded once; replaying missions can improve star ratings without XP duplication. Supports automatic version-1 migration, JSON backup export/import, and progress reset while preserving user preferences.
+- **Privacy & Static Deployment**: No accounts, passwords, cookies, cloud backends, analytics, or paid services. The application runs entirely client-side, deploys statically to GitHub Pages, and uses hash routing (`base: './'`) for robust direct linking and refresh-safe subpath hosting.
 
-## Run locally
+## Run Locally
 
-Install Node.js 22.20 or newer, then run:
+Requires Node.js 22.20 or newer:
 
 ```sh
 npm ci
 npm run dev
 ```
 
-No account, API key, credential, server, or paid service is required. Learner progress stays in `localStorage`; export a progress file before clearing site data or changing browsers.
-
-Useful checks:
+Run comprehensive quality checks:
 
 ```sh
-npm run check
-npx playwright install chromium
-npm run test:e2e
+npm run check          # Typecheck, lint, unit tests, and Vite production build
+npm run test:e2e        # Playwright end-to-end browser journeys
 ```
 
-`npm run check` runs TypeScript, lint, unit tests, and a production build. See [Deployment](docs/DEPLOYMENT.md) for GitHub Pages and subpath verification.
+## Project Guides
 
-## Project guides
+- [Architecture](docs/ARCHITECTURE.md) — System components, boundaries, state machine, and data flow
+- [Curriculum](docs/CURRICULUM.md) — Complete 14-course syllabus, starter paths, and math roadmap
+- [Authoring Guide](docs/AUTHORING.md) — Authoring courses, missions, layered math, and physics models
+- [Scientific Validation](docs/SCIENTIFIC_VALIDATION.md) — Dimensional consistency, reference cases, and model limits
+- [Sources and Citations](docs/SOURCES.md) — Open educational citations, reference maps, and boundary limits
+- [Deployment](docs/DEPLOYMENT.md) — GitHub Pages static deployment and subpath verification
+- [Contributing](CONTRIBUTING.md) — Development guidelines and contribution policies
 
-- [Architecture](docs/ARCHITECTURE.md)
-- [Curriculum](docs/CURRICULUM.md)
-- [Authoring lessons and models](docs/AUTHORING.md)
-- [Scientific validation](docs/SCIENTIFIC_VALIDATION.md)
-- [Sources and citation policy](docs/SOURCES.md)
-- [Deployment](docs/DEPLOYMENT.md)
-- [Contributing](CONTRIBUTING.md)
+## License and Source Policy
 
-## License and source use
-
-Project licensing is recorded in the repository license when present. Source citations support scientific claims; they do not license copied prose, figures, or exercises. Course explanations, examples, assessments, and visual assets must be original or separately licensed and attributed.
+Project licensing is recorded in the repository license. Source citations support scientific claims and contextual study; course explanations, numerical problems, interactive simulations, and learning assets are original works.

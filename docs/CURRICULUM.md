@@ -37,9 +37,9 @@ Mathematics expands alongside each release. Planned and theoretical material doe
 
 ## Open starter-course catalog
 
-The approved multi-course redesign now has authored catalog content for **14 open courses, 89 normal missions, and 13 checkpoints**: the 24-mission complete Foundations path plus thirteen five-mission starters. Task 6 supplies the data contracts and content; the new Explore, Course Path, and Mission screens are subsequent implementation tasks. The current legacy interface remains the Foundations release until that integration is completed.
+The Balanced Science Adventure platform publishes **14 open courses, 89 normal missions, and 13 checkpoints**: the 24-mission complete Foundations path plus thirteen five-mission starters. Every course is fully integrated into the Explore gallery, Course Path maps, focused Mission Player, and Progress v2 dashboard.
 
-Every starter is directly addressable in `courseCatalog`, without completion gates or required earlier courses. Quantum begins at `quantum / quantum-light-quanta`. Checkpoint badges require all five normal missions, but course access and mission lookup remain open. Deeper treatments beyond these bounded starters are planned.
+Every starter is directly addressable in `courseCatalog`, without completion gates or required earlier courses. Quantum begins at `quantum/quantum-light-quanta`. Checkpoint badges require all five normal missions, but course access and mission lookup remain open. Deeper treatments beyond these bounded starters are planned.
 
 | Course | Exact five-mission path | Registered lab |
 | --- | --- | --- |

@@ -226,7 +226,7 @@
 .mission-node-recommended .mission-node-marker {
   border-color: var(--accent);
   background: var(--accent);
-  color: #ffffff;
+  color: var(--accent-contrast);
 }
 
 /* Completed Node */

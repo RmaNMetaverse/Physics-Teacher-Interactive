@@ -213,6 +213,9 @@ test.describe('Mission player and layered math', () => {
       `Expected --celebration-duration to be 0ms under reduced motion, got '${cssCelebrationDuration}'`
     ).toBe(true);
 
+    // Reset media emulation to isolate the data-reduced-motion attribute test
+    await page.emulateMedia({ reducedMotion: 'no-preference' });
+
     // Also verify data-reduced-motion="true" sets duration to zero
     await page.evaluate(() => {
       document.documentElement.setAttribute('data-reduced-motion', 'true');

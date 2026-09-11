@@ -1,40 +1,55 @@
 # Architecture
 
-Physics Teacher Interactive is a client-only React 19 and TypeScript application built by Vite. A production build is a static `dist/` directory suitable for GitHub Pages at a domain root or repository subpath. Hash routes keep direct navigation and reloads independent of server rewrite rules.
+Physics Teacher Interactive is a client-only React 19 and TypeScript application built with Vite. A production build produces a static `dist/` bundle optimized for zero-configuration deployment to GitHub Pages at either a custom domain root or repository subpath. Hash-based routing (`#/explore`, `#/course/:id`, `#/mission/:courseId/:missionId`, `#/progress`) ensures that all route transitions, bookmarks, and reloads work without server-side rewrite rules.
 
-## Boundaries
+## Core Boundaries
 
-- `src/content/` owns lesson and mathematics definitions. Definitions conform to the interfaces in `src/types.ts`; IDs are stable kebab-case data keys.
-- `src/physics/` owns deterministic SI calculation models. These modules do not import React, Three.js, browser globals, or rendering code.
-- `src/lib/assessment.ts` converts assessment input into a correct/incorrect result. Concept answers use zero-based option indices. Quantitative answers use strict finite numbers, optional exact units, and absolute tolerances.
-- `src/lib/progress.ts` owns the version-1 local progress schema, validation, and resilient `localStorage` access.
-- React components own navigation and interaction. Three.js renders model output but does not calculate the underlying physics.
-- Charts and tables consume the same observation values. The table is a semantic fallback, not a second model.
+The application is structured into decoupled, strictly typed subsystems:
 
-The main data flow is:
+- **Learning Catalog (`src/learning/`)**:
+  - `catalog.ts`: Immutable registry validating the 14 open courses, 89 normal missions, and 13 checkpoints. Enforces unique kebab-case IDs, closed acyclic prerequisite graphs, required instructional content, and valid KaTeX equations.
+  - `mission-engine.ts`: Pure, deterministic state machine controlling mission step sequencing (Observe, Predict, Simulate, Explain, Layered Math, Check, Recap), assessment checking, hints, simulation tracking, restore state, and 1–3 star mastery scoring.
+  - `math-layers.ts`: Converts mathematical tutorials into two-layer representations (Quick formula mode and expandable Foundation mode with interactive visual manipulatives).
+- **Physics Engine (`src/physics/`)**:
+  - Contains 20 deterministic, analytical SI physics models (`src/physics/models/`) and a central registry (`src/physics/catalog.ts`).
+  - Independent of React, Three.js, DOM APIs, and rendering code. Input parameters and output kinematics/observations use SI units exclusively.
+- **Simulation Laboratory & Resilient Fallback (`src/components/simulation/`)**:
+  - `Lab.tsx`: Shared experiment viewport with bounded controls (maximum 3 primary controls before disclosure), play/pause, time scrubbing, and telemetry readouts.
+  - `SimulationBoundary.tsx`: Resilient error boundary wrapping 3D rendering. When WebGL context loss or hardware rendering errors occur, it activates **Reduced Visual Mode**—preserving the active physics loop, control sliders, SVG parameter plots, and accessible measurement data tables.
+- **Progress & Rewards (Version 2) (`src/progress/`)**:
+  - `progress.ts` & `types.ts`: Manages level calculations (`Math.floor(xp / 500) + 1`), local-day streak tracking, daily mission goals (1, 3, 5 missions/day), course mastery statistics, and checkpoint badges.
+  - Automatic migration seamlessly converts version-1 local storage records into version-2 schema, discarding obsolete or tampered identifiers.
+  - Validated JSON export and import with strict schema checking.
+- **Application Shell & Navigation (`src/app/`, `src/pages/`)**:
+  - `App.tsx` and `router.ts`: Router parses hash fragments, validates course and mission IDs against the catalog, and recovers gracefully to `#/explore` with an accessible status announcement if an invalid hash is entered.
+  - `AppShell.tsx`: Three-destination navigation (`Explore`, `Learn` dynamically targeted to the active course path, and `Progress`), with a mobile persistent bottom bar, accessible skip links, and dark/light theme switching.
+- **Visual Design System (`src/styles/`)**:
+  - Semantic CSS tokens (`tokens.css`) defining surface elevations, high-contrast text, journey violet accents, mastery mint, reward gold, and feedback coral.
+  - High-contrast `--accent-contrast` token (`#ffffff` in light mode, `#0d1117` in dark mode) ensuring WCAG AA compliance across buttons.
+  - Respects system `prefers-reduced-motion` and user `data-reduced-motion="true"` settings, clamping celebratory animation durations to 0ms.
+
+## Main Data Flows
 
 ```text
-lesson preset + bounded controls -> pure SI model -> simulation state
-simulation state -> Three.js scene + observations -> chart + table
-assessment input -> pure scoring -> progress -> localStorage/export
+1. Navigation:
+   URL Hash -> router.parseHash -> AppRoute -> Course/Mission from courseCatalog -> Page View
+
+2. Mission Player Execution:
+   MissionDefinition -> mission-engine (session/reducer) -> Step View
+   User Action (Predict / Simulate / Math / Check) -> dispatch(action) -> updated session
+   Recap Completion -> saveProgressV2 -> localStorage (physics-teacher-interactive-progress-v2)
+
+3. Physics Evaluation:
+   Parameters (preset + sliders) -> evaluateModel(modelId, parameters, t) -> SimulationState
+   SimulationState -> Three.js Scene (3D) OR GraphView / DataTable (Reduced Visual Mode)
+
+4. Progress Migration & Backup:
+   v1 localStorage -> migrateV1ToV2 -> catalog validation -> v2 Progress
+   User Export -> serializeProgressV2 -> physics-teacher-progress.json download
 ```
 
-## Scientific model contract
+## Static Deployment and Privacy Guarantees
 
-Each `SimulationDefinition` exposes bounded parameter definitions and a pure `evaluate(parameters, time)` function. Inputs and observations use the documented SI units. Equal inputs produce equal outputs. Pause, step, reset, and playback speed change the sampled time or controls; they do not introduce a second physics implementation.
-
-Models state their domain. Collisions, projectile motion, springs, pendulums, and orbits use classroom approximations described by each lesson. The renderer may scale positions for visibility, but displayed numerical observations come from SI model values.
-
-## Curriculum integrity
-
-Lessons and math tutorials form one directed prerequisite graph. Validation tests require unique IDs, known prerequisites, no cycles, and an available math tutorial for every lesson `math` reference. A course is released only when all its nodes pass these checks.
-
-## Progress and privacy
-
-`LearnerProgress.version` starts at `1`. Imports require every version-1 field, reject extra root fields, invalid values, unsafe answer IDs, and lesson/math IDs outside the current catalog. Stored progress is local to the browser origin. Storage exceptions degrade to an in-memory empty record and are surfaced through the `persistent` result; the application remains usable.
-
-There is no backend, analytics service, account system, or credential flow in the first release.
-
-## Portability and accessibility
-
-Vite uses a relative asset base. Internal navigation uses `#/...`, so both `/` and `/Physics-Teacher-Interactive/` hosting paths work without redirects. All essential interactions use HTML controls and keyboard-operable dialogs. KaTeX presentation is paired with readable equation text. Dynamic visualizations expose observations as text and a table.
+- **No Credentials or Cloud Services**: No user accounts, passwords, analytics trackers, external APIs, or remote databases.
+- **GitHub Pages Subpath Portability**: Vite `base: './'` coupled with hash routing guarantees full compatibility with GitHub Pages deployments under subpaths like `/Physics-Teacher-Interactive/`.
+- **Offline Resilience**: All computational models, KaTeX fonts, icons, and audio synthesis run locally in the browser.

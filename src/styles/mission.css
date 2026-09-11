@@ -133,7 +133,7 @@
   padding: 11px 22px;
   border-radius: var(--radius-md);
   background: var(--accent);
-  color: #ffffff;
+  color: var(--accent-contrast);
   font-size: 14px;
   font-weight: 700;
   border: none;
@@ -350,7 +350,7 @@
 
 .teach-math-button:hover {
   background: var(--accent);
-  color: #ffffff;
+  color: var(--accent-contrast);
 }
 
 .math-expand-guidance {
