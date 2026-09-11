@@ -1,86 +1,95 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Atom, BookOpen, Calculator, Check, ChevronDown, ChevronLeft, ChevronRight, CircleGauge, Clock3, Download, FlaskConical, GraduationCap, Info, Library, Menu, Moon, PlayCircle, Search, Settings, Sparkles, Sun, Target, Upload, X } from 'lucide-react';
-import type { Family, LearnerProgress, LessonDefinition } from './types';
-import { lessons, mathTutorials } from './content';
-import { createProgress, parseProgress, readProgress, saveProgress } from './lib/progress';
-import { Lab } from './components/Lab';
-import { Equation } from './components/Equation';
-import { AssessmentCard } from './components/AssessmentCard';
-import { MathModal } from './components/MathModal';
+import { ArrowLeft, Clock3, Flame, Trophy } from 'lucide-react';
+import { AppShell } from './app/AppShell';
+import { isValidAppHash, parseHash, toHash, type AppRoute } from './app/router';
+import { courseCatalog, courses } from './learning/catalog';
+import { readProgressV2, saveProgressV2 } from './progress/progress';
+import type { LearnerProgressV2 } from './progress/types';
+import { CoursePathPage } from './pages/CoursePathPage';
+import { ExplorePage } from './pages/ExplorePage';
 
-type Page='lesson'|'curriculum'|'math'|'progress';
-type LessonTab='learn'|'experiment'|'math'|'challenge'|'sources';
-const families:{id:Family;title:string;number:string}[]=[
-{id:'measurement',title:'Measurement',number:'01'},{id:'vectors',title:'Vectors',number:'02'},{id:'motion',title:'Motion',number:'03'},{id:'forces',title:'Forces',number:'04'},
-{id:'energy',title:'Energy',number:'05'},{id:'collisions',title:'Momentum',number:'06'},{id:'gravity',title:'Gravity',number:'07'},{id:'oscillations',title:'Oscillations',number:'08'}];
-const roadmap=[
-['Extended classical physics','Rotation, fluids, elasticity, waves, sound, thermodynamics, electromagnetism, circuits and optics.'],
-['Modern physics','Relativity, quantum mechanics, atomic and molecular physics, nuclear and particle physics, condensed matter, astrophysics and cosmology.'],
-['Advanced and frontier physics','Selected graduate derivations and sourced surveys of current open questions and theoretical proposals.']];
-function currentRoute():{page:Page;lessonId?:string}{
- const path=location.hash.replace(/^#\/?/,'').split('/').filter(Boolean);
- if(path[0]==='curriculum')return{page:'curriculum'}; if(path[0]==='math')return{page:'math'}; if(path[0]==='progress')return{page:'progress'};
- if(path[0]==='lesson'&&lessons.some(l=>l.id===path[1]))return{page:'lesson',lessonId:path[1]};
- return{page:'lesson',lessonId:'projectile-motion'};
-}
-const stamped=(old:LearnerProgress,patch:Partial<LearnerProgress>):LearnerProgress=>({...old,...patch,savedAt:new Date().toISOString()});
-const lessonIds=lessons.map(lesson=>lesson.id),mathIds=mathTutorials.map(tutorial=>tutorial.id);
-const assessmentAnswers=Object.fromEntries([...lessons.flatMap(lesson=>lesson.assessments),...mathTutorials.map(tutorial=>tutorial.assessment)].map(assessment=>[assessment.id,assessment.answer]));
-
-export function App(){
- const initial=useMemo(()=>readProgress(lessonIds,mathIds,assessmentAnswers),[]);
- const [progress,setProgress]=useState(initial.progress),[persistent,setPersistent]=useState(initial.persistent);
- const [route,setRoute]=useState(currentRoute),[tab,setTab]=useState<LessonTab>('learn'),[mathId,setMathId]=useState<string|null>(null),[sidebar,setSidebar]=useState(false),[toast,setToast]=useState('');
- const importRef=useRef<HTMLInputElement>(null),mainRef=useRef<HTMLElement>(null);
- const lesson=lessons.find(l=>l.id===route.lessonId)||lessons.find(l=>l.id==='projectile-motion')||lessons[0],index=lessons.indexOf(lesson);
- useEffect(()=>{const handler=()=>{setRoute(currentRoute());setSidebar(false);setTab('learn');window.scrollTo(0,0);};addEventListener('hashchange',handler);return()=>removeEventListener('hashchange',handler);},[]);
- useEffect(()=>{document.documentElement.dataset.theme=progress.theme;document.querySelector('meta[name=theme-color]')?.setAttribute('content',progress.theme==='dark'?'#090e1a':'#f5f7fb');},[progress.theme]);
- useEffect(()=>{setPersistent(saveProgress(progress));},[progress]);
- useEffect(()=>{if(!toast)return;const id=setTimeout(()=>setToast(''),3200);return()=>clearTimeout(id);},[toast]);
- if(!lesson)return <main className="error-panel"><h1>Course content unavailable</h1></main>;
- const selectedMath=mathTutorials.find(m=>m.id===mathId);
- function commit(patch:Partial<LearnerProgress>){setProgress(old=>stamped(old,patch));}
- const openLesson=(id:string)=>{location.hash=`/lesson/${id}`;};
- const navigate=(page:Page)=>{location.hash=page==='lesson'?`/lesson/${lesson.id}`:`/${page}`;};
- function answer(id:string,value:number){const answers={...progress.answers,[id]:value},complete=lesson.assessments.every(a=>Object.hasOwn(answers,a.id));commit({answers,completed:complete&&!progress.completed.includes(lesson.id)?[...progress.completed,lesson.id]:progress.completed,lastLesson:lesson.id});if(complete)setToast('Lesson complete — your progress is saved.');}
- function exportData(){const url=URL.createObjectURL(new Blob([JSON.stringify(progress,null,2)],{type:'application/json'})),a=document.createElement('a');a.href=url;a.download='physics-teacher-progress.json';a.click();URL.revokeObjectURL(url);setToast('Progress exported.');}
- async function importData(file:File){try{const next=parseProgress(await file.text(),lessonIds,mathIds,assessmentAnswers);setProgress(next);setToast('Progress restored successfully.');}catch(e){setToast(e instanceof Error?e.message:'This progress file is invalid.');}}
- return <div className="app-shell"><a className="skip-link" href="#main-content" onClick={event=>{event.preventDefault();mainRef.current?.focus();}}>Skip to lesson</a>
- <header className="topbar"><button className="mobile-menu icon-button" aria-label={sidebar?'Close course navigation':'Open course navigation'} aria-expanded={sidebar} onClick={()=>setSidebar(v=>!v)}>{sidebar?<X/>:<Menu/>}</button>
- <button className="brand" onClick={()=>navigate('lesson')} aria-label="Physics Teacher Interactive home"><Atom className="brand-symbol"/><span><span className="brand-title">Physics Teacher Interactive</span><span className="brand-subtitle">Learn by doing</span></span></button>
- <nav className="topnav" aria-label="Main navigation"><button className={route.page==='lesson'?'active':''} onClick={()=>navigate('lesson')}><FlaskConical size={16}/>Laboratory</button><button className={route.page==='curriculum'?'active':''} onClick={()=>navigate('curriculum')}><Library size={16}/>Curriculum</button><button className={route.page==='math'?'active':''} onClick={()=>navigate('math')}><Calculator size={16}/>Math</button><button className={route.page==='progress'?'active':''} onClick={()=>navigate('progress')}><CircleGauge size={16}/>Progress</button></nav>
- <div className="topbar-right"><span className="edition">FOUNDATIONS · 2026</span><button className="icon-button" onClick={()=>commit({theme:progress.theme==='dark'?'light':'dark'})} aria-label={`Use ${progress.theme==='dark'?'light':'dark'} theme`}>{progress.theme==='dark'?<Sun size={17}/>:<Moon size={17}/>}</button></div></header>
- <div className="shell-body"><aside className={`sidebar ${sidebar?'open':''}`} aria-label="Foundations course"><p className="section-label">Learning path</p><div className="course-heading"><GraduationCap size={19}/><span>Foundations of physics</span></div>
- {families.map(f=>{const items=lessons.filter(l=>l.family===f.id),selected=route.page==='lesson'&&lesson.family===f.id;return <div className="family-item" key={f.id}><button className={`family-button ${selected?'selected':''}`} onClick={()=>openLesson(items[0].id)} aria-expanded={selected}><span className="family-icon">{f.number}</span>{f.title}<ChevronDown className="chevron" size={13}/></button>{selected&&<div className="lesson-tree">{items.map(l=><button key={l.id} className={l.id===lesson.id?'current':''} onClick={()=>openLesson(l.id)}><span className="lesson-dot"/>{l.title}{progress.completed.includes(l.id)&&<Check size={12}/>}</button>)}</div>}</div>;})}
- <div className="sidebar-bottom"><div className="progress-caption"><span>Course progress</span><span>{progress.completed.length} / {lessons.length}</span></div><div className="progress-track"><div style={{width:`${100*progress.completed.length/lessons.length}%`}}/></div><button className="beginner-button" onClick={()=>openLesson(lessons[0].id)}><Sparkles size={14}/>Start from zero</button><p className="local-note"><Info size={12}/>{persistent?'Progress stays on this device':'Private mode: progress may not persist'}</p></div></aside>
- <main ref={mainRef} id="main-content" className="main" tabIndex={-1}>{route.page==='lesson'&&<LessonPage lesson={lesson} index={index} tab={tab} setTab={setTab} progress={progress} onAnswer={answer} onMath={setMathId} previous={()=>index>0&&openLesson(lessons[index-1].id)} next={()=>index<lessons.length-1&&openLesson(lessons[index+1].id)} suspended={Boolean(selectedMath)}/>}
- {route.page==='curriculum'&&<Curriculum progress={progress} onOpen={openLesson}/>}
- {route.page==='math'&&<MathLibrary progress={progress} onOpen={setMathId}/>}
- {route.page==='progress'&&<Progress progress={progress} persistent={persistent} onContinue={()=>openLesson(progress.lastLesson||'projectile-motion')} onExport={exportData} onImport={()=>importRef.current?.click()} onReset={()=>{const next=createProgress();next.theme=progress.theme;setProgress(next);setToast('Learning progress reset.');}}/>}</main></div>
- <input ref={importRef} type="file" accept="application/json,.json" hidden onChange={e=>{const file=e.target.files?.[0];if(file)void importData(file);e.currentTarget.value='';}}/>
- {selectedMath&&<MathModal tutorial={selectedMath} onClose={()=>setMathId(null)} onComplete={()=>{if(!progress.mathCompleted.includes(selectedMath.id))commit({mathCompleted:[...progress.mathCompleted,selectedMath.id]});}} completed={progress.mathCompleted.includes(selectedMath.id)} prerequisites={selectedMath.prerequisites.map(id=>mathTutorials.find(m=>m.id===id)).filter(Boolean) as typeof mathTutorials} onOpen={setMathId}/>}
- {toast&&<div className="toast" role="status">{toast}</div>}</div>;
+function learnHash(progress: LearnerProgressV2): string {
+  const course = courseCatalog.courses.get(progress.selectedCourseId) ?? courses[0];
+  return toHash({ page: 'course', courseId: course.id });
 }
 
-function LessonPage({lesson,index,tab,setTab,progress,onAnswer,onMath,previous,next,suspended}:{lesson:LessonDefinition;index:number;tab:LessonTab;setTab:(t:LessonTab)=>void;progress:LearnerProgress;onAnswer:(id:string,v:number)=>void;onMath:(id:string)=>void;previous:()=>void;next:()=>void;suspended:boolean}){
- const family=families.find(f=>f.id===lesson.family)!;
- const tabs:[LessonTab,string,typeof BookOpen][]=[['learn','Learn',BookOpen],['experiment','Experiment',FlaskConical],['math','Math toolkit',Calculator],['challenge','Challenges',Target],['sources','Sources',Info]];
- return <><div className="breadcrumb"><span>Foundations</span><ChevronRight size={11}/><span>{family.title}</span><ChevronRight size={11}/><span>Lesson {index+1}</span></div>
- <div className="lesson-heading"><div><p className="eyebrow">{family.title} · Lesson {index+1} of {lessons.length}</p><h1>{lesson.title}</h1><p className="lesson-subtitle">{lesson.summary}</p><div className="lesson-badges"><span className="badge"><Clock3 size={12}/>{lesson.minutes} min</span><span className="badge"><Target size={12}/>{lesson.objectives.length} objectives</span>{progress.completed.includes(lesson.id)&&<span className="badge success"><Check size={12}/>Complete</span>}</div></div><div className="lesson-counter"><button className="icon-button" aria-label="Previous lesson" onClick={previous} disabled={index===0}><ChevronLeft/></button><span><b>{index+1}</b> / {lessons.length}</span><button className="icon-button" aria-label="Next lesson" onClick={next} disabled={index===lessons.length-1}><ChevronRight/></button></div></div>
- <Lab key={lesson.id} lesson={lesson} suspended={suspended}/><div className="below-lab"><div className="lesson-tabs" aria-label="Lesson sections">{tabs.map(([id,label,Icon])=><button key={id} aria-pressed={tab===id} className={tab===id?'active':''} onClick={()=>setTab(id)}><Icon size={15}/>{label}</button>)}</div>
- <div className="lesson-reading">{tab==='learn'&&<div className="learn-layout"><article><h2>Begin with a prediction</h2><div className="callout"><strong>Before you press play:</strong> {lesson.prediction}</div>{lesson.explanation.map(p=><p key={p}>{p}</p>)}<h3>The equation</h3><div className="equation-card"><Equation value={lesson.equation}/><p className="equation-symbols">{lesson.symbols}</p></div><h3>Worked example</h3><p>{lesson.workedExample.question}</p><ol className="step-list">{lesson.workedExample.steps.map(s=><li key={s}>{s}</li>)}</ol><p className="answer-line">{lesson.workedExample.answer}</p></article><aside className="insight-card"><p className="panel-label"><Target size={13}/>By the end</p><ul>{lesson.objectives.map(x=><li key={x}>{x}</li>)}</ul><h3>Model boundaries</h3><ul>{lesson.assumptions.map(x=><li key={x}>{x}</li>)}</ul></aside></div>}
- {tab==='experiment'&&<><h2>Run a controlled experiment</h2><p>Change one parameter at a time, then reset so each comparison has a clear cause.</p><ol className="step-list">{lesson.experiment.map(s=><li key={s}>{s}</li>)}</ol><div className="callout"><strong>Model statement:</strong> {lesson.assumptions.join(' ')}</div></>}
- {tab==='math'&&<><h2>Build the mathematics first</h2><p>Each tutorial connects an operation to a manipulable visual. The experiment remains paused while you work.</p><div className="math-cards">{lesson.math.map(id=>{const m=mathTutorials.find(x=>x.id===id)!;return <button className="math-card" key={id} onClick={()=>onMath(id)} aria-label={`Open math tutorial: ${m.title}`}><Calculator size={20}/><strong>{m.title}</strong><p>{m.summary}</p><span className="card-action">Open tutorial <ChevronRight size={12}/></span></button>;})}</div></>}
- {tab==='challenge'&&<><h2>Check your understanding</h2><p>Hints and explanatory feedback are part of learning. Retries are unlimited.</p>{lesson.assessments.map((a,i)=><AssessmentCard key={a.id} assessment={a} index={i} onCorrect={v=>onAnswer(a.id,v)} answered={Object.hasOwn(progress.answers,a.id)}/>)}</>}
- {tab==='sources'&&<><h2>Sources and scientific scope</h2><p>These sources support the scientific claims. Explanations and exercises are original to this project.</p><ul className="source-list">{lesson.references.map(r=><li key={r.url}><a href={r.url} target="_blank" rel="noreferrer">{r.label}</a></li>)}</ul><p>Scientific review date: {lesson.reviewedAt}. Interactive scenes are teaching models with the listed limitations.</p></>}</div>
- <div className="course-footer"><span><Info size={13}/>Reviewed {lesson.reviewedAt}</span><span>SI units · deterministic model · no account required</span></div></div></>;
+function MissionPlaceholder({ route }: { route: Extract<AppRoute, { page: 'mission' }> }) {
+  const course = courseCatalog.getCourse(route.courseId);
+  const mission = courseCatalog.getMission(route.courseId, route.missionId);
+  return <section className="mission-placeholder">
+    <a className="contextual-back" href={`#/course/${course.id}`}><ArrowLeft aria-hidden="true" />Back to {course.title} path</a>
+    <p className="eyebrow">{mission.kind === 'checkpoint' ? 'Course checkpoint' : 'Mission'}</p>
+    <h1>{mission.title}</h1>
+    <p>{mission.summary}</p>
+    <div className="mission-placeholder-meta"><span><Clock3 aria-hidden="true" />{mission.minutes} min</span><span><Trophy aria-hidden="true" />{mission.xp} XP</span></div>
+    <div className="mission-placeholder-note" role="note"><strong>Mission preview</strong><p>The focused interactive player arrives in the next milestone. You can return to the course path and choose any mission.</p></div>
+  </section>;
 }
-function Curriculum({progress,onOpen}:{progress:LearnerProgress;onOpen:(id:string)=>void}){
- const [query,setQuery]=useState(''),q=query.trim().toLowerCase(),shown=lessons.filter(l=>!q||`${l.title} ${l.summary} ${l.family}`.toLowerCase().includes(q));
- return <><div className="page-head"><p className="eyebrow">Complete first release</p><h1>Foundations curriculum</h1><p>Twenty-four connected lessons take you from measuring a quantity to modeling orbits and oscillators. Follow the sequence or explore freely.</p><div className="search-field"><Search size={17}/><label className="sr-only" htmlFor="curriculum-search">Search curriculum</label><input id="curriculum-search" role="searchbox" aria-label="Search curriculum" placeholder="Search lessons, concepts, or families" value={query} onChange={e=>setQuery(e.target.value)}/></div><button className="primary-button" onClick={()=>onOpen(lessons[0].id)}><Sparkles size={15}/>Start from zero</button></div>
- {families.map(f=>{const items=shown.filter(l=>l.family===f.id);return items.length?<section className="curriculum-family" key={f.id}><h2><FlaskConical size={18}/>{f.title}</h2><div className="lesson-grid">{items.map(l=><button className="lesson-card" key={l.id} aria-label={`Open lesson: ${l.title}`} onClick={()=>onOpen(l.id)}><div className="lesson-card-meta"><span>{l.level}</span><span>{l.minutes} min</span></div><h3>{l.title}</h3><p>{l.summary}</p><div className="lesson-card-bottom"><span>{progress.completed.includes(l.id)?'Completed':'Explore lesson'}</span>{progress.completed.includes(l.id)?<Check size={14}/>:<ChevronRight size={14}/>}</div></button>)}</div></section>:null;})}
- {shown.length===0&&<div className="empty-state">No lessons match “{query}”. Try a broader physics term.</div>}
- <section className="roadmap"><p className="eyebrow">Documented roadmap</p><h2>From foundations to the frontier</h2><p>Future courses are shown honestly as planned work. Only the foundations lessons above count as available content.</p>{roadmap.map((r,i)=><div className="roadmap-row" key={r[0]}><span className="phase-number">{i+2}</span><div><h3>{r[0]}</h3><p>{r[1]}</p></div><span className="badge">PLANNED</span></div>)}</section></>;
+
+function ProgressPlaceholder({ progress }: { progress: LearnerProgressV2 }) {
+  return <section className="progress-placeholder">
+    <p className="eyebrow">Your learning record</p><h1>Progress</h1>
+    <div className="progress-summary-cards">
+      <article><Trophy aria-hidden="true" /><strong>{progress.totalXp}</strong><span>Total XP</span></article>
+      <article><Flame aria-hidden="true" /><strong>{progress.streak.current}</strong><span>Day streak</span></article>
+      <article><strong>{progress.completedMissions.length}</strong><span>Missions complete</span></article>
+    </div>
+    <p>Your full mastery dashboard, badges, preferences, and backup controls arrive in a later milestone.</p>
+  </section>;
 }
-function MathLibrary({progress,onOpen}:{progress:LearnerProgress;onOpen:(id:string)=>void}){return <><div className="page-head"><p className="eyebrow">Mathematics for physics</p><h1>Interactive math toolkit</h1><p>Build from arithmetic toward vectors, rates, accumulation and periodic functions. Every tool includes a visual control, worked example and check.</p></div><div className="math-cards">{mathTutorials.map((m,i)=><button className="math-card" key={m.id} onClick={()=>onOpen(m.id)} aria-label={`Open math tutorial: ${m.title}`}><span className="phase-number">{String(i+1).padStart(2,'0')}</span><strong>{m.title}</strong><p>{m.summary}</p><span className="card-action">{progress.mathCompleted.includes(m.id)?'Understanding checked':'Open tutorial'} <ChevronRight size={12}/></span></button>)}</div></>;}
-function Progress({progress,persistent,onContinue,onExport,onImport,onReset}:{progress:LearnerProgress;persistent:boolean;onContinue:()=>void;onExport:()=>void;onImport:()=>void;onReset:()=>void}){return <><div className="page-head"><p className="eyebrow">Your learning record</p><h1>Progress and preferences</h1><p>Your answers stay in this browser. Export a file for backup or to move to another device.</p></div><div className="stat-grid"><div className="stat-card"><strong>{progress.completed.length}</strong><span>of {lessons.length} lessons completed</span></div><div className="stat-card"><strong>{Object.keys(progress.answers).length}</strong><span>challenges answered</span></div><div className="stat-card"><strong>{progress.mathCompleted.length}</strong><span>math checks completed</span></div></div><section className="settings-card"><h2>Continue learning</h2><p>{progress.lastLesson?`Resume ${lessons.find(l=>l.id===progress.lastLesson)?.title||'your last lesson'}.`:'Your first completed challenge will establish your saved path.'}</p><button className="primary-button" onClick={onContinue}><PlayCircle size={15}/>Continue learning</button></section><section className="settings-card"><h2>Keep a private backup</h2><p>{persistent?'Progress storage is available on this device.':'Browser storage is unavailable, so export before closing.'} Imports are validated before replacing current progress.</p><div className="settings-actions"><button className="secondary-button" onClick={onExport}><Download size={15}/>Export progress</button><button className="secondary-button" onClick={onImport}><Upload size={15}/>Import progress</button></div></section><section className="settings-card"><h2>Reset learning progress</h2><p>Clear lesson answers and completion. Your theme is kept.</p><button className="secondary-button" onClick={onReset}><Settings size={15}/>Reset progress</button></section></>;}
+
+function initialRoute(): { route: AppRoute; recoveryMessage: string } {
+  if (typeof window === 'undefined') return { route: { page: 'explore' }, recoveryMessage: '' };
+  const valid = isValidAppHash(window.location.hash);
+  return {
+    route: parseHash(window.location.hash),
+    recoveryMessage: valid ? '' : 'That route is unavailable, so we returned you to Explore.',
+  };
+}
+
+export function App() {
+  const stored = useMemo(() => readProgressV2(courseCatalog, new Date()), []);
+  const initial = useMemo(initialRoute, []);
+  const [progress, setProgress] = useState(stored.progress);
+  const [route, setRoute] = useState(initial.route);
+  const [recoveryMessage, setRecoveryMessage] = useState(initial.recoveryMessage);
+  const mainRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const syncRoute = () => {
+      const valid = isValidAppHash(window.location.hash);
+      const next = parseHash(window.location.hash);
+      setRoute(next);
+      if (next.page === 'course' || next.page === 'mission') {
+        setProgress(current => current.selectedCourseId === next.courseId ? current : {
+          ...current,
+          selectedCourseId: next.courseId,
+          savedAt: new Date().toISOString(),
+        });
+      }
+      setRecoveryMessage(valid ? '' : 'That route is unavailable, so we returned you to Explore.');
+      const canonicalHash = toHash(next);
+      if (window.location.hash !== canonicalHash) {
+        window.history.replaceState(null, '', `${window.location.pathname}${window.location.search}${canonicalHash}`);
+      }
+      window.scrollTo(0, 0);
+    };
+    syncRoute();
+    window.addEventListener('hashchange', syncRoute);
+    return () => window.removeEventListener('hashchange', syncRoute);
+  }, []);
+
+  useEffect(() => {
+    document.documentElement.dataset.theme = progress.settings.theme;
+    document.querySelector('meta[name=theme-color]')?.setAttribute('content', progress.settings.theme === 'dark' ? '#090e1a' : '#f5f7fb');
+    saveProgressV2(progress, courseCatalog);
+  }, [progress]);
+
+  let page;
+  if (route.page === 'explore') page = <ExplorePage courses={courses} progress={progress} />;
+  else if (route.page === 'course') page = <CoursePathPage course={courseCatalog.getCourse(route.courseId)} progress={progress} />;
+  else if (route.page === 'mission') page = <MissionPlaceholder route={route} />;
+  else page = <ProgressPlaceholder progress={progress} />;
+
+  return <AppShell route={route} learnHash={learnHash(progress)} recoveryMessage={recoveryMessage} mainRef={mainRef}>{page}</AppShell>;
+}

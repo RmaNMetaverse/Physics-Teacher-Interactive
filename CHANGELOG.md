@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Replaced the legacy lesson sidebar and tabbed shell with catalog-validated hash routes, a three-destination navigation, an open 14-course Explore gallery, accessible course mission paths, contextual back links, and announced invalid-route recovery.
+
 - Corrected numeric-answer rounding allowance to scale with the answer magnitude, preventing zero or substantially wrong answers from passing tiny SI-energy checks with explicit scientific tolerances.
 
 - Authored thirteen open five-mission starter courses and thirteen checkpoints, bringing the validated catalog to fourteen courses and eighty-nine normal missions; Quantum is addressable from its first mission without completion gates.
