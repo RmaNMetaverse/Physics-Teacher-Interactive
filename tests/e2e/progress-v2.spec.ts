@@ -42,19 +42,19 @@ test.describe('Progress page and rewards dashboard (v2)', () => {
       const rewards = document.querySelector('.progress-rewards-dashboard');
       const mastery = document.querySelector('.mastery-rings-grid');
       const activity = document.querySelector('.activity-ledger-list');
-      const firstActivity = document.querySelector('.activity-ledger-item');
+      const activitySection = document.querySelector('.progress-activity-section');
       return {
         rewardsDisplay: rewards ? getComputedStyle(rewards).display : '',
         masteryDisplay: mastery ? getComputedStyle(mastery).display : '',
         activityGap: activity ? getComputedStyle(activity).gap : '',
-        activityRowDisplay: firstActivity ? getComputedStyle(firstActivity).display : '',
+        activitySectionDisplay: activitySection ? getComputedStyle(activitySection).display : '',
       };
     });
 
     expect(layout.rewardsDisplay).toBe('grid');
     expect(layout.masteryDisplay).toBe('grid');
     expect(layout.activityGap).not.toBe('0px');
-    expect(layout.activityRowDisplay).toBe('flex');
+    expect(layout.activitySectionDisplay).toBe('grid');
 
     await page.setViewportSize({ width: 360, height: 800 });
     await expect(page.locator('.progress-page-container')).toBeVisible();
