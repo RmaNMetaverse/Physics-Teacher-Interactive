@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-09-12 — Appearance discoverability and layout repair
+
+- Added an always-visible Appearance shortcut to the top bar, with a compact icon-only treatment on phones, so theme presets, custom colors, and Liquid Glass are reachable from every route.
+- Made Liquid Glass the default for new sessions and for legacy dark/light settings that have no stored glass preference.
+- Repaired the Learn course header grid: back navigation, course title, and progress/time stats now occupy explicit stable regions and collapse cleanly on mobile.
+- Added focused browser coverage for the global appearance entry point, course-header structure, responsive overflow, and touch layout.
+
 ## 2026-09-12 — Custom themes and Liquid Glass
 
 - Expanded appearance settings from dark/light into Light, Night, Eye Comfort, Ocean, and High Contrast presets, each with tailored surfaces, text, borders, shadows, and default accents.

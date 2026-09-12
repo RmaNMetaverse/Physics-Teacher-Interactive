@@ -16,6 +16,10 @@ test('opens Explore first with one continue action and every open course', async
   await expect(navigation.getByRole('link').allTextContents()).resolves.toEqual(['Explore', 'Learn', 'Progress']);
   await expect(page.locator('.sidebar')).toHaveCount(0);
   await expect(page.locator('.lesson-tabs')).toHaveCount(0);
+  await expect(page.getByRole('link', { name: 'Appearance and themes' })).toHaveAttribute('href', '#/progress');
+  await page.getByRole('link', { name: 'Appearance and themes' }).click();
+  await expect(page).toHaveURL(/#\/progress$/);
+  await expect(page.locator('#settings-heading')).toBeInViewport();
 });
 
 test('opens Quantum first and exposes every mission node to native tab order', async ({ page }) => {
@@ -39,6 +43,18 @@ test('opens Quantum first and exposes every mission node to native tab order', a
   await nodes.first().click();
   await expect(page).toHaveURL(/#\/mission\/quantum\/quantum-light-quanta$/);
   await expect(page.getByRole('link', { name: 'Back to Quantum Physics path' })).toBeVisible();
+});
+
+test('course header keeps back link, title, and stats in a stable layout', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto('/#/course/quantum');
+  const header = page.locator('#main-content > .course-path-header');
+  await expect(header).toBeVisible();
+  await expect(header.locator('.contextual-back')).toBeVisible();
+  await expect(header.locator('h1')).toHaveText('Quantum Physics');
+  await expect(header.locator('dl')).toBeVisible();
+  expect(await header.evaluate(element => getComputedStyle(element).gridTemplateColumns.split(' ').length)).toBe(3);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(1440);
 });
 
 test('filters the course gallery and recovers invalid routes with an announcement', async ({ page }) => {
@@ -164,4 +180,3 @@ test('course path displays as an ordered list without connector lines and elemen
   const hasVisibleFocus = (focusRing.outlineStyle !== 'none' && focusRing.outlineWidth >= 2) || (focusRing.boxShadow !== 'none' && !focusRing.boxShadow.includes('rgba(0, 0, 0, 0)'));
   expect(hasVisibleFocus, 'Interactive elements must display a visible focus indicator').toBe(true);
 });
-

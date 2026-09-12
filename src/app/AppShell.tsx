@@ -1,5 +1,5 @@
 import type { ReactNode, RefObject } from 'react';
-import { Atom, ChartNoAxesColumn, Compass, Map } from 'lucide-react';
+import { Atom, ChartNoAxesColumn, Compass, Map, Palette } from 'lucide-react';
 import type { AppRoute } from './router';
 import { toHash } from './router';
 
@@ -19,6 +19,11 @@ export function AppShell({ route, learnHash, recoveryMessage, mainRef, children 
       <a className="adventure-brand" href={toHash({ page: 'explore' })} aria-label="Physics Teacher Interactive home">
         <Atom aria-hidden="true" />
         <span>Physics Teacher Interactive<small>Learn by doing</small></span>
+      </a>
+      <a className="appearance-shortcut" href={toHash({ page: 'progress' })} aria-label="Appearance and themes" title="Appearance and themes" onClick={() => {
+        try { sessionStorage.setItem('physics-focus-appearance', 'true'); } catch { /* Continue if storage is blocked. */ }
+      }}>
+        <Palette aria-hidden="true" /><span>Appearance</span>
       </a>
       <nav className="primary-nav" aria-label="Main navigation">
         <a href={toHash({ page: 'explore' })} aria-current={current === 'explore' ? 'page' : undefined}><Compass aria-hidden="true" />Explore</a>

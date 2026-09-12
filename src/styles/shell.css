@@ -165,6 +165,32 @@ summary:focus-visible,
   color: var(--muted);
 }
 
+.appearance-shortcut {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 44px;
+  padding: 0 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-full);
+  background: var(--panel);
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.appearance-shortcut:hover {
+  color: var(--text);
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  text-decoration: none;
+}
+
+.appearance-shortcut svg { width: 16px; height: 16px; color: var(--accent); }
+
 /* Primary Navigation (Desktop Top Bar) */
 .primary-nav {
   display: flex;

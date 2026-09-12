@@ -1,4 +1,4 @@
-import { useState, useId } from 'react';
+import { useEffect, useState, useId } from 'react';
 import { Download, RefreshCw, Upload, Volume2, VolumeX, Sparkles, Zap, Palette, Layers3 } from 'lucide-react';
 import { courseCatalog, courses } from '../learning/catalog';
 import { createProgressV2, parseProgressV2, serializeProgressV2 } from '../progress/progress';
@@ -17,6 +17,17 @@ export interface ProgressPageProps {
 export function ProgressPage({ progress, onProgressChange }: ProgressPageProps) {
   const [importStatus, setImportStatus] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
   const fileInputId = useId();
+
+  useEffect(() => {
+    let focusAppearance = false;
+    try {
+      focusAppearance = sessionStorage.getItem('physics-focus-appearance') === 'true';
+      if (focusAppearance) sessionStorage.removeItem('physics-focus-appearance');
+    } catch {
+      focusAppearance = false;
+    }
+    if (focusAppearance) requestAnimationFrame(() => document.getElementById('settings-heading')?.scrollIntoView({ block: 'start' }));
+  }, []);
 
   const handleGoalChange = (goal: 1 | 3 | 5) => {
     onProgressChange?.({
@@ -193,6 +204,7 @@ export function ProgressPage({ progress, onProgressChange }: ProgressPageProps) 
       {/* Settings & Preferences */}
       <section className="progress-settings-section" aria-labelledby="settings-heading">
         <h2 id="settings-heading">Settings & Preferences</h2>
+        <p className="settings-entry-copy">Appearance, colors, and Liquid Glass are available here from the Appearance button in the top bar.</p>
 
         <div className="settings-grid">
           <fieldset className="setting-card appearance-card">

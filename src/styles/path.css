@@ -7,7 +7,8 @@
 /* Course Path Header */
 .course-path-header {
   display: grid;
-  grid-template-columns: 1fr auto;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
   gap: 20px;
   align-items: flex-end;
   margin-bottom: 24px;
@@ -48,6 +49,18 @@
   font-size: clamp(24px, 3vw, 34px);
   font-weight: 800;
   letter-spacing: -0.4px;
+}
+
+.course-path-header > div {
+  min-width: 0;
+}
+
+.course-path-header > div:not(.contextual-back) {
+  text-align: center;
+}
+
+.course-path-header dl {
+  justify-self: end;
 }
 
 .course-path-header dl {
