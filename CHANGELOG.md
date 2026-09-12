@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-09-12 — Custom themes and Liquid Glass
+
+- Expanded appearance settings from dark/light into Light, Night, Eye Comfort, Ocean, and High Contrast presets, each with tailored surfaces, text, borders, shadows, and default accents.
+- Added persistent primary and secondary color pickers, preset-color reset, and automatic light/dark foreground selection for filled primary controls.
+- Added an independent Liquid Glass switch with translucent blurred panels, specular borders, soft color blooms, elevated controls, progressive fallback, and no continuous animation.
+- Preserved import compatibility with version-1 dark/light preferences and original version-2 settings while strictly validating new theme, color, and glass values.
+- Added responsive settings layouts for 320px phones and automated coverage for theme selection, color application, Liquid Glass, reload persistence, migration, validation, and horizontal overflow.
+- Documented presets, visual behavior, compatibility, and persistence in `docs/APPEARANCE.md`.
+
 ## 2026-09-12 — 3D laboratory visual upgrade
 
 - Rebuilt the shared 3D stage with beveled instrument housings, brushed-metal bump and roughness textures, directional rim lighting, luminous deck accents, procedural surface shaders, and astronomy halos and star fields.

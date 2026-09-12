@@ -6,6 +6,7 @@
  * mission path, mission player, progress rewards, simulation labs, and responsive behaviors.
  */
 @import './styles/tokens.css';
+@import './styles/appearance.css';
 @import './styles/shell.css';
 @import './styles/explore.css';
 @import './styles/path.css';

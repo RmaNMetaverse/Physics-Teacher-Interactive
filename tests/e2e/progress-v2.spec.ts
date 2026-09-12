@@ -58,7 +58,7 @@ test.describe('Progress page and rewards dashboard (v2)', () => {
     await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
     await themeBtn.click();
     await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
-    await page.getByRole('button', { name: /Dark mode/i }).click();
+    await page.getByRole('button', { name: /Night theme/i }).click();
     await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
 
     // Sound toggle
@@ -78,6 +78,32 @@ test.describe('Progress page and rewards dashboard (v2)', () => {
     await expect(celebSwitch).toHaveAttribute('aria-checked', 'true');
     await celebSwitch.click();
     await expect(celebSwitch).toHaveAttribute('aria-checked', 'false');
+  });
+
+  test('persists theme presets, custom colors, and optional Liquid Glass', async ({ page }) => {
+    await page.goto('/#/progress');
+    await page.getByRole('button', { name: 'Eye Comfort theme' }).click();
+    await expect(page.locator('html')).toHaveAttribute('data-theme', 'eye-comfort');
+
+    await page.getByLabel('Custom primary color').fill('#d946ef');
+    await page.getByLabel('Custom secondary color').fill('#14b8a6');
+    await expect.poll(() => page.locator('html').evaluate(element => getComputedStyle(element).getPropertyValue('--accent').trim())).toBe('#d946ef');
+    await expect.poll(() => page.locator('html').evaluate(element => getComputedStyle(element).getPropertyValue('--teal').trim())).toBe('#14b8a6');
+    await page.locator('.progress-settings-section').screenshot({ path: 'test-results/eye-comfort-liquid-glass.png' });
+
+    const glass = page.getByRole('switch', { name: 'Liquid Glass' });
+    await expect(glass).toHaveAttribute('aria-checked', 'true');
+    await glass.click();
+    await expect(page.locator('html')).toHaveAttribute('data-liquid-glass', 'false');
+    await page.reload();
+    await expect(page.locator('html')).toHaveAttribute('data-theme', 'eye-comfort');
+    await expect(page.locator('html')).toHaveAttribute('data-liquid-glass', 'false');
+    await expect(page.getByLabel('Custom primary color')).toHaveValue('#d946ef');
+    await page.setViewportSize({ width: 320, height: 700 });
+    await page.locator('main').focus();
+    await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+    await page.locator('.progress-settings-section').screenshot({ path: 'test-results/custom-theme-mobile.png' });
+    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(await page.evaluate(() => window.innerWidth));
   });
 
   test('exports progress as valid JSON file', async ({ page }) => {

@@ -1,3 +1,5 @@
+import type { ThemeName } from '../appearance';
+
 export type StarCount = 1 | 2 | 3;
 
 export interface MissionCompletionInput {
@@ -20,7 +22,15 @@ export interface LearnerProgressV2 {
   streak: { current: number; longest: number; lastActiveDate: string };
   dailyGoal: 1 | 3 | 5;
   badges: string[];
-  settings: { theme: 'light' | 'dark'; sound: boolean; reducedMotion: boolean; celebrations: boolean };
+  settings: {
+    theme: ThemeName;
+    sound: boolean;
+    reducedMotion: boolean;
+    celebrations: boolean;
+    primaryColor?: string;
+    secondaryColor?: string;
+    liquidGlass?: boolean;
+  };
   savedAt: string;
 }
 

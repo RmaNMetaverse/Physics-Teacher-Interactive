@@ -332,7 +332,7 @@ describe('ProgressPage: Dashboard, Settings, and Backup Controls', () => {
     render(<ProgressPage progress={progress} onProgressChange={onChange} />);
 
     // Theme toggle
-    const themeBtn = screen.getByRole('button', { name: /Light mode|Theme/i });
+    const themeBtn = screen.getByRole('button', { name: 'Light mode' });
     await user.click(themeBtn);
     expect(onChange).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -366,6 +366,24 @@ describe('ProgressPage: Dashboard, Settings, and Backup Controls', () => {
         settings: expect.objectContaining({ celebrations: false }),
       })
     );
+  });
+
+  it('selects comfort themes, custom colors, and Liquid Glass independently', async () => {
+    const user = userEvent.setup();
+    const progress = makeProgress();
+    const onChange = vi.fn();
+    render(<ProgressPage progress={progress} onProgressChange={onChange} />);
+
+    await user.click(screen.getByRole('button', { name: 'Eye Comfort theme' }));
+    expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ settings: expect.objectContaining({
+      theme: 'eye-comfort', primaryColor: '#8b5e34', secondaryColor: '#477a5b',
+    }) }));
+
+    fireEvent.change(screen.getByLabelText('Custom primary color'), { target: { value: '#ff3366' } });
+    expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ settings: expect.objectContaining({ primaryColor: '#ff3366' }) }));
+
+    await user.click(screen.getByRole('switch', { name: 'Liquid Glass' }));
+    expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ settings: expect.objectContaining({ liquidGlass: false }) }));
   });
 
   it('displays recent activity from validated ledger events with newest first', () => {

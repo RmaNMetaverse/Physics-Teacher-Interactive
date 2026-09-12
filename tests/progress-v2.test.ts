@@ -107,6 +107,16 @@ describe('version-2 learner progress', () => {
     expect(migrated.answers['foundations/measurement-basics/measurement-basics-predict']).toBe(1);
     expect(migrated.completedMathSteps).toContain('foundations/measurement-basics/measurement-basics-required-math-arithmetic');
     expect(migrated.settings.theme).toBe('light');
+    expect(migrated.settings).toMatchObject({ primaryColor: '#7c3aed', secondaryColor: '#059669', liquidGlass: true });
+  });
+
+  it('upgrades original version-2 appearance settings and rejects unsafe custom colors', () => {
+    const courseCatalog = catalog();
+    const original = createProgressV2(now);
+    const legacySettings = { theme: 'dark', sound: true, reducedMotion: false, celebrations: true };
+    const upgraded = parseProgressV2(JSON.stringify({ ...original, settings: legacySettings }), courseCatalog, now);
+    expect(upgraded.settings).toMatchObject({ primaryColor: '#a78bfa', secondaryColor: '#34d399', liquidGlass: true });
+    expect(() => parseProgressV2(JSON.stringify({ ...original, settings: { ...original.settings, primaryColor: 'url(bad)' } }), courseCatalog, now)).toThrow(/color/i);
   });
 
   it('rejects corrupt imports and unknown version-2 IDs while serializing a derived XP total', () => {

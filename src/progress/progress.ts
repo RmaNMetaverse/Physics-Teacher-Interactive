@@ -2,11 +2,12 @@ import { LEGACY_STORAGE_KEY } from '../lib/progress';
 import type { CourseCatalog, MissionDefinition, MissionStep } from '../learning/types';
 import type { LearnerProgress } from '../types';
 import type { LearnerProgressV2, MissionCompletionInput, ProgressStepInput, StarCount } from './types';
+import { normalizeAppearanceSettings, presetFor } from '../appearance';
 
 export const PROGRESS_V2_STORAGE_KEY = 'physics-teacher-interactive-progress-v2';
 
 const V2_KEYS = ['answers', 'badges', 'completedMathSteps', 'completedMissions', 'dailyGoal', 'missionStars', 'nextMissionByCourse', 'savedAt', 'selectedCourseId', 'settings', 'stepAttempts', 'streak', 'totalXp', 'version', 'xpLedger'];
-const SETTINGS_KEYS = ['celebrations', 'reducedMotion', 'sound', 'theme'];
+const SETTINGS_KEYS = new Set(['celebrations', 'liquidGlass', 'primaryColor', 'reducedMotion', 'secondaryColor', 'sound', 'theme']);
 const STREAK_KEYS = ['current', 'lastActiveDate', 'longest'];
 
 type IndexedMission = { mission: MissionDefinition; steps: Map<string, MissionStep> };
@@ -96,7 +97,7 @@ function updateStreak(streak: LearnerProgressV2['streak'], now: Date): LearnerPr
 
 export function createProgressV2(now: Date): LearnerProgressV2 {
   assertNow(now);
-  return { version: 2, selectedCourseId: '', nextMissionByCourse: {}, completedMissions: [], missionStars: {}, stepAttempts: {}, answers: {}, completedMathSteps: [], xpLedger: {}, totalXp: 0, streak: { current: 0, longest: 0, lastActiveDate: '' }, dailyGoal: 3, badges: [], settings: { theme: 'dark', sound: true, reducedMotion: false, celebrations: true }, savedAt: now.toISOString() };
+  return { version: 2, selectedCourseId: '', nextMissionByCourse: {}, completedMissions: [], missionStars: {}, stepAttempts: {}, answers: {}, completedMathSteps: [], xpLedger: {}, totalXp: 0, streak: { current: 0, longest: 0, lastActiveDate: '' }, dailyGoal: 3, badges: [], settings: { theme: 'dark', primaryColor: '#a78bfa', secondaryColor: '#34d399', liquidGlass: true, sound: true, reducedMotion: false, celebrations: true }, savedAt: now.toISOString() };
 }
 
 function parseV2(value: unknown, catalog: CourseCatalog): LearnerProgressV2 {
@@ -124,9 +125,10 @@ function parseV2(value: unknown, catalog: CourseCatalog): LearnerProgressV2 {
   }
   const badges = requireList(value.badges, new Set(index.badges.keys()), 'Badges');
   if (badges.length !== earnedBadgeIds.size || !badges.every(badge => earnedBadgeIds.has(badge))) throw new Error('Badges must exactly match completed eligible checkpoints.');
-  if (!isRecord(value.settings) || !exactKeys(value.settings, SETTINGS_KEYS) || (value.settings.theme !== 'light' && value.settings.theme !== 'dark') || typeof value.settings.sound !== 'boolean' || typeof value.settings.reducedMotion !== 'boolean' || typeof value.settings.celebrations !== 'boolean') throw new Error('Settings are invalid.');
+  if (!isRecord(value.settings) || !Object.keys(value.settings).every(key => SETTINGS_KEYS.has(key)) || typeof value.settings.sound !== 'boolean' || typeof value.settings.reducedMotion !== 'boolean' || typeof value.settings.celebrations !== 'boolean') throw new Error('Settings are invalid.');
+  const appearance = normalizeAppearanceSettings(value.settings);
   if (!canonicalIso(value.savedAt)) throw new Error('Saved time must be a canonical ISO timestamp.');
-  return { version: 2, selectedCourseId: value.selectedCourseId, nextMissionByCourse, completedMissions, missionStars, stepAttempts, answers, completedMathSteps, xpLedger, totalXp: sum(xpLedger), streak: { current: streak.current, longest: streak.longest, lastActiveDate: streak.lastActiveDate }, dailyGoal: value.dailyGoal, badges, settings: { theme: value.settings.theme, sound: value.settings.sound, reducedMotion: value.settings.reducedMotion, celebrations: value.settings.celebrations }, savedAt: value.savedAt };
+  return { version: 2, selectedCourseId: value.selectedCourseId, nextMissionByCourse, completedMissions, missionStars, stepAttempts, answers, completedMathSteps, xpLedger, totalXp: sum(xpLedger), streak: { current: streak.current, longest: streak.longest, lastActiveDate: streak.lastActiveDate }, dailyGoal: value.dailyGoal, badges, settings: { ...appearance, sound: value.settings.sound, reducedMotion: value.settings.reducedMotion, celebrations: value.settings.celebrations }, savedAt: value.savedAt };
 }
 
 function migrateV1(value: unknown, catalog: CourseCatalog, now: Date): LearnerProgressV2 {
@@ -154,7 +156,10 @@ function migrateV1(value: unknown, catalog: CourseCatalog, now: Date): LearnerPr
   }
   const completedMath = Array.isArray(legacy.mathCompleted) ? legacy.mathCompleted.filter((id): id is string => typeof id === 'string') : [];
   for (const tutorialId of completedMath) for (const key of index.mathSteps) if (key.endsWith(`-required-${tutorialId}`)) progress.completedMathSteps.push(key);
-  if (legacy.theme === 'light' || legacy.theme === 'dark') progress.settings.theme = legacy.theme;
+  if (legacy.theme === 'light' || legacy.theme === 'dark') {
+    const preset = presetFor(legacy.theme);
+    progress.settings = { ...progress.settings, theme: preset.theme, primaryColor: preset.primaryColor, secondaryColor: preset.secondaryColor, liquidGlass: preset.liquidGlass };
+  }
   if (canonicalIso(legacy.savedAt)) progress.savedAt = legacy.savedAt;
   return { ...progress, totalXp: sum(progress.xpLedger) };
 }

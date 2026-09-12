@@ -1,5 +1,5 @@
 import { useState, useId } from 'react';
-import { Download, Moon, RefreshCw, Sun, Upload, Volume2, VolumeX, Sparkles, Zap } from 'lucide-react';
+import { Download, RefreshCw, Upload, Volume2, VolumeX, Sparkles, Zap, Palette, Layers3 } from 'lucide-react';
 import { courseCatalog, courses } from '../learning/catalog';
 import { createProgressV2, parseProgressV2, serializeProgressV2 } from '../progress/progress';
 import type { LearnerProgressV2 } from '../progress/types';
@@ -7,6 +7,7 @@ import { XpBar } from '../components/rewards/XpBar';
 import { StreakCard } from '../components/rewards/StreakCard';
 import { MasteryRing } from '../components/rewards/MasteryRing';
 import { BadgeShelf } from '../components/rewards/BadgeShelf';
+import { presetFor, themePresets } from '../appearance';
 
 export interface ProgressPageProps {
   progress: LearnerProgressV2;
@@ -194,32 +195,53 @@ export function ProgressPage({ progress, onProgressChange }: ProgressPageProps) 
         <h2 id="settings-heading">Settings & Preferences</h2>
 
         <div className="settings-grid">
-          {/* Theme Toggle */}
+          <fieldset className="setting-card appearance-card">
+            <legend><Palette size={17} aria-hidden="true" /> Color theme</legend>
+            <p>Choose a preset designed for a different environment or reading need.</p>
+            <div className="theme-preset-grid">
+              {themePresets.map(preset => (
+                <button
+                  key={preset.theme}
+                  type="button"
+                  className="theme-preset"
+                  aria-pressed={progress.settings.theme === preset.theme}
+                  aria-label={preset.theme === 'light' ? 'Light mode' : `${preset.label} theme`}
+                  onClick={() => updateSettings({ theme: preset.theme, primaryColor: preset.primaryColor, secondaryColor: preset.secondaryColor })}
+                >
+                  <span className="theme-preview" style={{ '--preview-primary': preset.primaryColor, '--preview-secondary': preset.secondaryColor } as React.CSSProperties} aria-hidden="true" />
+                  <span><strong>{preset.label}</strong><small>{preset.description}</small></span>
+                </button>
+              ))}
+            </div>
+          </fieldset>
+
+          <div className="setting-card custom-color-card">
+            <div className="setting-info">
+              <strong>Custom colors</strong>
+              <small>Personalize actions and progress accents</small>
+            </div>
+            <div className="color-picker-grid">
+              <label>Primary
+                <span><input type="color" aria-label="Custom primary color" value={progress.settings.primaryColor ?? presetFor(progress.settings.theme).primaryColor} onChange={event => updateSettings({ primaryColor: event.target.value })} /><code>{progress.settings.primaryColor ?? presetFor(progress.settings.theme).primaryColor}</code></span>
+              </label>
+              <label>Secondary
+                <span><input type="color" aria-label="Custom secondary color" value={progress.settings.secondaryColor ?? presetFor(progress.settings.theme).secondaryColor} onChange={event => updateSettings({ secondaryColor: event.target.value })} /><code>{progress.settings.secondaryColor ?? presetFor(progress.settings.theme).secondaryColor}</code></span>
+              </label>
+            </div>
+            <button type="button" className="secondary-button setting-action-btn" onClick={() => {
+              const preset = presetFor(progress.settings.theme);
+              updateSettings({ primaryColor: preset.primaryColor, secondaryColor: preset.secondaryColor });
+            }}>Reset theme colors</button>
+          </div>
+
           <div className="setting-card">
             <div className="setting-info">
-              <strong>Theme</strong>
-              <small>Choose dark or light appearance</small>
+              <strong>Liquid Glass</strong>
+              <small>Layer translucent, refractive-looking surfaces over any theme</small>
             </div>
-            <button
-              type="button"
-              className="secondary-button setting-action-btn"
-              onClick={() =>
-                updateSettings({
-                  theme: progress.settings.theme === 'dark' ? 'light' : 'dark',
-                })
-              }
-            >
-              {progress.settings.theme === 'dark' ? (
-                <>
-                  <Sun size={16} aria-hidden="true" />
-                  Light mode
-                </>
-              ) : (
-                <>
-                  <Moon size={16} aria-hidden="true" />
-                  Dark mode
-                </>
-              )}
+            <button type="button" role="switch" aria-checked={progress.settings.liquidGlass ?? true} className={`toggle-switch ${(progress.settings.liquidGlass ?? true) ? 'is-checked' : ''}`} onClick={() => updateSettings({ liquidGlass: !(progress.settings.liquidGlass ?? true) })} aria-label="Liquid Glass">
+              <Layers3 size={16} aria-hidden="true" />
+              <span>{(progress.settings.liquidGlass ?? true) ? 'Enabled' : 'Disabled'}</span>
             </button>
           </div>
 

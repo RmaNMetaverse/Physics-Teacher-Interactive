@@ -97,7 +97,7 @@ summary:focus-visible,
   transition: top var(--transition-fast);
 }
 
-.skip-link:focus {
+.skip-link:focus-visible {
   top: 14px;
 }
 

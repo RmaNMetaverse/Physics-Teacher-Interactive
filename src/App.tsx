@@ -8,6 +8,7 @@ import { CoursePathPage } from './pages/CoursePathPage';
 import { ExplorePage } from './pages/ExplorePage';
 import { MissionPage } from './pages/MissionPage';
 import { ProgressPage } from './pages/ProgressPage';
+import { accentContrast, normalizeAppearanceSettings } from './appearance';
 
 function learnHash(progress: LearnerProgressV2): string {
   const course = courseCatalog.courses.get(progress.selectedCourseId) ?? courses[0];
@@ -56,9 +57,20 @@ export function App() {
   }, []);
 
   useEffect(() => {
-    document.documentElement.dataset.theme = progress.settings.theme;
+    const appearance = normalizeAppearanceSettings(progress.settings);
+    document.documentElement.dataset.theme = appearance.theme;
+    document.documentElement.dataset.liquidGlass = appearance.liquidGlass ? 'true' : 'false';
     document.documentElement.dataset.reducedMotion = progress.settings.reducedMotion ? 'true' : 'false';
-    document.querySelector('meta[name=theme-color]')?.setAttribute('content', progress.settings.theme === 'dark' ? '#0d1117' : '#fbfbfe');
+    document.documentElement.style.setProperty('--accent', appearance.primaryColor);
+    document.documentElement.style.setProperty('--journey-violet', appearance.primaryColor);
+    document.documentElement.style.setProperty('--accent-hover', `color-mix(in srgb, ${appearance.primaryColor} 82%, white)`);
+    document.documentElement.style.setProperty('--accent-soft', `${appearance.primaryColor}24`);
+    document.documentElement.style.setProperty('--accent-contrast', accentContrast(appearance.primaryColor));
+    document.documentElement.style.setProperty('--teal', appearance.secondaryColor);
+    document.documentElement.style.setProperty('--mastery-mint', appearance.secondaryColor);
+    document.documentElement.style.setProperty('--mastery-soft', `${appearance.secondaryColor}24`);
+    const darkSurface = appearance.theme === 'dark' || appearance.theme === 'ocean' || appearance.theme === 'high-contrast';
+    document.querySelector('meta[name=theme-color]')?.setAttribute('content', darkSurface ? '#08101f' : appearance.theme === 'eye-comfort' ? '#f4ecd8' : '#fbfbfe');
     saveProgressV2(progress, courseCatalog);
   }, [progress]);
 
