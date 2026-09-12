@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-09-12 — 3D laboratory visual upgrade
+
+- Rebuilt the shared 3D stage with beveled instrument housings, brushed-metal bump and roughness textures, directional rim lighting, luminous deck accents, procedural surface shaders, and astronomy halos and star fields.
+- Upgraded all eight foundation experiment families with detailed apparatus, solid vector shafts, ramp supports, cart wheel hubs, spring guides, pendulum hardware, and clearer schematic markers.
+- Filled the previously empty 3D views for all 12 advanced models with distinct, labeled displays driven by existing SI observations, including animated wave samples, relativistic clocks, instanced probability bins, and physical instrument readouts.
+- Kept geometry bounded and rendering on demand, removed shadow-map rendering costs, added conservative initial pixel-ratio caps and sustained-frame-time resolution reduction, and fitted cameras to narrow mobile viewports. No dependency changes or remote visual assets.
+- Expanded browser checks to actual WebGL/shader output, rendering budgets, all 20 models, foundation variants, and a 320px high-DPI phone. Documented scientific interpretation and performance limits in docs/3D-RENDERING.md.
+
 ## 0.2.0 — 2026-09-11
 
 - Completed legacy UI cleanup by removing retired `MathModal.tsx` and `AssessmentCard.tsx` and stripping obsolete selectors from `src/styles.css`.

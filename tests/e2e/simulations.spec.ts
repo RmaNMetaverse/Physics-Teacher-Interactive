@@ -1,6 +1,14 @@
 import { expect, test } from '@playwright/test';
 
 const representativeCourses = [
+  { courseId: 'foundations', missionId: 'vector-addition', modelId: 'vectors' },
+  { courseId: 'foundations', missionId: 'projectile-motion', modelId: 'projectile' },
+  { courseId: 'foundations', missionId: 'net-force', modelId: 'forces' },
+  { courseId: 'foundations', missionId: 'work', modelId: 'energy' },
+  { courseId: 'foundations', missionId: 'momentum', modelId: 'collisions' },
+  { courseId: 'foundations', missionId: 'orbits', modelId: 'gravity' },
+  { courseId: 'foundations', missionId: 'hookes-law', modelId: 'spring' },
+  { courseId: 'foundations', missionId: 'pendulum', modelId: 'pendulum' },
   { courseId: 'foundations', missionId: 'measurement-basics', modelId: 'measurement' },
   { courseId: 'classical-mechanics', missionId: 'classical-mechanics-frames-and-motion', modelId: 'motion' },
   { courseId: 'waves-sound', missionId: 'waves-sound-oscillation', modelId: 'waves' },
@@ -20,6 +28,9 @@ const representativeCourses = [
 test.describe('Mission simulations across all 14 courses', () => {
   for (const { courseId, missionId, modelId } of representativeCourses) {
     test(`renders interactive simulation and graph data for ${courseId} (${modelId})`, async ({ page }) => {
+      const errors: string[] = [];
+      page.on('pageerror', error => errors.push(error.message));
+      page.on('console', message => { if (message.type() === 'error') errors.push(message.text()); });
       // Set saved session at simulate step (index 2)
       await page.addInitScript(
         ({ cId, mId }) => {
@@ -43,6 +54,21 @@ test.describe('Mission simulations across all 14 courses', () => {
       // Verify simulate step header and prompt
       await expect(page.getByText('Interactive simulation')).toBeVisible();
       await expect(page.getByText('Interactive laboratory')).toBeVisible();
+      const canvas = page.locator('.scene-canvas canvas');
+      await expect(canvas).toBeVisible();
+      await expect.poll(async () => Number(await canvas.getAttribute('data-draw-calls'))).toBeGreaterThan(5);
+      expect(Number(await canvas.getAttribute('data-draw-calls'))).toBeLessThan(100);
+      expect(Number(await canvas.getAttribute('data-triangles'))).toBeLessThan(100000);
+      await page.setViewportSize({ width: 390, height: 844 });
+      await expect(canvas).toBeVisible();
+      await page.getByRole('button', { name: 'Step experiment', exact: true }).click();
+      if (!['vectors', 'measurement'].includes(modelId)) await expect(page.getByTestId('simulation-time')).not.toHaveText('0');
+      await page.locator('.experiment-viewport').screenshot({ path: 'test-results/scene-' + modelId + '-mobile.png' });
+      await page.getByRole('button', { name: 'Play experiment', exact: true }).click();
+      await page.getByRole('button', { name: 'Pause experiment', exact: true }).click();
+      const paused = await page.getByTestId('simulation-time').textContent();
+      await expect(page.getByTestId('simulation-time')).toHaveText(paused!);
+      expect(errors).toEqual([]);
 
       // Controls panel exists and shows at most 3 before Explore further
       await expect(page.getByText('Experiment controls')).toBeVisible();
@@ -113,4 +139,21 @@ test.describe('Mission simulations across all 14 courses', () => {
     await runBtn.click();
     await expect(page.locator('.simulation-completed-banner')).toContainText('Observation complete');
   });
+});
+
+test('caps high-DPI phone rendering and keeps the scene inside a 320px viewport', async ({ browser }) => {
+  const context = await browser.newContext({ viewport: { width: 320, height: 700 }, deviceScaleFactor: 3 });
+  const page = await context.newPage();
+  await page.addInitScript(() => {
+    localStorage.setItem('physics-mission-session-quantum-quantum-light-quanta', JSON.stringify({
+      currentStepIndex: 2, answers: {}, hintedStepIds: [], expandedMathStepIds: [],
+      completedSimulationStepIds: [], recapCompleted: false,
+    }));
+  });
+  await page.goto('/#/mission/quantum/quantum-light-quanta');
+  const canvas = page.locator('.scene-canvas canvas');
+  await expect.poll(async () => Number(await canvas.getAttribute('data-draw-calls'))).toBeGreaterThan(5);
+  expect(Number(await canvas.getAttribute('data-pixel-ratio'))).toBeLessThanOrEqual(1);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(320);
+  await context.close();
 });

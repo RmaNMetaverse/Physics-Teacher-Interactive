@@ -1,10 +1,13 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { Html, Line, OrbitControls } from '@react-three/drei';
 import { Vector3 } from 'three';
 import type { Family, ModelId, Parameters, SimulationState } from '../../types';
 import type { Trajectory } from '../../physics/scene';
 import { sanitizeModelParameters } from '../../physics';
+import { ConceptScenes } from './ConceptScenes';
+import { CameraFraming, Halo, Housing, Metal, RenderBudget, Rod, Studio, Surface, useBrushedTexture } from './Studio';
+import { initialPixelRatio } from './render-policy';
 
 type Point = [number, number, number];
 export interface SceneProps {
@@ -27,12 +30,13 @@ function Arrow({ start, end, color }: { start: Point; end: Point; color: string 
   const direction = new Vector3(...end).sub(new Vector3(...start));
   const length = direction.length();
   if (length < 1e-7) return null;
-  return <arrowHelper args={[direction.normalize(), new Vector3(...start), length, color, Math.min(.3, length * .2), Math.min(.16, length * .1)]}/>;
+  return <><Rod start={start} end={end} radius={.035} color={color}/><arrowHelper args={[direction.normalize(), new Vector3(...start), length, color, Math.min(.3, length * .2), Math.min(.16, length * .1)]}/></>;
 }
 
 function Experiment({ modelId, family, parameters, state, trajectory }: Omit<SceneProps, 'resetKey' | 'onParameterChange'>) {
   const id: ModelId = modelId ?? family ?? 'motion';
   const p = useMemo(() => sanitizeModelParameters(id, parameters), [id, parameters]);
+  const texture = useBrushedTexture();
   const transform = useMemo(() => {
     const { min, max } = trajectory.bounds;
     const scale = 10 / Math.max(...max.map((v, i) => v - min[i]), 1);
@@ -64,19 +68,17 @@ function Experiment({ modelId, family, parameters, state, trajectory }: Omit<Sce
   const xLabel: Point = [5.2, origin[1], origin[2]];
 
   const speedObs = state.observations.find(o => o.key === 'speed');
+  const advanced = state.bodies.length === 0;
 
   return <>
-    <color attach="background" args={['#0b1526']}/>
-    <fog attach="fog" args={['#0b1526', 19, 38]}/>
-    <ambientLight intensity={.6}/>
-    <directionalLight position={[4, 9, 7]} intensity={2.1} castShadow shadow-mapSize={[1024, 1024]}/>
-    <pointLight position={[-5, 3, 3]} intensity={25} color="#4c83ad"/>
-    <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, floor - .015, 0]} receiveShadow><planeGeometry args={[28, 24]}/><meshStandardMaterial color="#101d30" roughness={.9}/></mesh>
-    <gridHelper args={[24, 48, '#29415c', '#1b2e45']} position={[0, floor, 0]}/>
+    <Studio floor={advanced ? -3.3 : floor} space={['gravity', 'astrophysics', 'cosmology'].includes(id)}/>
+    {advanced && <ConceptScenes id={id} parameters={p} state={state}/>}
+    {!advanced && <>
     <Line points={[[-5.5, origin[1], origin[2]], [5.5, origin[1], origin[2]]]} color="#38536b" lineWidth={1}/>
     <Line points={[[origin[0], floor, origin[2]], [origin[0], 5.5, origin[2]]]} color="#38536b" lineWidth={1}/>
     <Label position={xLabel} color="#698398">x</Label>
     <Label position={[origin[0], Math.min(5.3, origin[1] + 2), origin[2]]} color="#698398">y</Label>
+    </>}
     {moving && path.length > 1 && <Line points={path} color={id === 'gravity' ? '#356b80' : '#546478'} lineWidth={1.5} dashed dashSize={.12} gapSize={.12}/>}
     {moving && state.time > 0 && path.length > 1 && <Line points={path.slice(0, visibleTrail)} color={mainColor} lineWidth={2}/>}
     {id === 'motion' && speedObs && <>
@@ -85,6 +87,7 @@ function Experiment({ modelId, family, parameters, state, trajectory }: Omit<Sce
       <Label position={[primaryPoint[0] + .25, primaryPoint[1] + .55, 0]} color={amber}>{fmt(speedObs.value)} m/s</Label>
     </>}
     {id === 'measurement' && <>
+      <group position={[(origin[0] + primaryPoint[0]) / 2, origin[1] - .18, -.05]}><Housing size={[Math.max(.1, Math.abs(primaryPoint[0] - origin[0])), .25, .65]} color="#516779" texture={texture}/></group>
       <Line points={[origin, point([p.length ?? 1, 0, 0])]} color={teal} lineWidth={5}/>
       {Array.from({ length: 21 }, (_, i) => {
         const x = (p.length ?? 1) * i / 20;
@@ -103,36 +106,43 @@ function Experiment({ modelId, family, parameters, state, trajectory }: Omit<Sce
       <Label position={[point(state.bodies[2].position)[0], point(state.bodies[2].position)[1] + .45, 0]} color={amber}>A + B</Label>
     </>}
     {slope && <>
-      <Line points={[slopeStart, slopeEnd]} color="#70859d" lineWidth={6}/>
+      <Rod start={[slopeStart[0], floor, -.35]} end={[slopeStart[0], slopeStart[1] - .25, -.35]} radius={.06}/>
+      <Rod start={[slopeEnd[0], floor, -.35]} end={[slopeEnd[0], slopeEnd[1] - .25, -.35]} radius={.06}/>
+      <group position={[(slopeStart[0] + slopeEnd[0]) / 2, (slopeStart[1] + slopeEnd[1]) / 2 - .2, 0]} rotation={[0, 0, -angle]}><Housing size={[slopeDistance, .15, 1.2]} color="#536a80" texture={texture}/></group>
+      {[-.53, .53].map(z => <Rod key={z} start={[slopeStart[0], slopeStart[1] - .1, z]} end={[slopeEnd[0], slopeEnd[1] - .1, z]} color={teal} radius={.018}/>)}
       <Line points={[slopeStart, [slopeStart[0], slopeEnd[1], 0], slopeEnd]} color="#33465e" lineWidth={1}/>
       <Label position={[slopeStart[0] + .5, slopeStart[1] - .65, 0]}>{fmt(p.angle ?? 0)}° slope</Label>
     </>}
     {id === 'collisions' && <>
-      <Line points={[[-5.5, origin[1] - .28, -.45], [5.5, origin[1] - .28, -.45]]} color="#54687e" lineWidth={3}/>
-      <Line points={[[-5.5, origin[1] - .28, .45], [5.5, origin[1] - .28, .45]]} color="#54687e" lineWidth={3}/>
+      {[-.24, .24].map(z => <Rod key={z} start={[-5.5, origin[1] - .32, z]} end={[5.5, origin[1] - .32, z]} radius={.045} color="#a2b8ce"/>)}
     </>}
     {spring && <>
+      <Rod start={[springAnchor[0], floor, 0]} end={springAnchor} radius={.06}/>
+      <Rod start={[springAnchor[0], primaryPoint[1] - .38, 0]} end={[5, primaryPoint[1] - .38, 0]} radius={.045}/>
+      <Rod start={[5, floor, 0]} end={[5, primaryPoint[1] - .38, 0]} radius={.06}/>
       <mesh position={springAnchor}><boxGeometry args={[.12, 1.3, .8]}/><meshStandardMaterial color="#536981" metalness={.6} roughness={.35}/></mesh>
       <Line points={springPoints} color="#a0bdd0" lineWidth={2.5}/>
       <Label position={[springAnchor[0] + 1, springAnchor[1] + 1, 0]}>k = {fmt(p.stiffness ?? p.springConstant ?? 10)} N/m</Label>
     </>}
     {pendulum && <>
+      <Rod start={[origin[0], origin[1], -.8]} end={[origin[0], floor, -.8]} radius={.075}/>
+      <Rod start={[origin[0], origin[1], -.8]} end={origin} radius={.075}/>
       <mesh position={origin}><sphereGeometry args={[.09, 16, 16]}/><meshStandardMaterial color="#c6d5e1"/></mesh>
-      <Line points={[origin, primaryPoint]} color="#aec4d7" lineWidth={2}/>
+      <Rod start={origin} end={primaryPoint} color="#aec4d7" radius={.022}/>
       <Line points={[origin, point([0, -(p.length ?? 1), 0])]} color="#344e66" dashed dashSize={.08} gapSize={.08}/>
       <Label position={[origin[0] + .6, origin[1] - (p.length ?? 1) * scale / 2, 0]}>L = {fmt(p.length ?? 1)} m</Label>
     </>}
     {state.bodies.map((b, index) => {
       if (b.id === 'origin') return null;
-      const position = point(b.position), radius = Math.min(.65, Math.max(.13, b.radius * scale));
+      const position = point(b.position), radius = b.id === 'central-mass' ? .95 : Math.min(.75, Math.max(.3, b.radius * scale));
       const color = id === 'motion' ? amber : b.color;
       const cart = id === 'collisions', block = slope || spring;
       return <group key={b.id} position={position} rotation={slope ? [0, 0, -angle] : [0, 0, 0]}>
-        <mesh castShadow>
-          {cart || block ? <boxGeometry args={[Math.max(.4, radius * 2), Math.max(.32, radius * 1.6), Math.max(.4, radius * 1.7)]}/> : <sphereGeometry args={[radius, 32, 24]}/>}
-          <meshStandardMaterial color={color} roughness={.28} metalness={.28} emissive={color} emissiveIntensity={b.id === 'central-mass' ? .18 : .05}/>
-        </mesh>
-        {cart && [-1, 1].flatMap(x => [-1, 1].map(z => <mesh key={x + ':' + z} position={[x * .18, -.22, z * .24]} rotation={[Math.PI / 2, 0, 0]}><cylinderGeometry args={[.1, .1, .08, 16]}/><meshStandardMaterial color="#71849a" metalness={.7} roughness={.3}/></mesh>))}
+        {cart || block ? <Housing size={[Math.max(.4, radius * 2), Math.max(.32, radius * 1.6), Math.max(.4, radius * 1.7)]} color={color} texture={texture}/> : <mesh><sphereGeometry args={[radius, 32, 20]}/><Surface color={color}/></mesh>}
+        {(cart || block) && <mesh position={[0, Math.max(.32, radius * 1.6) / 2 + .008, 0]} rotation={[-Math.PI / 2, 0, 0]}><planeGeometry args={[Math.max(.2, radius), .16]}/><meshBasicMaterial color="#d4e8eb"/></mesh>}
+        {!cart && !block && <mesh rotation={[Math.PI / 2, 0, .35]}><torusGeometry args={[radius * 1.015, radius * .035, 6, 40]}/><Metal color="#d0dfed"/></mesh>}
+        {b.id === 'central-mass' && <Halo radius={radius}/>}
+        {cart && [-1, 1].flatMap(x => [-1, 1].map(z => <group key={x + ':' + z} position={[x * radius * .65, -.22, z * radius]} rotation={[Math.PI / 2, 0, 0]}><mesh><cylinderGeometry args={[.13, .13, .1, 16]}/><meshStandardMaterial color="#162033" roughness={.85}/></mesh><mesh position={[0, z * .055, 0]}><cylinderGeometry args={[.07, .07, .014, 12]}/><Metal color="#b9cce2"/></mesh></group>))}
         {cart && <Label position={[0, .65, 0]} color={color}>{index === 0 ? 'A' : 'B'} · {fmt(index === 0 ? (p.mass1 ?? 1) : (p.mass2 ?? 1))} kg</Label>}
         {b.id === 'central-mass' && <Label position={[0, -radius - .5, 0]} color={amber}>M = {fmt(p.centralMass ?? 1)} kg</Label>}
       </group>;
@@ -141,15 +151,17 @@ function Experiment({ modelId, family, parameters, state, trajectory }: Omit<Sce
 }
 
 export default function Scene({ modelId, family, parameters, state, trajectory, resetKey, shouldThrow }: SceneProps) {
+  const [pixelRatio, setPixelRatio] = useState(() => initialPixelRatio(window.innerWidth, navigator.hardwareConcurrency || 4, window.devicePixelRatio || 1));
   if (shouldThrow) {
     throw new Error('Forced 3D Scene render failure for testing reduced visual mode');
   }
   const id: ModelId = modelId ?? family ?? 'motion';
   return <div className="scene-canvas" style={{ position: 'absolute', inset: 0 }} aria-label="Interactive three-dimensional physics model. Drag to orbit the camera; scroll to zoom.">
-    <Canvas key={id + ':' + resetKey} frameloop="demand" shadows dpr={[1, 1.5]} camera={{ position: [7, 5.5, 13], fov: 43, near: .1, far: 70 }} gl={{ antialias: true, alpha: false }}>
+    <Canvas key={id + ':' + resetKey} frameloop="demand" dpr={pixelRatio} camera={{ position: [4, 4, 17], fov: 43, near: .1, far: 70 }} gl={{ antialias: true, alpha: false, powerPreference: 'default' }}>
+      <RenderBudget onDowngrade={setPixelRatio}/>
       <Experiment modelId={id} family={family} parameters={parameters} state={state} trajectory={trajectory}/>
-      <OrbitControls makeDefault target={[0, 0, 0]} enableDamping={false} minDistance={5} maxDistance={25} maxPolarAngle={Math.PI * .85}/>
+      <OrbitControls makeDefault target={[0, 0, 0]} enableDamping={false} minDistance={5} maxDistance={45} maxPolarAngle={Math.PI * .85}/>
+      <CameraFraming/>
     </Canvas>
-    <div style={{ position: 'absolute', left: 16, bottom: 12, color: '#7f96ae', fontSize: 10, pointerEvents: 'none', letterSpacing: '.04em' }}>DRAG TO ORBIT · SCROLL TO ZOOM · MARKER SIZES SCHEMATIC</div>
   </div>;
 }
