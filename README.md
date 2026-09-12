@@ -2,6 +2,16 @@
 
 Physics Teacher Interactive is a free, static, open-source physics adventure for learning physics by predicting, experimenting, calculating, and explaining. It combines 14 open courses, 89 interactive missions, 13 checkpoints, 20 deterministic SI physics models, 17 layered mathematics tutorials, accessible equations, and client-only local progress stored securely in the learner's browser.
 
+## App Preview
+
+The interface uses a responsive, liquid-glass-inspired visual system with a focused mission player and a progress dashboard for long-term mastery.
+
+![Progress dashboard mockup](docs/assets/progress-dashboard-mockup.svg)
+
+![Interactive mission lab mockup](docs/assets/mission-lab-mockup.svg)
+
+Run the app locally with `npm run dev` to explore the live simulations and responsive layouts.
+
 ## Multi-Course Architecture
 
 The platform provides open access to 14 structured physics courses:
