@@ -35,6 +35,34 @@ test.describe('Progress page and rewards dashboard (v2)', () => {
     await expect(page.getByText(/Complete checkpoints in any course to earn badges/)).toBeVisible();
   });
 
+  test('keeps dashboard regions spaced and readable at desktop and phone widths', async ({ page }) => {
+    await page.goto('/#/progress');
+
+    const layout = await page.evaluate(() => {
+      const rewards = document.querySelector('.progress-rewards-dashboard');
+      const mastery = document.querySelector('.mastery-rings-grid');
+      const activity = document.querySelector('.activity-ledger-list');
+      const firstActivity = document.querySelector('.activity-ledger-item');
+      return {
+        rewardsDisplay: rewards ? getComputedStyle(rewards).display : '',
+        masteryDisplay: mastery ? getComputedStyle(mastery).display : '',
+        activityGap: activity ? getComputedStyle(activity).gap : '',
+        activityRowDisplay: firstActivity ? getComputedStyle(firstActivity).display : '',
+      };
+    });
+
+    expect(layout.rewardsDisplay).toBe('grid');
+    expect(layout.masteryDisplay).toBe('grid');
+    expect(layout.activityGap).not.toBe('0px');
+    expect(layout.activityRowDisplay).toBe('flex');
+
+    await page.setViewportSize({ width: 360, height: 800 });
+    await expect(page.locator('.progress-page-container')).toBeVisible();
+    await expect(page.locator('.mastery-rings-grid')).toBeVisible();
+    const mobileColumns = await page.locator('.progress-rewards-dashboard').evaluate((element) => getComputedStyle(element).gridTemplateColumns);
+    expect(mobileColumns.split(' ').length).toBe(1);
+  });
+
   test('switches daily goals and preserves selection', async ({ page }) => {
     await page.goto('/#/progress');
 

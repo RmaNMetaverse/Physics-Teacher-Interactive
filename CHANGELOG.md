@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-09-12 — Progress dashboard layout redesign
+
+- Rebuilt the progress page layout with explicit component-aligned dashboard styles, consistent card surfaces, readable typography, and intentional whitespace between every progress section.
+- Added responsive reward, streak, goal, mastery, activity, settings, and backup layouts for desktop, tablet, and narrow phone widths.
+- Added accessible visual hierarchy for XP, streak, mastery, badge, and activity metadata while preserving existing progress behavior and hash routing.
+
 ## 2026-09-12 — Appearance discoverability and layout repair
 
 - Added an always-visible Appearance shortcut to the top bar, with a compact icon-only treatment on phones, so theme presets, custom colors, and Liquid Glass are reachable from every route.

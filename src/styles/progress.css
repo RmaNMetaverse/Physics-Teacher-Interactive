@@ -487,3 +487,325 @@
 .celebration-ray-group {
   transform-origin: center;
 }
+
+/* Progress dashboard redesign
+ *
+ * The progress page uses a dedicated component vocabulary. These rules keep
+ * spacing and hierarchy explicit so each card remains readable at every size.
+ */
+.progress-page-container {
+  width: min(100%, 1080px);
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  padding: 4px 0 32px;
+}
+
+.progress-page-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 8px 2px 2px;
+}
+
+.progress-page-header .eyebrow {
+  margin: 0 0 8px;
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.progress-page-header h1 {
+  margin: 0;
+  color: var(--text);
+  font-size: clamp(2rem, 4vw, 2.8rem);
+  line-height: 1.05;
+  letter-spacing: -0.04em;
+}
+
+.progress-rewards-dashboard {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.progress-rewards-dashboard > .xp-bar-widget,
+.progress-rewards-dashboard > .progress-streak-and-goals {
+  grid-column: 1 / -1;
+}
+
+.xp-bar-widget,
+.streak-card,
+.daily-goals-card,
+.progress-mastery-section,
+.progress-activity-section,
+.progress-settings-section,
+.progress-backup-section {
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  background: var(--panel);
+  box-shadow: var(--shadow-sm);
+}
+
+.xp-bar-widget {
+  display: grid;
+  gap: 18px;
+  padding: 24px 26px;
+}
+
+.xp-bar-header,
+.mastery-section-header,
+.badge-shelf-header,
+.progress-activity-section > h2 {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.xp-level-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text);
+}
+
+.xp-level-badge svg {
+  color: var(--accent);
+}
+
+.xp-counts {
+  display: inline-flex;
+  align-items: baseline;
+  justify-content: flex-end;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.xp-current-progress {
+  color: var(--accent);
+  font-size: 1.05rem;
+  font-weight: 800;
+}
+
+.xp-total-copy,
+.streak-longest-count,
+.mastery-ring-count,
+.total-completed-missions,
+.badge-shelf-count {
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.xp-progress-bar {
+  display: block;
+  width: 100%;
+  height: 12px;
+  overflow: hidden;
+  border: 0;
+  border-radius: 999px;
+  background: var(--raised);
+}
+
+.xp-progress-bar::-webkit-progress-bar { background: var(--raised); border-radius: inherit; }
+.xp-progress-bar::-webkit-progress-value { background: var(--accent); border-radius: inherit; }
+.xp-progress-bar::-moz-progress-bar { background: var(--accent); border-radius: inherit; }
+
+.progress-streak-and-goals {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.streak-card,
+.daily-goals-card {
+  min-width: 0;
+  padding: 24px;
+}
+
+.streak-card {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.streak-card-visual {
+  display: grid;
+  flex: 0 0 58px;
+  place-items: center;
+  width: 58px;
+  height: 58px;
+  border-radius: 18px;
+  background: color-mix(in srgb, var(--accent) 14%, transparent);
+}
+
+.streak-flame-icon {
+  display: grid;
+  place-items: center;
+  color: var(--accent);
+}
+
+.streak-card-content {
+  min-width: 0;
+  display: grid;
+  gap: 7px;
+}
+
+.streak-eyebrow,
+.goal-eyebrow {
+  color: var(--muted);
+  font-size: 0.75rem;
+  font-weight: 750;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.streak-counts {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+}
+
+.streak-current-count {
+  color: var(--text);
+  font-size: 1.65rem;
+  line-height: 1;
+}
+
+.streak-status-copy,
+.goal-description,
+.backup-description {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.55;
+}
+
+.daily-goals-card {
+  display: grid;
+  align-content: center;
+  gap: 9px;
+}
+
+.daily-goals-card .goal-description { margin-bottom: 4px; }
+
+.goal-options {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.goal-btn {
+  min-height: 46px;
+  padding: 9px 10px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--raised);
+  color: var(--text);
+  font-size: 0.78rem;
+  font-weight: 750;
+  line-height: 1.2;
+  cursor: pointer;
+}
+
+.goal-btn:hover,
+.goal-btn.is-selected {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 13%, var(--raised));
+  color: var(--accent);
+}
+
+.progress-mastery-section,
+.progress-activity-section,
+.progress-settings-section,
+.progress-backup-section {
+  padding: 28px;
+}
+
+.mastery-section-header h2,
+.badge-shelf-header h2,
+.progress-activity-section > h2,
+.progress-settings-section > h2,
+.progress-backup-section > h2 {
+  margin: 0;
+  color: var(--text);
+  font-size: 1.25rem;
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+}
+
+.total-completed-missions,
+.badge-shelf-count {
+  flex: 0 0 auto;
+  padding: 6px 10px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--raised);
+  font-weight: 700;
+}
+
+.mastery-rings-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 22px;
+}
+
+.course-mastery-item {
+  min-width: 0;
+  min-height: 170px;
+  display: grid;
+  place-items: center;
+  padding: 18px 12px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--raised);
+}
+
+.mastery-ring-widget {
+  width: 100%;
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+  text-align: center;
+}
+
+.mastery-ring-visual {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 88px;
+  height: 88px;
+}
+
+.mastery-ring-svg { width: 88px; height: 88px; transform: rotate(-90deg); }
+.mastery-ring-percentage { position: absolute; color: var(--text); font-size: 0.88rem; font-weight: 800; }
+.mastery-ring-details { display: grid; gap: 5px; width: 100%; }
+.mastery-ring-label { overflow-wrap: anywhere; color: var(--text); font-size: 0.88rem; line-height: 1.3; }
+
+.badge-shelf-section { margin-top: 0; }
+.badge-shelf-grid { margin-top: 20px; }
+
+.progress-activity-section > h2 { margin-bottom: 18px; }
+.activity-ledger-list { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; }
+.activity-ledger-item { display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 15px 16px; border: 1px solid var(--line); border-radius: 14px; background: var(--raised); }
+.activity-item-info { min-width: 0; display: grid; gap: 4px; }
+.activity-item-info strong { color: var(--text); font-size: 0.92rem; line-height: 1.35; }
+.activity-item-info small { color: var(--muted); font-size: 0.78rem; line-height: 1.35; }
+.activity-item-xp { flex: 0 0 auto; color: var(--accent); font-size: 0.84rem; font-weight: 800; white-space: nowrap; }
+
+.progress-settings-section,
+.progress-backup-section { display: grid; gap: 18px; }
+.progress-settings-section > h2,
+.progress-backup-section > h2 { margin-bottom: 2px; }
+.backup-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+
+@media (max-width: 980px) {
+  .mastery-rings-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}

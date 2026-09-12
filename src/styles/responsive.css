@@ -285,4 +285,67 @@ html, body {
     margin: 12px 14px 0;
     width: calc(100% - 28px);
   }
+
+  /* Progress dashboard redesign */
+  .progress-page-container {
+    gap: 18px;
+    padding: 0 0 24px;
+  }
+
+  .progress-page-header {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 4px;
+    padding: 4px 0 0;
+  }
+
+  .progress-rewards-dashboard,
+  .progress-streak-and-goals {
+    grid-template-columns: 1fr;
+  }
+
+  .progress-rewards-dashboard > .xp-bar-widget,
+  .progress-rewards-dashboard > .progress-streak-and-goals {
+    grid-column: auto;
+  }
+
+  .xp-bar-widget,
+  .streak-card,
+  .daily-goals-card,
+  .progress-mastery-section,
+  .progress-activity-section,
+  .progress-settings-section,
+  .progress-backup-section {
+    border-radius: 18px;
+  }
+
+  .xp-bar-widget,
+  .streak-card,
+  .daily-goals-card,
+  .progress-mastery-section,
+  .progress-activity-section,
+  .progress-settings-section,
+  .progress-backup-section {
+    padding: 20px;
+  }
+
+  .xp-bar-header {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .xp-counts { justify-content: flex-start; }
+  .goal-options { grid-template-columns: 1fr; }
+  .mastery-rings-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 16px; }
+  .course-mastery-item { min-height: 154px; padding: 14px 8px; }
+  .mastery-section-header,
+  .badge-shelf-header { align-items: flex-start; flex-direction: column; gap: 10px; }
+  .activity-ledger-item { align-items: flex-start; padding: 13px 14px; }
+}
+
+@media (max-width: 420px) {
+  .mastery-rings-grid { grid-template-columns: 1fr; }
+  .activity-ledger-item { flex-direction: column; gap: 7px; }
+  .activity-item-xp { align-self: flex-start; }
 }
