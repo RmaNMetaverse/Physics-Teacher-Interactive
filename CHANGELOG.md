@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-09-14 — macOS Segmented Desktop Toolbar & Responsive Shell
+
+- Rebuilt `<AppShell />` with a macOS-style segmented control (`.macos-segmented-nav`) featuring Explore, Learn, and Progress segments with active page indicators and min 44px touch targets.
+- Added sticky 56px Liquid Glass topbar with specular top highlight and integrated telemetry stats pill displaying live XP and streak counts.
+- Integrated quick `<AppearancePopover />` trigger directly in desktop topbar with outside click and Escape dismissal.
+- Wired `<MobileTabBar />` floating Liquid Glass dock for mobile viewports (`<= 768px`) with safe-area bottom clearance (`calc(84px + env(safe-area-inset-bottom, 0px))`) on main content.
+- Added comprehensive unit tests in `tests/app-shell.test.tsx`.
+
 ## 2026-09-14 — iOS-Style Mobile Floating Bottom Tab Bar
 
 - Implemented `<MobileTabBar />` floating Liquid Glass navigation bar anchored at `bottom: calc(12px + env(safe-area-inset-bottom))` for mobile viewports.

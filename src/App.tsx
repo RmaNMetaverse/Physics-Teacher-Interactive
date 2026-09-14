@@ -93,5 +93,24 @@ export function App() {
     page = <ProgressPage progress={progress} onProgressChange={setProgress} />;
   }
 
-  return <AppShell route={route} learnHash={learnHash(progress)} recoveryMessage={recoveryMessage} mainRef={mainRef}>{page}</AppShell>;
+  const updateSettings = (partial: Partial<LearnerProgressV2['settings']>) => {
+    setProgress(current => ({
+      ...current,
+      settings: { ...current.settings, ...partial },
+      savedAt: new Date().toISOString(),
+    }));
+  };
+
+  return (
+    <AppShell
+      route={route}
+      learnHash={learnHash(progress)}
+      recoveryMessage={recoveryMessage}
+      mainRef={mainRef}
+      progress={progress}
+      onUpdateSettings={updateSettings}
+    >
+      {page}
+    </AppShell>
+  );
 }
