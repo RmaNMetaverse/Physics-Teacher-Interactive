@@ -18,6 +18,7 @@ import { sampleTrajectory } from '../../physics/scene';
 import { formatNumber as fmt } from '../../lib/format';
 import { GraphView } from './GraphView';
 import { SimulationBoundary } from './SimulationBoundary';
+import { advancePlayback, shouldAutoplay } from './playback-policy';
 
 const Scene = lazy(() => import('./Scene'));
 
@@ -95,13 +96,40 @@ export function Lab({
     sanitizeModelParameters(id, { ...modelDefaults(id), ...(preset ?? lesson?.preset) })
   );
   const [time, setTime] = useState(0);
-  const [playing, setPlaying] = useState(false);
+  const [playing, setPlaying] = useState(() =>
+    shouldAutoplay(
+      (typeof document !== 'undefined' && document.documentElement.dataset.reducedMotion === 'true') ||
+        Boolean(typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches),
+      suspended
+    )
+  );
+  const [visible, setVisible] = useState(true);
+  useEffect(() => {
+    if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') return;
+    const media = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const respectMotion = () => {
+      if (media.matches || document.documentElement.dataset.reducedMotion === 'true') setPlaying(false);
+    };
+    media.addEventListener?.('change', respectMotion);
+    const observer = new MutationObserver(respectMotion);
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-reduced-motion'] });
+    return () => {
+      media.removeEventListener?.('change', respectMotion);
+      observer.disconnect();
+    };
+  }, []);
   const [speed, setSpeed] = useState(1);
   const [view, setView] = useState<'3d' | 'graph'>('3d');
   const [camera, setCamera] = useState(0);
   const [reducedModeActive, setReducedModeActive] = useState(false);
 
   const container = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!container.current || typeof IntersectionObserver === 'undefined') return;
+    const observer = new IntersectionObserver(([entry]) => setVisible(entry.isIntersecting));
+    observer.observe(container.current);
+    return () => observer.disconnect();
+  }, []);
   const trajectory = useMemo(() => sampleTrajectory(id, parameters), [id, parameters]);
   const state = useMemo(() => definition.evaluate(parameters, time), [definition, parameters, time]);
   const duration = trajectory.duration || definition.duration;
@@ -116,7 +144,7 @@ export function Lab({
   }, [suspended]);
 
   useEffect(() => {
-    if (!playing) return;
+    if (!playing || !visible || suspended) return;
     let frame = 0;
     let previous = 0;
     let accumulator = 0;
@@ -131,22 +159,21 @@ export function Lab({
       const steps = Math.floor(accumulator * 60);
       if (steps > 0) {
         accumulator -= steps / 60;
-        setTime(t => Math.min(duration, t + (steps / 60) * speed * baseSpeed));
+        setTime(t => advancePlayback(t, (steps / 60) * speed * baseSpeed, duration));
       }
       frame = requestAnimationFrame(tick);
     };
     frame = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(frame);
-  }, [playing, speed, baseSpeed, duration]);
+  }, [playing, visible, suspended, speed, baseSpeed, duration]);
 
   useEffect(() => {
-    if (state.ended || time >= duration) setPlaying(false);
-  }, [state.ended, time, duration]);
+    if (playing && state.ended && time < duration) setTime(0);
+  }, [playing, state.ended, time, duration]);
 
   function update(key: string, value: number) {
     setParameters(p => sanitizeModelParameters(id, { ...p, [key]: value }));
     setTime(0);
-    setPlaying(false);
   }
 
   function play() {
