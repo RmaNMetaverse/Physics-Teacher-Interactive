@@ -1,10 +1,11 @@
 import { memo, useEffect, useLayoutEffect, useMemo, useRef } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
-import { Html, RoundedBox } from '@react-three/drei';
+import { Environment, Html, Lightformer, RoundedBox } from '@react-three/drei';
 import { CanvasTexture, RepeatWrapping, Vector3, Quaternion, Object3D } from 'three';
 import type { InstancedMesh } from 'three';
 import type { MeshStandardMaterial } from 'three';
 import { nextPixelRatio } from './render-policy';
+import type { ModelId } from '../../types';
 
 export type Point = [number, number, number];
 export const palette = { mint: '#5eead4', gold: '#ffbd69', blue: '#83aaff', steel: '#647991' };
@@ -34,7 +35,7 @@ export function useBrushedTexture() {
 }
 
 export function Metal({ color = palette.steel, texture }: { color?: string; texture?: CanvasTexture }) {
-  return <meshStandardMaterial color={color} metalness={.65} roughness={.36} bumpMap={texture} bumpScale={.025} roughnessMap={texture}/>;
+  return <meshStandardMaterial color={color} metalness={.86} roughness={.24} bumpMap={texture} bumpScale={.009} roughnessMap={texture} envMapIntensity={1.35}/>;
 }
 
 /** Analytic surface pattern runs in the existing PBR pass, without texture fetches. */
@@ -96,7 +97,7 @@ export function CameraFraming() {
   const { camera, size, invalidate } = useThree();
   useLayoutEffect(() => {
     const factor = Math.max(1, size.height / Math.max(size.width, 1) * 1.1);
-    camera.position.set(3 * factor, 7 * factor, 16 * factor);
+    camera.position.set(3 * factor, 5.5 * factor, 15.2 * factor);
     camera.lookAt(0, 0, 0);
     invalidate();
   }, [camera, size.width, size.height, invalidate]);
@@ -111,12 +112,18 @@ function Starfield() {
   return <points><bufferGeometry><bufferAttribute attach="attributes-position" args={[positions, 3]}/></bufferGeometry><pointsMaterial color="#acc9ed" size={.065} sizeAttenuation transparent opacity={.65}/></points>;
 }
 
-export const Studio = memo(function Studio({ floor, space = false }: { floor: number; space?: boolean }) {
+export const Studio = memo(function Studio({ floor, space = false, modelId }: { floor: number; space?: boolean; modelId?: ModelId }) {
   const texture = useBrushedTexture();
+  const warm = modelId === 'thermal' || modelId === 'energy' || modelId === 'nuclear';
   return <>
     <color attach="background" args={['#080f1e']}/>
+    <Environment resolution={128} frames={1}>
+      <Lightformer form="rect" intensity={5} color="#e5f2ff" position={[0, 7, 2]} rotation={[Math.PI / 2, 0, 0]} scale={[12, 5, 1]}/>
+      <Lightformer form="rect" intensity={3} color="#6cbaff" position={[-7, 2, 1]} rotation={[0, Math.PI / 2, 0]} scale={[4, 8, 1]}/>
+      <Lightformer form="rect" intensity={4} color="#ffe4ba" position={[6, 3, -4]} rotation={[0, -Math.PI / 3, 0]} scale={[2, 9, 1]}/>
+    </Environment>
     <fog attach="fog" args={['#080f1e', 24, 48]}/>
-    <hemisphereLight args={['#b9d8ff', '#1b2436', 1.5]}/>
+    <hemisphereLight args={['#b9d8ff', '#1b2436', .75]}/>
     <directionalLight position={[3, 8, 6]} color="#fff0d8" intensity={3.2}/>
     <directionalLight position={[-6, 3, -4]} color="#64bbff" intensity={2.5}/>
     <directionalLight position={[4, 1, -7]} color="#71f3cf" intensity={1.4}/>
@@ -125,10 +132,10 @@ export const Studio = memo(function Studio({ floor, space = false }: { floor: nu
     <group position={[0, floor - .23, 0]}>
       <Housing size={[12.5, .3, 5.8]} color="#233348" texture={texture}/>
       <mesh position={[0, .16, 0]} rotation={[-Math.PI / 2, 0, 0]}><planeGeometry args={[12.1, 5.4]}/><meshStandardMaterial color={space ? '#0a162b' : '#162c40'} roughness={.7}/></mesh>
-      {[-1, 1].map(z => <mesh key={z} position={[0, .07, z * 2.91]}><boxGeometry args={[11.8, .025, .02]}/><meshBasicMaterial color={space ? palette.blue : palette.mint}/></mesh>)}
+      {[-1, 1].map(z => <mesh key={z} position={[0, .07, z * 2.91]}><boxGeometry args={[11.8, .025, .02]}/><meshBasicMaterial color={space ? palette.blue : warm ? palette.gold : palette.mint}/></mesh>)}
       {[-1, 1].flatMap(x => [-1, 1].map(z => <mesh key={`${x}:${z}`} position={[x * 5.9, .17, z * 2.55]}><cylinderGeometry args={[.07, .07, .035, 12]}/><Metal color="#a3b4ca"/></mesh>))}
     </group>
-    <gridHelper args={[12, 24, '#355571', '#203b51']} position={[0, floor -.055, 0]} scale={[1, 1, .44]}/>
+    {!space && <gridHelper args={[12, 12, '#294357', '#172b3e']} position={[0, floor -.055, 0]} scale={[1, 1, .44]}/>}
   </>;
 });
 

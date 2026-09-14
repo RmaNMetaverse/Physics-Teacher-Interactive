@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { Html, Line, OrbitControls } from '@react-three/drei';
-import { Vector3 } from 'three';
+import { CatmullRomCurve3, Vector3 } from 'three';
 import type { Family, ModelId, Parameters, SimulationState } from '../../types';
 import type { Trajectory } from '../../physics/scene';
 import { sanitizeModelParameters } from '../../physics';
@@ -22,6 +22,11 @@ export interface SceneProps {
 }
 const teal = '#5eead4', amber = '#ffae54', blue = '#7da7ff';
 const fmt = (value: number) => Math.abs(value) >= 1e5 ? value.toExponential(2) : Number(value.toFixed(2)).toString();
+
+function WoundSpring({ points }: { points: Point[] }) {
+  const curve = useMemo(() => new CatmullRomCurve3(points.map(p => new Vector3(...p))), [points]);
+  return <mesh><tubeGeometry args={[curve, 96, .038, 8, false]}/><Metal color="#cad9e5"/></mesh>;
+}
 
 function Label({ position, children, color = '#c9d6e8' }: { position: Point; children: React.ReactNode; color?: string }) {
   return <Html center position={position} style={{ pointerEvents: 'none', whiteSpace: 'nowrap' }}><span className="scene-tag" style={{ color, fontSize: 10, letterSpacing: '.04em', background: 'rgba(7,17,32,.8)', padding: '4px 7px', borderRadius: 4 }}>{children}</span></Html>;
@@ -71,7 +76,7 @@ function Experiment({ modelId, family, parameters, state, trajectory }: Omit<Sce
   const advanced = state.bodies.length === 0;
 
   return <>
-    <Studio floor={advanced ? -3.3 : floor} space={['gravity', 'astrophysics', 'cosmology'].includes(id)}/>
+    <Studio modelId={id} floor={advanced ? -3.3 : floor} space={['gravity', 'astrophysics', 'cosmology'].includes(id)}/>
     {advanced && <ConceptScenes id={id} parameters={p} state={state}/>}
     {!advanced && <>
     <Line points={[[-5.5, origin[1], origin[2]], [5.5, origin[1], origin[2]]]} color="#38536b" lineWidth={1}/>
@@ -121,10 +126,15 @@ function Experiment({ modelId, family, parameters, state, trajectory }: Omit<Sce
       <Rod start={[springAnchor[0], primaryPoint[1] - .38, 0]} end={[5, primaryPoint[1] - .38, 0]} radius={.045}/>
       <Rod start={[5, floor, 0]} end={[5, primaryPoint[1] - .38, 0]} radius={.06}/>
       <mesh position={springAnchor}><boxGeometry args={[.12, 1.3, .8]}/><meshStandardMaterial color="#536981" metalness={.6} roughness={.35}/></mesh>
-      <Line points={springPoints} color="#a0bdd0" lineWidth={2.5}/>
+      <WoundSpring points={springPoints}/>
       <Label position={[springAnchor[0] + 1, springAnchor[1] + 1, 0]}>k = {fmt(p.stiffness ?? p.springConstant ?? 10)} N/m</Label>
     </>}
     {pendulum && <>
+      {[-1, 1].map(side => <group key={side}>
+        <Rod start={[origin[0] + side * 1.4, floor, -1]} end={[origin[0] + side * 1.4, origin[1] + .2, -1]} radius={.09} color="#ced9e5"/>
+        <group position={[origin[0] + side * 1.4, floor + .05, -1]}><Housing size={[.7, .12, 1.2]} color="#405773"/></group>
+      </group>)}
+      <Rod start={[origin[0] - 1.4, origin[1] + .2, -1]} end={[origin[0] + 1.4, origin[1] + .2, -1]} radius={.1} color="#ced9e5"/>
       <Rod start={[origin[0], origin[1], -.8]} end={[origin[0], floor, -.8]} radius={.075}/>
       <Rod start={[origin[0], origin[1], -.8]} end={origin} radius={.075}/>
       <mesh position={origin}><sphereGeometry args={[.09, 16, 16]}/><meshStandardMaterial color="#c6d5e1"/></mesh>

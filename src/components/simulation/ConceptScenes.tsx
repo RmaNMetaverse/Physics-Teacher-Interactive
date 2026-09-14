@@ -4,6 +4,7 @@ import type { ModelId, Parameters, SimulationState } from '../../types';
 import { modelCatalog } from '../../physics';
 import { Bars, Halo, Housing, Metal, palette, Rod, Surface, Tag } from './Studio';
 import type { Point } from './Studio';
+import { InstrumentRing, ParticleSculpture, Pedestal, WaveRibbon } from './CinematicElements';
 
 const format = (n: number) => n !== 0 && (Math.abs(n) < .01 || Math.abs(n) > 10000) ? n.toExponential(2) : Number(n.toPrecision(3)).toString();
 
@@ -45,17 +46,26 @@ export function ConceptScenes({ id, parameters: p, state }: { id: ModelId; param
   return <group>
     <Tag position={[0, 3.3, 0]} color={palette.blue}>{caption[id]}</Tag>
     {id === 'waves' && <>
+      <WaveRibbon profile={wave}/>
+      <group position={[0, -2.15, 0]}><Housing size={[10, .16, 1.7]} color="#d3dee8"/></group>
+      {[-4.7, 4.7].map(x => <group key={x} position={[x, -.4, 0]}><Housing size={[.22, 3.5, .5]} color="#3a5268"/></group>)}
+      {[-.5, .5].map(z => <Line key={z} points={wave.map(([x,y]) => [x,y,z] as Point)} color="#478eae" lineWidth={1.3}/>)}
       <Line points={wave} color={palette.mint} lineWidth={4}/>
       {wave.filter((_, i) => i % 4 === 0).map((point, i) => <group key={i}><Rod start={[point[0], -2, 0]} end={point} radius={.014} color="#38536a"/><Orb position={point} radius={i === 8 ? .14 : .065} color={i === 8 ? palette.gold : palette.mint}/></group>)}
       <Tag position={[0, -2.5, 0]}>λ = {format(p.wavelength)} m · f = {format(p.frequency)} Hz</Tag>
     </>}
     {id === 'thermal' && <>
       <mesh position={[-1.8, 0, 0]}><boxGeometry args={[3, 3, 2.4]}/><meshStandardMaterial color="#729cae" wireframe transparent opacity={.4}/></mesh>
-      {p.amount > 0 && Array.from({ length: 24 }, (_, i) => <Orb key={i} position={[-3 + (i * .618 % 1) * 2.4, -1.2 + (i * .414 % 1) * 2.4, -.9 + (i * .732 % 1) * 1.8]} radius={.09} color={palette.gold}/>)}
+      {p.amount > 0 && <group position={[-1.8, 0, 0]}><ParticleSculpture time={state.time} mode="gas" color={palette.gold} count={96}/></group>}
+      <group position={[-1.8, -1.85, 0]}><Pedestal radius={2}/></group>
+      {[-3.35, -.25].map(x => <Rod key={x} start={[x,-1.6,-1.3]} end={[x,1.6,-1.3]} radius={.07} color={palette.gold}/>)}
       {[-1.6, 1.6].map(y => <group key={y} position={[-1.8, y, 0]}><Housing size={[3.3, .16, 2.7]} color="#53667d"/></group>)}
       <Dial position={[2.4, 0, 0]} fraction={p.temperature / 10000} title="Temperature / 10,000 K" value={format(p.temperature) + ' K'} color={palette.gold}/>
     </>}
     {id === 'electromagnetism' && <>
+      <group position={[0,-2.7,0]}><Pedestal radius={1.4}/></group>
+      <Rod start={[0,-2.6,0]} end={[0,-.7,0]} radius={.08}/>
+      <group rotation={[.4,0,.2]}><InstrumentRing radius={2.9} color={palette.blue}/></group>
       <Orb radius={.65} color={p.charge < 0 ? palette.blue : palette.gold}/>
       <Tag position={[0, 0, .8]}>{p.charge > 0 ? '+' : p.charge < 0 ? '−' : '0'}</Tag>
       {p.charge !== 0 && Array.from({ length: 12 }, (_, i) => {
@@ -67,8 +77,9 @@ export function ConceptScenes({ id, parameters: p, state }: { id: ModelId; param
       <Tag position={[0, -3, 0]}>E = {format(value('electricField'))} N/C</Tag>
     </>}
     {id === 'optics' && <>
+      {[-3.8,3.8].map(x => <group key={x} position={[x,-2.55,0]}><Pedestal radius={.55}/><Rod start={[0,0,0]} end={[0,2,0]} radius={.065}/><mesh position={[0,2,0]}><cylinderGeometry args={[.23,.23,.6,24]}/><Metal color={x < 0 ? palette.gold : palette.blue}/></mesh></group>)}
       <mesh rotation={[0, Math.PI / 2, 0]}><torusGeometry args={[1.65, .09, 8, 48]}/><Metal/></mesh>
-      <mesh scale={[.18, 1.6, 1.6]}><sphereGeometry args={[1, 24, 16]}/><meshStandardMaterial color="#8cddff" metalness={.2} roughness={.15} transparent opacity={.28} depthWrite={false}/></mesh>
+      <mesh scale={[.18, 1.6, 1.6]}><sphereGeometry args={[1, 40, 24]}/><meshPhysicalMaterial color="#a0e3ff" metalness={.1} roughness={.08} transparent opacity={.35} depthWrite={false} clearcoat={1} iridescence={.5}/></mesh>
       <Rod start={[0, -1.65, 0]} end={[0, -2.7, 0]} radius={.07}/>
       <Rod start={[-4.5, -2.7, 0]} end={[4.5, -2.7, 0]} radius={.09}/>
       <Tag position={[-2.7, .5, 0]}>Object: {format(p.objectDistance)} m</Tag>
@@ -76,12 +87,15 @@ export function ConceptScenes({ id, parameters: p, state }: { id: ModelId; param
       <Tag position={[0, 2.2, 0]}>f = {format(p.focalLength)} m</Tag>
     </>}
     {id === 'relativity' && <>
+      {[-2,2].map(x => <group key={x} position={[x,-2.8,0]}><Pedestal radius={1.45}/><Rod start={[0,0,-.1]} end={[0,1.75,-.1]} radius={.1}/></group>)}
       <Dial clock position={[-2, .3, 0]} fraction={(state.time % 60) / 60} title="Coordinate time" value={format(state.time) + ' s'}/>
       <Dial clock position={[2, .3, 0]} fraction={(value('properTime') % 60) / 60} title="Proper time" value={format(value('properTime')) + ' s'} color={palette.gold}/>
       <group position={[-2, -2.3, 0]}><Housing size={[3, .16, .3]} color={palette.mint}/></group>
       <mesh position={[2, -2.3, 0]} scale={[3 * value('lengthRatio'), .16, .3]}><boxGeometry/><Metal color={palette.gold}/></mesh>
     </>}
     {id === 'quantum' && <>
+      <group position={[0,-1.75,0]}><Housing size={[9.5,.2,2]} color="#d2dce6"/></group>
+      <group position={[0,0,-.6]} rotation={[Math.PI/2,0,0]}><InstrumentRing radius={2.6} color={palette.blue}/></group>
       <Bars items={state.probabilitySamples?.map(sample => {
         const height = sample.probability / peak * 3;
         return { position: [(sample.position - p.center) / p.sigma * .72, height / 2 - 1.5, 0] as Point, scale: [.06, Math.max(.003, height), .45] as Point };
@@ -89,26 +103,42 @@ export function ConceptScenes({ id, parameters: p, state }: { id: ModelId; param
       <Tag position={[0, -2.3, 0]}>σ = {format(p.sigma)} m · T ≈ {format(value('transmission'))}</Tag>
     </>}
     {id === 'atomic' && <>
+      <group position={[0,0,-1.6]} scale={.85}><ParticleSculpture time={0} mode="shell" color={palette.blue} count={240}/></group>
+      <Tag position={[0,-2.8,0]}>Decorative shell · not an electron orbit</Tag>
       <Rod start={[-3.5, -2, 0]} end={[-3.5, 2, 0]}/>
       <Line points={[[-3.5, 2, 0], [3.5, 2, 0]]} color="#768699" dashed dashSize={.12} gapSize={.1}/>
       <group position={[0, 2 + value('energyEv') / 13.6 * 4, 0]}><Housing size={[6, .08, .5]} color={palette.gold}/><Tag position={[0, -.5, .2]}>n = {p.n} · {format(value('energyEv'))} eV</Tag></group>
       <Tag position={[0, 2.5, 0]}>Ionization limit · 0 eV</Tag>
     </>}
-    {id === 'nuclear' && <Dial position={[0, 0, 0]} fraction={p.initial === 0 ? 0 : value('remaining') / p.initial} title="Expected fraction remaining" value={format(value('remaining')) + ' / ' + format(p.initial)} color={palette.gold}/>}
+    {id === 'nuclear' && <>
+      <group position={[-2,0,0]} scale={.8}><ParticleSculpture time={0} mode="shell" color={palette.gold} count={160}/><Orb radius={1.15} color="#344b68"/><InstrumentRing radius={2.1}/></group>
+      <Dial position={[2, 0, 0]} fraction={p.initial === 0 ? 0 : value('remaining') / p.initial} title="Expected fraction remaining" value={format(value('remaining')) + ' / ' + format(p.initial)} color={palette.gold}/>
+      <Tag position={[-2,-2.3,0]}>Illustrative nucleus · not individual decay events</Tag>
+    </>}
     {id === 'particle' && <>
+      <group position={[0,-1.75,0]}><Housing size={[10.5,.2,2]} color="#d3dce7"/></group>
+      <group position={[0,.1,-1.5]} rotation={[Math.PI/2,0,0]}><InstrumentRing radius={2.6}/><InstrumentRing radius={2.85} color={palette.blue}/></group>
       {['energy', 'restEnergy', 'pc', 'kinetic'].map((key, i) => <group key={key} position={[-3.6 + i * 2.4, -1.5, 0]}>
         <mesh position={[0, value(key) / (value('energy') || 1) * 1.5, 0]} scale={[.55, Math.max(.003, value(key) / (value('energy') || 1) * 3), .55]}><boxGeometry/><Metal color={i % 2 ? palette.blue : palette.mint}/></mesh>
         <Tag position={[0, -.5, 0]}>{key === 'pc' ? 'pc' : key}</Tag>
       </group>)}
     </>}
-    {id === 'condensed' && <Dial position={[0, 0, 0]} fraction={value('occupancy')} title="Mean occupancy · 0 to 1" value={format(value('occupancy'))}/>}
+    {id === 'condensed' && <>
+      <group position={[-2,0,0]} rotation={[.2,.35,.1]}><ParticleSculpture time={0} mode="lattice" color={palette.mint} count={343}/></group>
+      <group position={[-2,-2,0]}><Pedestal radius={1.8}/></group>
+      <Dial position={[2, 0, 0]} fraction={value('occupancy')} title="Mean occupancy · 0 to 1" value={format(value('occupancy'))}/>
+      <Tag position={[-2,-2.5,0]}>Illustrative crystal lattice</Tag>
+    </>}
     {id === 'astrophysics' && <>
       <Orb radius={1.7} color="#ff913a" luminous/><Halo radius={1.7} warm/>
+      <ParticleSculpture time={state.time} mode="corona" color={palette.gold} count={480}/>
       <mesh rotation={[.3, .3, 0]}><torusGeometry args={[2.1, .012, 6, 64]}/><meshBasicMaterial color="#bc8558"/></mesh>
       <Tag position={[0, -2.6, 0]}>R = {format(p.radius)} m · L = {format(value('luminosity'))} W</Tag>
     </>}
     {id === 'cosmology' && <>
-      <Orb position={[-3.5, 0, 0]} color={palette.blue}/><Orb position={[3.5, 0, 0]} color={palette.gold}/>
+      <group position={[-3.5,0,0]} scale={.7} rotation={[.2,0,.15]}><ParticleSculpture time={state.time} mode="galaxy" color={palette.blue} count={420}/><Orb radius={.2} luminous/></group>
+      <group position={[3.5,0,0]} scale={.7} rotation={[-.3,0,-.2]}><ParticleSculpture time={state.time} mode="galaxy" color={palette.gold} count={420}/><Orb radius={.2} color={palette.gold} luminous/></group>
+      <Tag position={[0,-2.5,0]}>Decorative rotation · galaxy positions fixed</Tag>
       <Line points={[[-2.8, 0, 0], [2.8, 0, 0]]} color={palette.mint} dashed dashSize={.15} gapSize={.12}/>
       <Tag position={[0, .7, 0]}>d = {format(p.distance)} m</Tag>
       <Tag position={[0, -1, 0]}>v = {format(value('recessionSpeed'))} m/s</Tag>
