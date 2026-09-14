@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { AppShell } from './app/AppShell';
-import { isValidAppHash, parseHash, toHash, type AppRoute } from './app/router';
+import { isSupabaseAuthHash, isValidAppHash, parseHash, toHash, type AppRoute } from './app/router';
 import { courseCatalog, courses } from './learning/catalog';
 import { readProgressV2, saveProgressV2 } from './progress/progress';
 import type { LearnerProgressV2 } from './progress/types';
@@ -18,6 +18,7 @@ function learnHash(progress: LearnerProgressV2): string {
 
 function initialRoute(): { route: AppRoute; recoveryMessage: string } {
   if (typeof window === 'undefined') return { route: { page: 'explore' }, recoveryMessage: '' };
+  if (isSupabaseAuthHash(window.location.hash)) return { route: { page: 'explore' }, recoveryMessage: '' };
   const valid = isValidAppHash(window.location.hash);
   return {
     route: parseHash(window.location.hash),
@@ -36,6 +37,12 @@ export function App() {
 
   useEffect(() => {
     const syncRoute = () => {
+      if (isSupabaseAuthHash(window.location.hash)) {
+        setRoute({ page: 'explore' });
+        setRecoveryMessage('');
+        window.scrollTo(0, 0);
+        return;
+      }
       const valid = isValidAppHash(window.location.hash);
       const next = parseHash(window.location.hash);
       setRoute(next);

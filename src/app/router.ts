@@ -8,6 +8,17 @@ export type AppRoute =
 
 const exploreHashes = new Set(['', '#', '#/', '#/explore']);
 
+/**
+ * Supabase's browser auth flow returns sessions and errors in the fragment.
+ * This app also uses fragments for navigation, so callbacks must be excluded
+ * from route recovery until the Supabase client has processed and removed them.
+ */
+export function isSupabaseAuthHash(hash: string): boolean {
+  if (!hash.startsWith('#') || hash.startsWith('#/')) return false;
+  const values = new URLSearchParams(hash.slice(1));
+  return values.has('access_token') || values.has('refresh_token') || values.has('error') || values.has('error_code');
+}
+
 function routeParts(hash: string): string[] {
   if (!hash.startsWith('#/')) return [];
   return hash.slice(2).split('/');

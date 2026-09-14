@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-09-14 — OAuth callback route recovery fix
+
+- Recognized Supabase OAuth callback fragments before hash-route validation so successful Google and GitHub sign-ins no longer show the false red invalid-route message.
+- Leave the authentication fragment available until the Supabase client processes the session and removes it.
+
 ## 2026-09-14 — Auth redirect reliability
 
 - Added an explicit email confirmation redirect to the current static-host URL, matching the existing OAuth return behavior and preserving the GitHub Pages repository subpath.

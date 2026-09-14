@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { isValidAppHash, parseHash, toHash } from '../src/app/router';
+import { isSupabaseAuthHash, isValidAppHash, parseHash, toHash } from '../src/app/router';
 
 describe('hash router', () => {
   it.each(['', '#', '#/', '#/explore'])(
@@ -35,5 +35,11 @@ describe('hash router', () => {
     expect(toHash({ page: 'mission', courseId: 'quantum', missionId: 'quantum-build-a-wavefunction' }))
       .toBe('#/mission/quantum/quantum-build-a-wavefunction');
     expect(toHash({ page: 'progress' })).toBe('#/progress');
+  });
+
+  it('recognizes Supabase callback fragments without mistaking them for invalid routes', () => {
+    expect(isSupabaseAuthHash('#access_token=session-token&refresh_token=refresh-token&type=signup')).toBe(true);
+    expect(isSupabaseAuthHash('#error=access_denied&error_code=provider_not_enabled')).toBe(true);
+    expect(isSupabaseAuthHash('#/course/quantum')).toBe(false);
   });
 });
