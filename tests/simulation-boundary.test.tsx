@@ -246,5 +246,30 @@ describe('Precision Lab & Floating Playback HUD', () => {
       expect(v).toHaveClass('tabular-nums');
     });
   });
+
+  it('renders graph view and reduced visual mode with scrollable wrapper containers', () => {
+    // Switch to graph view
+    render(<Lab modelId="motion" />);
+    const graphTab = screen.getByRole('button', { name: /Graph & data/i });
+    fireEvent.click(graphTab);
+
+    const wrapper = document.querySelector('.graph-viewport-wrapper');
+    expect(wrapper).toBeInTheDocument();
+  });
+
+  it('provides canvas overlays with accessible hint and camera controls', () => {
+    render(<Lab modelId="motion" />);
+    const axisHint = document.querySelector('.scene-axis-hint');
+    expect(axisHint).toBeInTheDocument();
+
+    const cameraBtn = screen.getByRole('button', { name: 'Reset camera' });
+    expect(cameraBtn).toBeInTheDocument();
+    expect(cameraBtn).toHaveClass('icon-button');
+
+    const expandBtn = screen.getByRole('button', { name: 'Expand experiment' });
+    expect(expandBtn).toBeInTheDocument();
+    expect(expandBtn).toHaveClass('icon-button');
+  });
 });
+
 

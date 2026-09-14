@@ -269,7 +269,7 @@ input[type="range"].hardware-slider,
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18), 0 8px 32px rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(24px) saturate(180%);
   -webkit-backdrop-filter: blur(24px) saturate(180%);
-  color: var(--text);
+  color: #f5f8fc;
   user-select: none;
   max-width: calc(100% - 32px);
   box-sizing: border-box;
@@ -283,14 +283,26 @@ input[type="range"].hardware-slider,
   box-shadow: none !important;
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
+  color: #ffffff !important;
 }
 
 @media (prefers-reduced-transparency: reduce) {
   .playback-hud {
-    background-color: var(--panel) !important;
+    background-color: rgba(11, 18, 30, 0.95) !important;
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
+    color: #f5f8fc !important;
   }
+}
+
+/* Liquid Glass disabled fallback: maintain dark anodized glass aesthetic and light text */
+:root[data-liquid-glass="false"] .playback-hud,
+[data-liquid-glass="false"] .playback-hud {
+  background-color: rgba(11, 18, 30, 0.92) !important;
+  border-color: rgba(255, 255, 255, 0.15) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  color: #f5f8fc !important;
 }
 
 /* Play/Pause Primary Button */
@@ -336,16 +348,17 @@ input[type="range"].hardware-slider,
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.08);
-  color: var(--text);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.1);
+  color: #f5f8fc;
+  border: 1px solid rgba(255, 255, 255, 0.15);
   cursor: pointer;
   padding: 0;
-  transition: background var(--transition-fast, 150ms ease), transform var(--transition-fast, 150ms ease);
+  transition: background var(--transition-fast, 150ms ease), transform var(--transition-fast, 150ms ease), color var(--transition-fast, 150ms ease);
 }
 
 .hud-btn:hover {
-  background: rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
   transform: scale(1.05);
 }
 
@@ -370,16 +383,16 @@ input[type="range"].hardware-slider,
 .hud-speed-group {
   display: inline-flex;
   align-items: center;
-  background: rgba(0, 0, 0, 0.35);
+  background: rgba(0, 0, 0, 0.45);
   border-radius: 9999px;
   padding: 2px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .hud-speed-btn {
   border: none;
   background: transparent;
-  color: var(--muted);
+  color: #94a3b8;
   font-size: 11px;
   font-weight: 600;
   font-variant-numeric: tabular-nums;
@@ -395,13 +408,13 @@ input[type="range"].hardware-slider,
 }
 
 .hud-speed-btn:hover {
-  color: var(--text);
+  color: #ffffff;
 }
 
 .hud-speed-btn.active,
 .hud-speed-btn[aria-pressed="true"] {
   background: rgba(255, 255, 255, 0.22);
-  color: var(--text);
+  color: #ffffff;
   font-weight: 700;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
 }
@@ -415,7 +428,7 @@ input[type="range"].hardware-slider,
 .hud-timecode {
   font-size: 12px;
   font-weight: 600;
-  color: var(--text);
+  color: #f5f8fc;
   font-variant-numeric: tabular-nums;
   font-feature-settings: "tnum";
   white-space: nowrap;
@@ -430,6 +443,7 @@ input[type="range"].hardware-slider,
   font-variant-numeric: tabular-nums;
   font-feature-settings: "tnum";
   font-weight: 700;
+  color: #f5f8fc;
 }
 
 .tabular-nums {
@@ -450,15 +464,15 @@ input[type="range"].hardware-slider,
   display: block;
   font-size: 13px;
   font-weight: 600;
-  color: var(--text);
-  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
+  color: #f5f8fc;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.85);
 }
 
 .scene-label p {
   margin: 2px 0 0;
   font-size: 11px;
-  color: var(--muted);
-  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
+  color: #94a3b8;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.85);
 }
 
 .scene-controls {
@@ -478,14 +492,14 @@ input[type="range"].hardware-slider,
   align-items: center;
   gap: 6px;
   font-size: 11px;
-  color: var(--muted);
+  color: rgba(255, 255, 255, 0.75);
   pointer-events: none;
-  background: rgba(11, 18, 30, 0.65);
+  background: rgba(11, 18, 30, 0.75);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   padding: 4px 10px;
   border-radius: 9999px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   z-index: 10;
 }
 
@@ -497,8 +511,8 @@ input[type="range"].hardware-slider,
   height: 32px;
   border-radius: var(--radius-sm, 8px);
   background: rgba(18, 24, 36, 0.75);
-  color: var(--muted);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.15);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   cursor: pointer;
@@ -506,8 +520,53 @@ input[type="range"].hardware-slider,
 }
 
 .icon-button:hover {
-  color: var(--text);
-  background: rgba(28, 36, 54, 0.9);
+  color: #ffffff;
+  background: rgba(28, 36, 54, 0.95);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Graph & Reduced Viewport Scrolling Container */
+.graph-viewport-wrapper,
+.reduced-visual-mode {
+  height: 100%;
+  overflow-y: auto;
+  padding: 16px 20px 76px 20px;
+  box-sizing: border-box;
+}
+
+/* Narrow Viewport Mobile Responsiveness (< 520px / 320px) */
+@media (max-width: 520px) {
+  .playback-hud {
+    gap: 4px;
+    padding: 6px 10px;
+    max-width: calc(100% - 16px);
+    bottom: 12px;
+  }
+  .hud-btn {
+    min-width: 32px;
+    min-height: 32px;
+    width: 32px;
+    height: 32px;
+  }
+  .hud-play-btn {
+    min-width: 40px;
+    min-height: 40px;
+    width: 40px;
+    height: 40px;
+  }
+}
+
+@media (max-width: 440px) {
+  .hud-speed-group {
+    display: none;
+  }
+  .hud-divider:nth-of-type(1) {
+    display: none;
+  }
+  .hud-timecode {
+    font-size: 11px;
+    padding: 0 4px;
+  }
 }
 
 /* Telemetry Section - Apple Watch Modular Meter */
