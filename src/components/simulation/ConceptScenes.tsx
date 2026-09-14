@@ -4,7 +4,7 @@ import type { ModelId, Parameters, SimulationState } from '../../types';
 import { modelCatalog } from '../../physics';
 import { Bars, Halo, Housing, Metal, palette, Rod, Surface, Tag } from './Studio';
 import type { Point } from './Studio';
-import { InstrumentRing, ParticleSculpture, Pedestal, WaveRibbon } from './CinematicElements';
+import { InstrumentRing, ParticleSculpture, Pedestal, ProbabilityCloud, WaveRibbon } from './CinematicElements';
 
 const format = (n: number) => n !== 0 && (Math.abs(n) < .01 || Math.abs(n) > 10000) ? n.toExponential(2) : Number(n.toPrecision(3)).toString();
 
@@ -36,7 +36,7 @@ export function ConceptScenes({ id, parameters: p, state }: { id: ModelId; param
   const caption: Partial<Record<ModelId, string>> = {
     waves: 'Two wavelengths · normalized axes', thermal: 'Equilibrium chamber · decorative molecules',
     electromagnetism: 'Radial field direction · arrows not to scale', optics: 'Lens instrument · not a ray trace',
-    relativity: 'Clocks: one turn = 60 s · normalized lengths', quantum: 'Position probability bins · ±6σ',
+    relativity: 'Clocks: one turn = 60 s · normalized lengths', quantum: 'Bead density + exact probability bins · ±6σ',
     atomic: 'Hydrogen energy level · not an electron orbit', nuclear: 'Expected population · not individual events',
     particle: 'Energy components / total energy', condensed: 'Single-state mean occupancy',
     astrophysics: 'Blackbody · illustrative texture and color', cosmology: 'Fixed-epoch distance · not evolving galaxies',
@@ -96,14 +96,16 @@ export function ConceptScenes({ id, parameters: p, state }: { id: ModelId; param
     {id === 'quantum' && <>
       <group position={[0,-1.75,0]}><Housing size={[9.5,.2,2]} color="#d2dce6"/></group>
       <group position={[0,0,-.6]} rotation={[Math.PI/2,0,0]}><InstrumentRing radius={2.6} color={palette.blue}/></group>
+      <group position={[0,.15,.15]}><ProbabilityCloud samples={state.probabilitySamples ?? []} center={p.center} sigma={p.sigma} time={state.time}/></group>
       <Bars items={state.probabilitySamples?.map(sample => {
         const height = sample.probability / peak * 3;
-        return { position: [(sample.position - p.center) / p.sigma * .72, height / 2 - 1.5, 0] as Point, scale: [.06, Math.max(.003, height), .45] as Point };
+        return { position: [(sample.position - p.center) / p.sigma * .72, height / 2 - 1.5, -.72] as Point, scale: [.045, Math.max(.003, height), .12] as Point };
       }) ?? []}/>
+      <Tag position={[0, 2.45, 0]}>Bead count follows |ψ|² · depth is illustrative</Tag>
       <Tag position={[0, -2.3, 0]}>σ = {format(p.sigma)} m · T ≈ {format(value('transmission'))}</Tag>
     </>}
     {id === 'atomic' && <>
-      <group position={[0,0,-1.6]} scale={.85}><ParticleSculpture time={0} mode="shell" color={palette.blue} count={240}/></group>
+      <group position={[0,0,-1.6]} scale={.85}><ParticleSculpture time={state.time} mode="shell" color={palette.blue} count={240}/></group>
       <Tag position={[0,-2.8,0]}>Decorative shell · not an electron orbit</Tag>
       <Rod start={[-3.5, -2, 0]} end={[-3.5, 2, 0]}/>
       <Line points={[[-3.5, 2, 0], [3.5, 2, 0]]} color="#768699" dashed dashSize={.12} gapSize={.1}/>
@@ -111,7 +113,7 @@ export function ConceptScenes({ id, parameters: p, state }: { id: ModelId; param
       <Tag position={[0, 2.5, 0]}>Ionization limit · 0 eV</Tag>
     </>}
     {id === 'nuclear' && <>
-      <group position={[-2,0,0]} scale={.8}><ParticleSculpture time={0} mode="shell" color={palette.gold} count={160}/><Orb radius={1.15} color="#344b68"/><InstrumentRing radius={2.1}/></group>
+      <group position={[-2,0,0]} scale={.8}><ParticleSculpture time={state.time} mode="shell" color={palette.gold} count={160}/><Orb radius={1.15} color="#344b68"/><InstrumentRing radius={2.1}/></group>
       <Dial position={[2, 0, 0]} fraction={p.initial === 0 ? 0 : value('remaining') / p.initial} title="Expected fraction remaining" value={format(value('remaining')) + ' / ' + format(p.initial)} color={palette.gold}/>
       <Tag position={[-2,-2.3,0]}>Illustrative nucleus · not individual decay events</Tag>
     </>}
@@ -124,7 +126,7 @@ export function ConceptScenes({ id, parameters: p, state }: { id: ModelId; param
       </group>)}
     </>}
     {id === 'condensed' && <>
-      <group position={[-2,0,0]} rotation={[.2,.35,.1]}><ParticleSculpture time={0} mode="lattice" color={palette.mint} count={343}/></group>
+      <group position={[-2,0,0]} rotation={[.2,.35,.1]}><ParticleSculpture time={state.time} mode="lattice" color={palette.mint} count={343}/></group>
       <group position={[-2,-2,0]}><Pedestal radius={1.8}/></group>
       <Dial position={[2, 0, 0]} fraction={value('occupancy')} title="Mean occupancy · 0 to 1" value={format(value('occupancy'))}/>
       <Tag position={[-2,-2.5,0]}>Illustrative crystal lattice</Tag>

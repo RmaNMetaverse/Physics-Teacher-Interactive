@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-09-14 — Cinematic simulations and continuous autoplay
+
+- Added a deterministic, model-derived 3D quantum probability cloud whose bead density follows the existing |ψ|² bins while retaining all exact quantitative bars and readouts.
+- Animated bounded instanced particle systems for thermal, atomic, nuclear, condensed-matter, astrophysics, and cosmology displays, with labels that distinguish illustrative motion from calculated quantities.
+- Moved gravity, astrophysics, and cosmology into a dedicated deep-space environment with star fields and orbital framing instead of the generic laboratory platform.
+- Made simulations start automatically, loop at the model duration, and continue after parameter changes; explicit Pause remains sticky and reduced-motion preferences still begin paused.
+- Added focused unit and browser coverage for autoplay, looping, parameter response, pause behavior, and reduced motion; updated the complete all-course WebGL matrix for autoplay-first operation.
+- Revalidated all 24 representative simulation scenarios below 100 draw calls and 100,000 triangles, including mobile screenshots and a 320px high-DPI device.
+
 ## [0.3.0] — 2026-09-14: Apple Design UI/UX Overhaul (Precision Scientific Studio)
 
 Comprehensive overhaul of the Physics Teacher Interactive interface using the Apple Design Skill and Human Interface Guidelines (HIG) to create an authentic "Precision Scientific Studio" learning experience.

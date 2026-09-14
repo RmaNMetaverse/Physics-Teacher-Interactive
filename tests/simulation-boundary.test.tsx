@@ -159,21 +159,20 @@ describe('Precision Lab & Floating Playback HUD', () => {
     const hud = document.querySelector('.playback-hud');
     expect(hud).toBeInTheDocument();
 
-    // Initially, experiment is paused
-    const playBtn = screen.getByRole('button', { name: 'Play' });
-    expect(playBtn).toBeInTheDocument();
-    expect(playBtn).toHaveAttribute('aria-label', 'Play');
-
-    // Click to start playback
-    fireEvent.click(playBtn);
-
+    // The experiment begins automatically
     const pauseBtn = screen.getByRole('button', { name: 'Pause' });
     expect(pauseBtn).toBeInTheDocument();
     expect(pauseBtn).toHaveAttribute('aria-label', 'Pause');
 
     // Click to pause
     fireEvent.click(pauseBtn);
-    expect(screen.getByRole('button', { name: 'Play' })).toBeInTheDocument();
+    const playBtn = screen.getByRole('button', { name: 'Play' });
+    expect(playBtn).toBeInTheDocument();
+    expect(playBtn).toHaveAttribute('aria-label', 'Play');
+
+    // Click to resume
+    fireEvent.click(playBtn);
+    expect(screen.getByRole('button', { name: 'Pause' })).toBeInTheDocument();
   });
 
   it('advances simulation when Step button is clicked', () => {

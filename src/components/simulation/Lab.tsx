@@ -15,6 +15,7 @@ import {
 import type { LessonDefinition, ModelId, Parameters, SimulationState, ParameterDefinition } from '../../types';
 import { modelCatalog, modelDefaults, sanitizeModelParameters } from '../../physics';
 import { sampleTrajectory } from '../../physics/scene';
+import { advancePlayback, shouldAutoplay } from './playback-policy';
 import { formatNumber as fmt } from '../../lib/format';
 import { GraphView } from './GraphView';
 import { SimulationBoundary } from './SimulationBoundary';
@@ -94,14 +95,21 @@ export function Lab({
   const [parameters, setParameters] = useState<Parameters>(() =>
     sanitizeModelParameters(id, { ...modelDefaults(id), ...(preset ?? lesson?.preset) })
   );
+  const reducedMotionNow = () => typeof window !== 'undefined' && (
+    window.matchMedia?.('(prefers-reduced-motion: reduce)').matches === true ||
+    document.documentElement.dataset.reducedMotion === 'true'
+  );
   const [time, setTime] = useState(0);
-  const [playing, setPlaying] = useState(false);
+  const [motionReduced, setMotionReduced] = useState(reducedMotionNow);
+  const [playing, setPlaying] = useState(() => shouldAutoplay(reducedMotionNow(), suspended));
+  const manuallyPaused = useRef(false);
   useEffect(() => {
     if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') return;
     const media = window.matchMedia('(prefers-reduced-motion: reduce)');
     const respectMotion = () => {
-      if (media.matches || document.documentElement.dataset.reducedMotion === 'true') setPlaying(false);
+      setMotionReduced(media.matches || document.documentElement.dataset.reducedMotion === 'true');
     };
+    respectMotion();
     media.addEventListener?.('change', respectMotion);
     const observer = new MutationObserver(respectMotion);
     observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-reduced-motion'] });
@@ -126,8 +134,9 @@ export function Lab({
   }, [state, onObservation]);
 
   useEffect(() => {
-    if (suspended) setPlaying(false);
-  }, [suspended]);
+    if (!shouldAutoplay(motionReduced, suspended)) setPlaying(false);
+    else if (!manuallyPaused.current) setPlaying(true);
+  }, [motionReduced, suspended]);
 
   useEffect(() => {
     if (!playing) return;
@@ -145,7 +154,7 @@ export function Lab({
       const steps = Math.floor(accumulator * 60);
       if (steps > 0) {
         accumulator -= steps / 60;
-        setTime(t => Math.min(duration, t + (steps / 60) * speed * baseSpeed));
+        setTime(t => advancePlayback(t, (steps / 60) * speed * baseSpeed, duration));
       }
       frame = requestAnimationFrame(tick);
     };
@@ -153,19 +162,20 @@ export function Lab({
     return () => cancelAnimationFrame(frame);
   }, [playing, speed, baseSpeed, duration]);
 
-  useEffect(() => {
-    if (state.ended || time >= duration) setPlaying(false);
-  }, [state.ended, time, duration]);
-
   function update(key: string, value: number) {
     setParameters(p => sanitizeModelParameters(id, { ...p, [key]: value }));
     setTime(0);
-    setPlaying(false);
   }
 
   function play() {
+    if (playing) {
+      manuallyPaused.current = true;
+      setPlaying(false);
+      return;
+    }
+    manuallyPaused.current = false;
     if (time >= duration || state.ended) setTime(0);
-    setPlaying(p => !p);
+    setPlaying(true);
   }
 
   const controls = definition.parameters.filter(p => {
@@ -407,6 +417,7 @@ export function Lab({
               aria-label="Reset"
               title="Reset experiment (t = 0)"
               onClick={() => {
+                manuallyPaused.current = true;
                 setTime(0);
                 setPlaying(false);
               }}
@@ -430,6 +441,7 @@ export function Lab({
               aria-label="Step"
               title="Step forward (1/60s)"
               onClick={() => {
+                manuallyPaused.current = true;
                 setPlaying(false);
                 setTime(t => Math.min(duration, t + baseSpeed / 60));
               }}

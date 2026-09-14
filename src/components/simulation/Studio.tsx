@@ -112,6 +112,17 @@ function Starfield() {
   return <points><bufferGeometry><bufferAttribute attach="attributes-position" args={[positions, 3]}/></bufferGeometry><pointsMaterial color="#acc9ed" size={.065} sizeAttenuation transparent opacity={.65}/></points>;
 }
 
+function DeepSpaceEnvironment({ modelId }: { modelId?: ModelId }) {
+  const warm = modelId === 'astrophysics';
+  const accent = warm ? '#ff9c55' : modelId === 'cosmology' ? '#9b8cff' : palette.blue;
+  return <group>
+    <Starfield/>
+    <mesh rotation={[1.12, .24, -.18]}><torusGeometry args={[6.7, .012, 6, 128]}/><meshBasicMaterial color={accent} transparent opacity={.34}/></mesh>
+    <mesh rotation={[.42, 1.1, .3]}><torusGeometry args={[7.8, .008, 6, 128]}/><meshBasicMaterial color={palette.mint} transparent opacity={.18}/></mesh>
+    <mesh position={[0, 0, -8]}><circleGeometry args={[11, 64]}/><meshBasicMaterial color={warm ? '#24120c' : '#0b1230'} transparent opacity={.48}/></mesh>
+  </group>;
+}
+
 export const Studio = memo(function Studio({ floor, space = false, modelId }: { floor: number; space?: boolean; modelId?: ModelId }) {
   const texture = useBrushedTexture();
   const warm = modelId === 'thermal' || modelId === 'energy' || modelId === 'nuclear';
@@ -127,14 +138,14 @@ export const Studio = memo(function Studio({ floor, space = false, modelId }: { 
     <directionalLight position={[3, 8, 6]} color="#fff0d8" intensity={3.2}/>
     <directionalLight position={[-6, 3, -4]} color="#64bbff" intensity={2.5}/>
     <directionalLight position={[4, 1, -7]} color="#71f3cf" intensity={1.4}/>
-    {space && <Starfield/>}
-    <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, floor - .08, 0]}><planeGeometry args={[60, 60]}/><meshStandardMaterial color="#0d1929" roughness={.85}/></mesh>
-    <group position={[0, floor - .23, 0]}>
+    {space && <DeepSpaceEnvironment modelId={modelId}/>}
+    {!space && <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, floor - .08, 0]}><planeGeometry args={[60, 60]}/><meshStandardMaterial color="#0d1929" roughness={.85}/></mesh>}
+    {!space && <group position={[0, floor - .23, 0]}>
       <Housing size={[12.5, .3, 5.8]} color="#233348" texture={texture}/>
-      <mesh position={[0, .16, 0]} rotation={[-Math.PI / 2, 0, 0]}><planeGeometry args={[12.1, 5.4]}/><meshStandardMaterial color={space ? '#0a162b' : '#162c40'} roughness={.7}/></mesh>
-      {[-1, 1].map(z => <mesh key={z} position={[0, .07, z * 2.91]}><boxGeometry args={[11.8, .025, .02]}/><meshBasicMaterial color={space ? palette.blue : warm ? palette.gold : palette.mint}/></mesh>)}
+      <mesh position={[0, .16, 0]} rotation={[-Math.PI / 2, 0, 0]}><planeGeometry args={[12.1, 5.4]}/><meshStandardMaterial color="#162c40" roughness={.7}/></mesh>
+      {[-1, 1].map(z => <mesh key={z} position={[0, .07, z * 2.91]}><boxGeometry args={[11.8, .025, .02]}/><meshBasicMaterial color={warm ? palette.gold : palette.mint}/></mesh>)}
       {[-1, 1].flatMap(x => [-1, 1].map(z => <mesh key={`${x}:${z}`} position={[x * 5.9, .17, z * 2.55]}><cylinderGeometry args={[.07, .07, .035, 12]}/><Metal color="#a3b4ca"/></mesh>))}
-    </group>
+    </group>}
     {!space && <gridHelper args={[12, 12, '#294357', '#172b3e']} position={[0, floor -.055, 0]} scale={[1, 1, .44]}/>}
   </>;
 });
