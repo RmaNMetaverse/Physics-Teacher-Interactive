@@ -9,6 +9,7 @@ import { ExplorePage } from './pages/ExplorePage';
 import { MissionPage } from './pages/MissionPage';
 import { ProgressPage } from './pages/ProgressPage';
 import { accentContrast, normalizeAppearanceSettings } from './appearance';
+import { useCloudAccount } from './cloud/useCloudAccount';
 
 function learnHash(progress: LearnerProgressV2): string {
   const course = courseCatalog.courses.get(progress.selectedCourseId) ?? courses[0];
@@ -31,6 +32,7 @@ export function App() {
   const [route, setRoute] = useState(initial.route);
   const [recoveryMessage, setRecoveryMessage] = useState(initial.recoveryMessage);
   const mainRef = useRef<HTMLElement>(null);
+  const account = useCloudAccount(progress, setProgress);
 
   useEffect(() => {
     const syncRoute = () => {
@@ -109,6 +111,7 @@ export function App() {
       mainRef={mainRef}
       progress={progress}
       onUpdateSettings={updateSettings}
+      account={account}
     >
       {page}
     </AppShell>

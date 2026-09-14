@@ -1,10 +1,12 @@
 import { useState, type ReactNode, type RefObject } from 'react';
-import { Atom, ChartNoAxesColumn, Compass, Flame, Map, Palette, Trophy } from 'lucide-react';
+import { Atom, ChartNoAxesColumn, Cloud, Compass, Flame, Map, Palette, Trophy, UserRound } from 'lucide-react';
 import type { AppRoute } from './router';
 import { toHash } from './router';
 import type { LearnerProgressV2 } from '../progress/types';
 import { AppearancePopover } from '../components/navigation/AppearancePopover';
 import { MobileTabBar } from '../components/navigation/MobileTabBar';
+import { AccountPopover } from '../components/navigation/AccountPopover';
+import type { CloudAccount } from '../cloud/useCloudAccount';
 
 export interface AppShellProps {
   route: AppRoute;
@@ -16,6 +18,7 @@ export interface AppShellProps {
   onProgressChange?: (next: LearnerProgressV2) => void;
   settings?: LearnerProgressV2['settings'];
   onUpdateSettings?: (partial: Partial<LearnerProgressV2['settings']>) => void;
+  account?: CloudAccount;
 }
 
 const DEFAULT_SETTINGS: LearnerProgressV2['settings'] = {
@@ -38,8 +41,10 @@ export function AppShell({
   onProgressChange,
   settings,
   onUpdateSettings,
+  account,
 }: AppShellProps) {
   const [isAppearanceOpen, setIsAppearanceOpen] = useState(false);
+  const [isAccountOpen, setIsAccountOpen] = useState(false);
   const current = route.page === 'course' || route.page === 'mission' ? 'learn' : route.page;
 
   const activeSettings = settings ?? progress?.settings ?? DEFAULT_SETTINGS;
@@ -137,7 +142,7 @@ export function AppShell({
             aria-label="Appearance settings"
             aria-expanded={isAppearanceOpen}
             aria-haspopup="dialog"
-            onClick={() => setIsAppearanceOpen(prev => !prev)}
+            onClick={() => { setIsAppearanceOpen(prev => !prev); setIsAccountOpen(false); }}
           >
             <Palette size={18} aria-hidden="true" />
             <span className="sr-only">Appearance</span>
@@ -149,6 +154,23 @@ export function AppShell({
             settings={activeSettings}
             onUpdateSettings={handleUpdateSettings}
           />
+
+          {account && (
+            <>
+              <button
+                type="button"
+                className={`account-toggle-button ${isAccountOpen ? 'is-active' : ''} ${account.user ? 'is-signed-in' : ''}`}
+                aria-label={account.user ? 'Account and cloud sync' : 'Sign in or register'}
+                aria-expanded={isAccountOpen}
+                aria-haspopup="dialog"
+                onClick={() => { setIsAccountOpen(previous => !previous); setIsAppearanceOpen(false); }}
+              >
+                {account.syncState === 'syncing' ? <Cloud className="syncing-cloud" size={18} aria-hidden="true" /> : <UserRound size={18} aria-hidden="true" />}
+                <span className="sr-only">Account</span>
+              </button>
+              <AccountPopover account={account} isOpen={isAccountOpen} onClose={() => setIsAccountOpen(false)} />
+            </>
+          )}
         </div>
       </header>
 

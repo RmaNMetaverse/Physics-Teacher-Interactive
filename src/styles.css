@@ -8,6 +8,7 @@
 @import './styles/tokens.css';
 @import './styles/appearance.css';
 @import './styles/shell.css';
+@import './styles/account.css';
 @import './styles/explore.css';
 @import './styles/path.css';
 @import './styles/mission.css';

@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-09-14 — Supabase accounts and durable progress sync
+
+- Added optional email registration, sign-in, sign-out, sync status, and manual synchronization controls without removing anonymous localStorage use.
+- Added a conflict-aware progress merge that preserves completed missions, best stars, badges, XP, math work, attempts, and the newest settings across devices.
+- Added a protected `user_progress` Supabase migration with per-user row-level security and no anonymous database access.
+- Added environment-based Supabase configuration and documented GitHub Pages, Vercel production, and branch-preview deployment without Docker.
+- Added focused cloud merge tests; unconfigured builds continue to operate as the original local-only app.
+
 ## 2026-09-14 — Cinematic simulations and continuous autoplay
 
 - Added a deterministic, model-derived 3D quantum probability cloud whose bead density follows the existing |ψ|² bins while retaining all exact quantitative bars and readouts.
