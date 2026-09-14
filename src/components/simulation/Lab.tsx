@@ -220,7 +220,7 @@ export function Lab({
         </div>
         {isMode ? (
           <select
-            className="text-input"
+            className="text-input hardware-select"
             style={{ width: '100%', fontSize: 11, padding: 7 }}
             id={`param-${p.key}`}
             aria-label={labelText}
@@ -234,9 +234,10 @@ export function Lab({
             ))}
           </select>
         ) : (
-          <>
+          <div className="slider-wrapper">
             <input
               id={`param-${p.key}`}
+              className="hardware-slider"
               aria-label={labelText}
               type="range"
               min={p.min}
@@ -256,9 +257,10 @@ export function Lab({
             />
             <div className="parameter-bounds">
               <span>{fmt(p.min)}</span>
+              <span className="live-unit-badge">{fmt(value)} {p.unit}</span>
               <span>{fmt(p.max)}</span>
             </div>
-          </>
+          </div>
         )}
       </div>
     );
@@ -297,7 +299,7 @@ export function Lab({
       </div>
 
       <div className="lab-content">
-        <div className="experiment-viewport">
+        <div className="experiment-viewport lab-canvas-frame">
           {view === '3d' && !reducedModeActive ? (
             <>
               <SimulationBoundary
@@ -396,6 +398,67 @@ export function Lab({
               <GraphView modelId={id} parameters={parameters} state={state} duration={duration} />
             </div>
           )}
+
+          {/* Floating Liquid Glass Playback HUD */}
+          <div className="playback-hud liquid-glass-surface" role="toolbar" aria-label="Playback controls">
+            <button
+              type="button"
+              className="hud-btn hud-reset-btn"
+              aria-label="Reset"
+              title="Reset experiment (t = 0)"
+              onClick={() => {
+                setTime(0);
+                setPlaying(false);
+              }}
+            >
+              <RotateCcw size={15} />
+            </button>
+
+            <button
+              type="button"
+              className="hud-play-btn"
+              aria-label={playing ? 'Pause' : 'Play'}
+              title={playing ? 'Pause' : 'Play'}
+              onClick={play}
+            >
+              {playing ? <Pause size={18} fill="currentColor" /> : <Play size={18} fill="currentColor" />}
+            </button>
+
+            <button
+              type="button"
+              className="hud-btn hud-step-btn"
+              aria-label="Step"
+              title="Step forward (1/60s)"
+              onClick={() => {
+                setPlaying(false);
+                setTime(t => Math.min(duration, t + baseSpeed / 60));
+              }}
+            >
+              <SkipForward size={15} />
+            </button>
+
+            <span className="hud-divider" aria-hidden="true" />
+
+            <div className="hud-speed-group segmented" role="group" aria-label="Playback speed">
+              {[0.5, 1, 2].map(s => (
+                <button
+                  key={s}
+                  type="button"
+                  className={`hud-speed-btn ${speed === s ? 'active' : ''}`}
+                  aria-pressed={speed === s}
+                  onClick={() => setSpeed(s)}
+                >
+                  {s}×
+                </button>
+              ))}
+            </div>
+
+            <span className="hud-divider" aria-hidden="true" />
+
+            <div className="hud-timecode tabular-nums" aria-label="Simulation timecode">
+              t = <span data-testid="simulation-time">{fmt(state.time, 2)}</span> s / {fmt(duration, 2)} s
+            </div>
+          </div>
         </div>
 
         <div className="parameters">
@@ -428,80 +491,14 @@ export function Lab({
         </div>
       </div>
 
-      <div className="lab-playbar">
-        <button
-          type="button"
-          className="play-button"
-          aria-label={playing ? 'Pause experiment' : 'Play experiment'}
-          onClick={play}
-        >
-          {playing ? <Pause size={14} /> : <Play size={14} fill="currentColor" />}
-          {playing ? 'Pause' : 'Play'}
-        </button>
-        <button
-          type="button"
-          className="playbar-icon"
-          aria-label="Reset experiment"
-          title="Reset experiment"
-          onClick={() => {
-            setTime(0);
-            setPlaying(false);
-          }}
-        >
-          <RotateCcw size={16} />
-        </button>
-        <button
-          type="button"
-          className="playbar-icon"
-          aria-label="Step experiment"
-          title="Step forward"
-          onClick={() => {
-            setPlaying(false);
-            setTime(t => Math.min(duration, t + baseSpeed / 60));
-          }}
-        >
-          <SkipForward size={16} />
-        </button>
-        <span className="playbar-divider" />
-        <select
-          className="speed-select"
-          aria-label="Playback speed"
-          value={speed}
-          onChange={e => setSpeed(Number(e.target.value))}
-        >
-          {[0.25, 0.5, 1, 2].map(s => (
-            <option key={s} value={s}>
-              {s * baseSpeed}×
-            </option>
-          ))}
-        </select>
-        <div className="timeline">
-          <input
-            type="range"
-            aria-label="Experiment time"
-            min="0"
-            max={duration}
-            step={duration / 1000}
-            value={Math.min(duration, time)}
-            onChange={e => {
-              setPlaying(false);
-              setTime(Number(e.target.value));
-            }}
-          />
-        </div>
-        <div className="time-label">
-          t = <b data-testid="simulation-time">{fmt(state.time, 2)}</b> s
-        </div>
-      </div>
-
       <div className="telemetry" aria-label="Numerical observations">
         {state.observations.slice(0, 4).map(o => (
           <div className="measurement" key={o.key}>
             <div className="measurement-label">
-              <span className="quantity-dot" style={{ background: o.color }} />
+              <span className="quantity-dot" style={{ background: o.color, color: o.color }} />
               {o.label}
             </div>
-            <div className="measurement-value">
+            <div className="measurement-value tabular-nums">
               {fmt(o.value)}
               <small>{o.unit}</small>
             </div>

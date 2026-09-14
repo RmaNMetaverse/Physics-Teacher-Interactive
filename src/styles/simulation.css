@@ -41,13 +41,21 @@
   box-shadow: 0 0 10px var(--teal);
 }
 
-/* Experiment Viewport */
+/* Experiment Viewport & Precision Instrument Housing */
 .experiment-viewport {
   position: relative;
-  height: 400px;
+  height: 420px;
   min-width: 0;
-  background: #090d14;
+  background: #0b121e;
   overflow: hidden;
+}
+
+.lab-canvas-frame {
+  position: relative;
+  overflow: hidden;
+  background: #0b121e;
+  border-radius: var(--radius-lg, 18px);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08), inset 0 2px 10px rgba(0, 0, 0, 0.65);
 }
 
 .scene-loading {
@@ -68,7 +76,7 @@
 .parameters {
   padding: 20px;
   border-left: 1px solid var(--line);
-  max-height: 400px;
+  max-height: 420px;
   overflow-y: auto;
   background: var(--panel);
 }
@@ -117,50 +125,176 @@
   padding: 4px 6px;
 }
 
-input[type=range] {
+/* Tactile Knurled Hardware Slider */
+.slider-wrapper {
+  position: relative;
+  margin: 4px 0;
+}
+
+.hardware-slider,
+input[type="range"].hardware-slider,
+.parameters input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
   width: 100%;
-  accent-color: var(--accent);
   height: 6px;
-  display: block;
+  background: var(--sunken, #060910);
+  border: 1px solid var(--line-subtle, rgba(255, 255, 255, 0.08));
+  border-radius: 9999px;
+  outline: none;
   cursor: pointer;
-  margin: 10px 0;
+  margin: 10px 0 6px 0;
+  transition: border-color var(--transition-fast, 150ms ease);
+}
+
+.hardware-slider:focus-visible,
+.parameters input[type="range"]:focus-visible {
+  border-color: var(--focus-ring-color, var(--accent));
+  box-shadow: var(--focus-ring-shadow, 0 0 0 4px var(--accent-soft));
+}
+
+/* WebKit Thumb - Knurled Grip Texture */
+.hardware-slider::-webkit-slider-thumb,
+.parameters input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 6px;
+  background:
+    repeating-linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.4) 0px,
+      rgba(255, 255, 255, 0.4) 1px,
+      transparent 1px,
+      transparent 3px
+    ),
+    linear-gradient(180deg, #3a4559 0%, #1c2436 100%);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  cursor: grab;
+  transition: transform var(--transition-fast, 150ms ease), border-color var(--transition-fast, 150ms ease);
+}
+
+.hardware-slider::-webkit-slider-thumb:hover,
+.parameters input[type="range"]::-webkit-slider-thumb:hover {
+  border-color: var(--accent);
+  transform: scale(1.08);
+}
+
+.hardware-slider::-webkit-slider-thumb:active,
+.parameters input[type="range"]::-webkit-slider-thumb:active {
+  cursor: grabbing;
+  transform: scale(1.15);
+  border-color: var(--accent);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+/* Firefox Thumb - Knurled Grip Texture */
+.hardware-slider::-moz-range-thumb,
+.parameters input[type="range"]::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 6px;
+  background:
+    repeating-linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.4) 0px,
+      rgba(255, 255, 255, 0.4) 1px,
+      transparent 1px,
+      transparent 3px
+    ),
+    linear-gradient(180deg, #3a4559 0%, #1c2436 100%);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  cursor: grab;
+  transition: transform var(--transition-fast, 150ms ease), border-color var(--transition-fast, 150ms ease);
+}
+
+.hardware-slider::-moz-range-thumb:hover,
+.parameters input[type="range"]::-moz-range-thumb:hover {
+  border-color: var(--accent);
+  transform: scale(1.08);
+}
+
+.hardware-slider::-moz-range-thumb:active,
+.parameters input[type="range"]::-moz-range-thumb:active {
+  cursor: grabbing;
+  transform: scale(1.15);
+  border-color: var(--accent);
+}
+
+/* Firefox Track */
+.hardware-slider::-moz-range-track,
+.parameters input[type="range"]::-moz-range-track {
+  height: 6px;
+  background: var(--sunken, #060910);
+  border: 1px solid var(--line-subtle, rgba(255, 255, 255, 0.08));
+  border-radius: 9999px;
 }
 
 .parameter-bounds {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   color: var(--muted);
   font-size: 11px;
 }
 
-/* Lab Playbar Controls */
-.lab-playbar {
+.live-unit-badge {
+  font-size: 11px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--accent);
+  background: var(--accent-soft);
+  padding: 1px 6px;
+  border-radius: 9999px;
+  border: 1px solid color-mix(in srgb, var(--accent) 25%, transparent);
+}
+
+/* Floating Liquid Glass Playback HUD */
+.playback-hud {
+  position: absolute;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 20;
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 12px 18px;
-  border-top: 1px solid var(--line);
-  min-height: 60px;
-  background: var(--panel);
-  flex-wrap: wrap;
-}
-
-.play-button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
   gap: 8px;
-  border-radius: var(--radius-md);
-  background: var(--accent);
-  color: var(--accent-contrast);
-  padding: 10px 18px;
-  font-size: 13px;
-  font-weight: 700;
-  min-width: 96px;
-  min-height: 44px;
+  padding: 8px 16px;
+  border-radius: 9999px;
+  background-color: color-mix(in srgb, #0d131f 78%, transparent);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18), 0 8px 32px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  color: var(--text);
+  user-select: none;
+  max-width: calc(100% - 32px);
+  box-sizing: border-box;
 }
 
-.playbar-icon {
+/* High contrast & reduced transparency fallbacks */
+[data-theme="high-contrast"] .playback-hud,
+:root[data-theme="high-contrast"] .playback-hud {
+  background: #090909 !important;
+  border: 1px solid #ffffff !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .playback-hud {
+    background-color: var(--panel) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+}
+
+/* Play/Pause Primary Button */
+.hud-play-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -168,42 +302,235 @@ input[type=range] {
   min-height: 44px;
   width: 44px;
   height: 44px;
-  border-radius: var(--radius-md);
-  color: var(--muted);
+  border-radius: 50%;
+  background: var(--accent, #a78bfa);
+  color: var(--accent-contrast, #0d1117);
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  transition: transform var(--transition-fast, 150ms ease), filter var(--transition-fast, 150ms ease);
+}
+
+.hud-play-btn:hover {
+  transform: scale(1.06);
+  filter: brightness(1.08);
+}
+
+.hud-play-btn:active {
+  transform: scale(0.96);
+}
+
+.hud-play-btn:focus-visible {
+  outline: var(--focus-ring-width, 2px) solid var(--focus-ring-color, var(--accent));
+  outline-offset: var(--focus-ring-offset, 3px);
+}
+
+/* Secondary Action Buttons (Reset, Step) */
+.hud-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 36px;
+  min-height: 36px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  cursor: pointer;
+  padding: 0;
+  transition: background var(--transition-fast, 150ms ease), transform var(--transition-fast, 150ms ease);
+}
+
+.hud-btn:hover {
+  background: rgba(255, 255, 255, 0.18);
+  transform: scale(1.05);
+}
+
+.hud-btn:active {
+  transform: scale(0.95);
+}
+
+.hud-btn:focus-visible {
+  outline: var(--focus-ring-width, 2px) solid var(--focus-ring-color, var(--accent));
+  outline-offset: var(--focus-ring-offset, 2px);
+}
+
+/* HUD Divider */
+.hud-divider {
+  width: 1px;
+  height: 20px;
+  background: rgba(255, 255, 255, 0.16);
+  margin: 0 4px;
+}
+
+/* HUD Speed Segmented Switcher */
+.hud-speed-group {
+  display: inline-flex;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.35);
+  border-radius: 9999px;
+  padding: 2px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.hud-speed-btn {
+  border: none;
   background: transparent;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  padding: 4px 8px;
+  border-radius: 9999px;
+  cursor: pointer;
+  min-width: 32px;
+  min-height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background var(--transition-fast, 150ms ease), color var(--transition-fast, 150ms ease);
 }
 
-.playbar-icon:hover {
+.hud-speed-btn:hover {
   color: var(--text);
-  background: var(--raised);
 }
 
-.speed-select {
-  min-height: 44px;
-  height: 44px;
-  padding: 8px 12px;
-  border: 1px solid var(--line);
-  border-radius: var(--radius-md);
-  background: var(--panel);
+.hud-speed-btn.active,
+.hud-speed-btn[aria-pressed="true"] {
+  background: rgba(255, 255, 255, 0.22);
   color: var(--text);
+  font-weight: 700;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+}
+
+.hud-speed-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+/* HUD Timecode Display */
+.hud-timecode {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+  white-space: nowrap;
+  padding: 0 6px;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.hud-timecode span,
+.hud-timecode b {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+  font-weight: 700;
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+}
+
+/* Scene Overlays */
+.scene-label {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.scene-label strong {
+  display: block;
   font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
 }
 
-/* Telemetry Section */
+.scene-label p {
+  margin: 2px 0 0;
+  font-size: 11px;
+  color: var(--muted);
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
+}
+
+.scene-controls {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  display: flex;
+  gap: 6px;
+  z-index: 10;
+}
+
+.scene-axis-hint {
+  position: absolute;
+  bottom: 68px;
+  left: 16px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: var(--muted);
+  pointer-events: none;
+  background: rgba(11, 18, 30, 0.65);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  padding: 4px 10px;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  z-index: 10;
+}
+
+.icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm, 8px);
+  background: rgba(18, 24, 36, 0.75);
+  color: var(--muted);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  cursor: pointer;
+  transition: var(--transition-fast, 150ms ease);
+}
+
+.icon-button:hover {
+  color: var(--text);
+  background: rgba(28, 36, 54, 0.9);
+}
+
+/* Telemetry Section - Apple Watch Modular Meter */
 .telemetry {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 1px;
   border-top: 1px solid var(--line);
-  background: var(--panel);
+  background: var(--line);
 }
 
 .measurement {
   padding: 14px 18px;
-  border-right: 1px solid var(--line);
+  background: var(--panel);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+  transition: background var(--transition-fast, 150ms ease);
 }
 
-.measurement:last-child {
-  border-right: none;
+.measurement:hover {
+  background: color-mix(in srgb, var(--panel) 92%, var(--raised));
 }
 
 .measurement-label {
@@ -211,17 +538,38 @@ input[type=range] {
   align-items: center;
   gap: 6px;
   color: var(--muted);
-  font-size: 11px;
-  font-weight: 600;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
   text-transform: uppercase;
   margin-bottom: 6px;
 }
 
+.quantity-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  box-shadow: 0 0 6px currentColor;
+}
+
 .measurement-value {
-  font-size: 18px;
+  font-size: 20px;
   font-weight: 700;
-  font-family: monospace;
+  font-family: var(--font-sans);
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
   color: var(--text);
+  letter-spacing: -0.2px;
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.measurement-value small {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--muted);
+  font-variant-numeric: normal;
 }
 
 /* Reduced Visual Mode & Simulation Fallbacks */

@@ -137,3 +137,114 @@ describe('SimulationBoundary & Reduced Visual Mode', () => {
     expect(onComplete).toHaveBeenCalledTimes(1);
   });
 });
+
+describe('Precision Lab & Floating Playback HUD', () => {
+  afterEach(() => {
+    cleanup();
+  });
+
+  it('structures playback controls within .playback-hud over .lab-canvas-frame', () => {
+    render(<Lab modelId="motion" />);
+    const frame = document.querySelector('.lab-canvas-frame');
+    expect(frame).toBeInTheDocument();
+
+    const hud = frame?.querySelector('.playback-hud');
+    expect(hud).toBeInTheDocument();
+    expect(hud).toHaveAttribute('role', 'toolbar');
+    expect(hud).toHaveAttribute('aria-label', 'Playback controls');
+  });
+
+  it('provides accessible Play/Pause labels on the primary button', async () => {
+    render(<Lab modelId="motion" />);
+    const hud = document.querySelector('.playback-hud');
+    expect(hud).toBeInTheDocument();
+
+    // Initially, experiment is paused
+    const playBtn = screen.getByRole('button', { name: 'Play' });
+    expect(playBtn).toBeInTheDocument();
+    expect(playBtn).toHaveAttribute('aria-label', 'Play');
+
+    // Click to start playback
+    fireEvent.click(playBtn);
+
+    const pauseBtn = screen.getByRole('button', { name: 'Pause' });
+    expect(pauseBtn).toBeInTheDocument();
+    expect(pauseBtn).toHaveAttribute('aria-label', 'Pause');
+
+    // Click to pause
+    fireEvent.click(pauseBtn);
+    expect(screen.getByRole('button', { name: 'Play' })).toBeInTheDocument();
+  });
+
+  it('advances simulation when Step button is clicked', () => {
+    render(<Lab modelId="motion" />);
+    const timeEl = screen.getByTestId('simulation-time');
+    expect(timeEl).toHaveTextContent('0');
+
+    const stepBtn = screen.getByRole('button', { name: 'Step' });
+    expect(stepBtn).toBeInTheDocument();
+
+    fireEvent.click(stepBtn);
+    expect(Number(timeEl.textContent)).toBeGreaterThan(0);
+  });
+
+  it('resets simulation time to 0 when Reset button is clicked', () => {
+    render(<Lab modelId="motion" />);
+    const stepBtn = screen.getByRole('button', { name: 'Step' });
+    const resetBtn = screen.getByRole('button', { name: 'Reset' });
+    const timeEl = screen.getByTestId('simulation-time');
+
+    // Advance first
+    fireEvent.click(stepBtn);
+    expect(Number(timeEl.textContent)).toBeGreaterThan(0);
+
+    // Now reset
+    fireEvent.click(resetBtn);
+    expect(Number(timeEl.textContent)).toBe(0);
+  });
+
+  it('renders timecode display with tabular figures formatting', () => {
+    render(<Lab modelId="motion" />);
+    const timecode = document.querySelector('.hud-timecode');
+    expect(timecode).toBeInTheDocument();
+    expect(timecode).toHaveClass('tabular-nums');
+    expect(timecode?.textContent).toMatch(/t\s*=\s*\d+(\.\d+)?\s*s\s*\/\s*\d+(\.\d+)?\s*s/);
+  });
+
+  it('provides speed multiplier switcher (0.5×, 1×, 2×)', () => {
+    render(<Lab modelId="motion" />);
+    const speedHalf = screen.getByRole('button', { name: '0.5×' });
+    const speedOne = screen.getByRole('button', { name: '1×' });
+    const speedDouble = screen.getByRole('button', { name: '2×' });
+
+    expect(speedHalf).toBeInTheDocument();
+    expect(speedOne).toBeInTheDocument();
+    expect(speedDouble).toBeInTheDocument();
+
+    // Default speed is 1x
+    expect(speedOne).toHaveAttribute('aria-pressed', 'true');
+
+    fireEvent.click(speedDouble);
+    expect(speedDouble).toHaveAttribute('aria-pressed', 'true');
+    expect(speedOne).toHaveAttribute('aria-pressed', 'false');
+  });
+
+  it('styles parameter sliders with knurled hardware class and live value unit pills', () => {
+    render(<Lab modelId="motion" />);
+    const sliders = document.querySelectorAll('.hardware-slider');
+    expect(sliders.length).toBeGreaterThan(0);
+
+    const badges = document.querySelectorAll('.live-unit-badge');
+    expect(badges.length).toBeGreaterThan(0);
+  });
+
+  it('formats telemetry measurement values with tabular figures', () => {
+    render(<Lab modelId="motion" />);
+    const values = document.querySelectorAll('.measurement-value');
+    expect(values.length).toBeGreaterThan(0);
+    values.forEach(v => {
+      expect(v).toHaveClass('tabular-nums');
+    });
+  });
+});
+
