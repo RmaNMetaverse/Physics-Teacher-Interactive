@@ -201,3 +201,6 @@ Comprehensive overhaul of the Physics Teacher Interactive interface using the Ap
 - Hardened saved progress against retired or tampered curriculum and assessment IDs, and kept keyboard skip navigation on the active lesson.
 - Added scientific, curriculum, accessibility, and browser regression tests.
 - Added SHA-pinned CI and GitHub Pages deployment workflows for Node.js 22.20.
+## 2026-09-14 — 3D simulation README gallery
+
+- Added captured measurement, quantum, and cosmology simulation-stage screenshots to the README.

@@ -16,6 +16,14 @@ The interface uses a responsive Apple-inspired Liquid Glass visual system with a
 
 ![Interactive mission lab](docs/assets/app-mission-lab.png)
 
+### 3D simulation gallery
+
+Mission laboratories include interactive 3D scenes with adjustable parameters, camera controls, and live scientific readouts.
+
+![Measurement laboratory simulation](docs/assets/simulation-measurement.png)
+![Quantum light simulation](docs/assets/simulation-quantum.png)
+![Cosmology expansion simulation](docs/assets/simulation-cosmology.png)
+
 ![Progress report dashboard](docs/assets/app-progress.png)
 
 The screenshots above are captured from the running app. The repository currently exposes Explore, Learn, and Progress tabs; the Progress screen is the learner-facing report dashboard.
