@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-09-14 — Opaque account panel
+
+- Made the account and cloud-sync popover fully opaque with no backdrop blur, preventing the authentication form from blending into the toolbar behind it.
+
 ## 2026-09-14 — OAuth callback route recovery fix
 
 - Recognized Supabase OAuth callback fragments before hash-route validation so successful Google and GitHub sign-ins no longer show the false red invalid-route message.

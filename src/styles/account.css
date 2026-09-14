@@ -40,10 +40,9 @@
   padding: 20px;
   border: 1px solid color-mix(in srgb, var(--line) 78%, white 22%);
   border-radius: 24px;
-  background: color-mix(in srgb, var(--panel) 90%, transparent);
-  box-shadow: 0 22px 60px rgba(0, 0, 0, 0.38), inset 0 1px rgba(255, 255, 255, 0.18);
-  backdrop-filter: blur(28px) saturate(175%);
-  -webkit-backdrop-filter: blur(28px) saturate(175%);
+  /* Account/auth content stays fully readable above the glass toolbar. */
+  background: var(--panel);
+  box-shadow: 0 22px 60px rgba(0, 0, 0, 0.38), inset 0 1px rgba(255, 255, 255, 0.12);
 }
 
 .account-popover-header,
