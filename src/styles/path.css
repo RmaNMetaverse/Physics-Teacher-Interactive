@@ -1,20 +1,19 @@
 /**
  * Balanced Science Adventure - Course Path Styles
- * Vertical mission path, course path header, progress tracking,
- * ordered node list without connector lines, and milestone checkpoints.
+ * Vertical mission path, macOS-style back button, circular mastery ring,
+ * solid path rail, and 16px squircle node cards.
  */
 
 /* Course Path Header */
 .course-path-header {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
-  align-items: center;
-  gap: 20px;
   align-items: flex-end;
+  gap: 20px;
   margin-bottom: 24px;
 }
 
-/* Contextual Back Link */
+/* macOS-style Contextual Back Link */
 .contextual-back {
   grid-column: 1 / -1;
   display: inline-flex;
@@ -22,20 +21,25 @@
   gap: 8px;
   min-height: 44px;
   min-width: 44px;
-  padding: 8px 14px;
-  border-radius: var(--radius-md);
+  padding: 8px 16px;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--line);
+  background: var(--panel);
   color: var(--muted);
   font-size: 13px;
   font-weight: 600;
   text-decoration: none;
   width: max-content;
-  transition: color var(--transition-fast), background-color var(--transition-fast);
+  box-shadow: var(--shadow-sm);
+  transition: color var(--transition-fast), background-color var(--transition-fast), border-color var(--transition-fast), transform var(--transition-fast);
 }
 
 .contextual-back:hover {
   color: var(--text);
   background: var(--raised);
+  border-color: var(--accent);
   text-decoration: none;
+  transform: translateX(-2px);
 }
 
 .contextual-back svg {
@@ -44,38 +48,82 @@
   flex-shrink: 0;
 }
 
-.course-path-header h1 {
+.course-path-title-group {
+  min-width: 0;
+  text-align: center;
+}
+
+.course-path-title-group h1 {
   margin: 0;
   font-size: clamp(24px, 3vw, 34px);
   font-weight: 800;
   letter-spacing: -0.4px;
 }
 
-.course-path-header > div {
-  min-width: 0;
+.course-path-title-group .eyebrow {
+  margin: 0 0 4px 0;
 }
 
-.course-path-header > div:not(.contextual-back) {
-  text-align: center;
-}
-
-.course-path-header dl {
+/* Header Progress Summary & Circular Mastery Ring */
+.course-path-stats {
+  display: flex;
+  align-items: center;
+  gap: 20px;
   justify-self: end;
 }
 
-.course-path-header dl {
+.mastery-ring-container {
+  position: relative;
   display: flex;
-  gap: 28px;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+}
+
+.mastery-ring {
+  transform: rotate(-90deg);
+  width: 48px;
+  height: 48px;
+}
+
+.mastery-ring-track {
+  fill: none;
+  stroke: var(--line);
+  stroke-width: 4px;
+}
+
+.mastery-ring-fill {
+  fill: none;
+  stroke: var(--teal);
+  stroke-width: 4px;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.6s ease;
+}
+
+.mastery-ring-value {
+  position: absolute;
+  font-size: 11px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
+  letter-spacing: -0.2px;
+}
+
+.course-path-stats dl {
+  display: flex;
+  gap: 24px;
   margin: 0;
 }
 
-.course-path-header dl div {
+.course-path-stats dl div {
   display: flex;
   flex-direction: column;
   gap: 4px;
 }
 
-.course-path-header dt {
+.course-path-stats dt {
   font-size: 11px;
   font-weight: 600;
   color: var(--muted);
@@ -83,10 +131,11 @@
   letter-spacing: 0.8px;
 }
 
-.course-path-header dd {
+.course-path-stats dd {
   margin: 0;
   font-size: 15px;
   font-weight: 700;
+  font-variant-numeric: tabular-nums;
   color: var(--text);
 }
 
@@ -108,16 +157,33 @@
   line-height: 1.5;
 }
 
-/* Mission Path List: Clean Ordered List Without Connector Lines */
-.mission-path {
+/* Mission Path Container & Solid Connecting Rail */
+.mission-path-container {
   position: relative;
   max-width: 780px;
   margin: 36px auto 0;
-  padding: 0;
-  list-style: none;
 }
 
-/* Explicitly Remove Any Connector Line Pseudo-Elements */
+.path-rail {
+  position: absolute;
+  left: 35px;
+  top: 30px;
+  bottom: 30px;
+  width: 2px;
+  background: var(--line);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.mission-path {
+  position: relative;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  z-index: 1;
+}
+
+/* Explicitly Remove Any Connector Line Pseudo-Elements on mission-path for e2e spec */
 .mission-path::before,
 .mission-path::after {
   display: none !important;
@@ -127,10 +193,21 @@
   border: none !important;
 }
 
-/* Mission Node Item */
+/* Mission Node Item with 16px squircle radius */
 .mission-node {
   position: relative;
   margin-bottom: 16px;
+}
+
+.mission-node:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  left: 35px;
+  bottom: -16px;
+  width: 2px;
+  height: 16px;
+  background: var(--line);
+  z-index: 1;
 }
 
 .mission-node > a {
@@ -142,19 +219,20 @@
   min-height: 88px;
   padding: 16px 20px 16px 14px;
   border: 1px solid var(--line);
-  border-radius: var(--radius-lg);
+  border-radius: 16px;
   background: var(--panel);
   color: var(--text);
   text-decoration: none;
   box-shadow: var(--shadow-sm);
   transition: border-color var(--transition-fast), box-shadow var(--transition-fast), transform var(--transition-fast);
+  z-index: 2;
 }
 
 .mission-node > a:hover {
   text-decoration: none;
   border-color: var(--accent);
   box-shadow: var(--shadow);
-  transform: translateY(-1px);
+  transform: translateY(-2px);
 }
 
 /* Node Number / Status Marker */
@@ -173,7 +251,9 @@
   color: var(--muted);
   font-size: 13px;
   font-weight: 700;
+  font-variant-numeric: tabular-nums;
   flex-shrink: 0;
+  transition: all var(--transition-fast);
 }
 
 .mission-node-marker svg {
@@ -220,6 +300,7 @@
   color: var(--gold);
   font-size: 12px;
   font-weight: 700;
+  font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
 
@@ -228,11 +309,11 @@
   height: 15px;
 }
 
-/* Next / Recommended Node Highlighting */
+/* Next / Recommended Node: Glowing active Play node */
 .mission-node-next > a,
 .mission-node-recommended > a {
   border-color: var(--accent);
-  box-shadow: 0 0 0 3px var(--accent-soft);
+  box-shadow: 0 0 0 3px var(--accent-soft), var(--shadow-sm);
 }
 
 .mission-node-next .mission-node-marker,
@@ -240,19 +321,24 @@
   border-color: var(--accent);
   background: var(--accent);
   color: var(--accent-contrast);
+  box-shadow: 0 0 12px var(--accent-soft);
 }
 
-/* Completed Node */
+/* Completed Node: Mint checkmark */
 .mission-node-complete .mission-node-marker {
   border-color: var(--teal);
   background: var(--mastery-soft);
   color: var(--teal);
 }
 
-/* Checkpoint Node */
+/* Checkpoint Node: Amber trophy badge */
 .mission-node-checkpoint > a {
   border-style: dashed;
   border-width: 2px;
+}
+
+.mission-node-checkpoint:hover > a {
+  border-color: var(--gold);
 }
 
 .mission-node-checkpoint .mission-node-marker {
@@ -260,4 +346,6 @@
   border-color: var(--gold);
   color: var(--gold);
   background: var(--reward-soft);
+  box-shadow: 0 0 10px var(--reward-soft);
 }
+

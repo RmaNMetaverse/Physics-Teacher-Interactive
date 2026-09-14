@@ -1,5 +1,15 @@
 # Changelog
 
+## 2026-09-14 — Apple Squircle Design Overhaul for Explore Gallery & Course Path
+
+- Overhauled Explore Page with Spotlight-style course search (search icon, single-click clear button, keyboard shortcut hint with `Cmd/Ctrl + K` and `/` focus listeners).
+- Styled Explore topic filters as Apple segmented pill controls with `aria-pressed` state indicators.
+- Upgraded course cards to 20px squircle geometry (`border-radius: 20px`), subtle elevation lift (`translateY(-2px)`), category badges, and tabular completion percentages.
+- Enhanced Continue Learning Hero card with subtle depth gradient, current course details, category badge, and prominent action button.
+- Overhauled Course Path header with macOS-style back button (`‹ Back to Explore` with hover highlight), course title, time remaining, and circular SVG mastery ring gauge.
+- Built vertical milestone pathway with solid connecting rail (`.path-rail`), mint completed checkmarks, glowing active Play nodes, and amber checkpoint trophy nodes (`<Trophy />`).
+- Added comprehensive unit tests in `tests/explore-and-path.test.tsx`.
+
 ## 2026-09-14 — Precision Physics Lab & Floating Liquid Glass Playback HUD
 
 - Enclosed simulation viewports in a precision dark anodized aluminum instrument housing (`.lab-canvas-frame`, `#0b121e`, 18px squircle radii, subtle inner depth).

@@ -68,18 +68,54 @@
   margin-bottom: 40px;
   padding: 24px 28px;
   border: 1px solid var(--line);
-  border-radius: var(--radius-lg);
-  background: linear-gradient(135deg, var(--accent-soft), var(--mastery-soft));
+  border-radius: 20px;
+  background: linear-gradient(135deg, var(--raised), var(--panel));
   box-shadow: var(--shadow);
 }
 
-.continue-hero h2 {
-  margin: 0 0 6px 0;
-  font-size: 22px;
-  font-weight: 700;
+.continue-hero-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
 }
 
-.continue-hero p {
+.continue-hero-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 4px;
+}
+
+.continue-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  border: 1px solid var(--accent);
+}
+
+.continue-stats {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.continue-hero h2 {
+  margin: 0 0 4px 0;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.continue-mission-title {
   margin: 0;
   color: var(--muted);
   font-size: 14px;
@@ -150,47 +186,119 @@
   flex-shrink: 0;
 }
 
-/* Course Search Input */
+/* Spotlight Course Search Input */
 .course-search {
   position: relative;
+  display: flex;
+  align-items: center;
   margin: 20px 0 16px 0;
+  border-radius: var(--radius-full);
+  background: var(--panel);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow-sm);
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
 }
 
-.course-search svg {
+.course-search:focus-within {
+  border-color: var(--accent);
+  box-shadow: var(--focus-ring-shadow);
+}
+
+.course-search .search-icon {
   position: absolute;
-  left: 14px;
+  left: 16px;
   top: 50%;
   transform: translateY(-50%);
   width: 18px;
   height: 18px;
   color: var(--muted);
   pointer-events: none;
+  flex-shrink: 0;
 }
 
 .course-search input {
   width: 100%;
   min-height: 44px;
   height: 46px;
-  padding: 10px 14px 10px 44px;
-  border: 1px solid var(--line);
-  border-radius: var(--radius-md);
-  background: var(--panel);
+  padding: 10px 88px 10px 44px;
+  border: none;
+  border-radius: var(--radius-full);
+  background: transparent;
   color: var(--text);
   font-size: 14px;
-  box-shadow: var(--shadow-sm);
-  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+  outline: none;
 }
 
-.course-search input:focus {
-  border-color: var(--accent);
+.course-search input::-webkit-search-cancel-button {
+  display: none;
 }
 
-/* Filter Chips with minimum 44px touch targets */
+.search-clear-btn {
+  position: absolute;
+  right: 52px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: var(--raised);
+  color: var(--muted);
+  cursor: pointer;
+  transition: background-color var(--transition-fast), color var(--transition-fast);
+}
+
+.search-clear-btn:hover {
+  background: var(--line);
+  color: var(--text);
+}
+
+.search-clear-btn svg {
+  width: 14px;
+  height: 14px;
+}
+
+.search-shortcut-hint {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  pointer-events: none;
+}
+
+.search-shortcut-hint kbd {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 7px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--raised);
+  color: var(--muted);
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.2;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* Filter Chips - Apple Segmented Pill Controls */
 .filter-chips {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 8px;
   margin-bottom: 26px;
+  padding: 4px;
+  background: var(--raised);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-full);
+  width: fit-content;
+  max-width: 100%;
 }
 
 .filter-chips button {
@@ -200,27 +308,29 @@
   min-height: 44px;
   min-width: 44px;
   padding: 8px 18px;
-  border: 1px solid var(--line);
+  border: 1px solid transparent;
   border-radius: var(--radius-full);
-  background: var(--panel);
+  background: transparent;
   color: var(--muted);
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
-  transition: border-color var(--transition-fast), background-color var(--transition-fast), color var(--transition-fast);
+  transition: background-color var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast);
 }
 
 .filter-chips button:hover {
-  border-color: var(--accent);
+  border-color: var(--line);
   color: var(--text);
-  background: var(--raised);
+  background: var(--panel);
 }
 
-.filter-chips button[aria-pressed="true"] {
+.filter-chips button[aria-pressed="true"],
+.filter-chips button.active {
   border-color: var(--accent);
-  background: var(--accent-soft);
-  color: var(--accent);
+  background: var(--panel);
+  color: var(--text);
   font-weight: 700;
+  box-shadow: var(--shadow-sm);
 }
 
 /* Responsive Course Card Grid */
@@ -230,7 +340,7 @@
   gap: 20px;
 }
 
-/* Course Card: Generous Rounded Card with Colored Accent Top */
+/* Course Card: Continuous 20px Squircle Corners with Colored Accent Top */
 .course-card {
   position: relative;
   display: flex;
@@ -239,7 +349,7 @@
   padding: 24px;
   border: 1px solid var(--line);
   border-top: 4px solid var(--course-color, var(--accent));
-  border-radius: var(--radius-lg);
+  border-radius: 20px;
   background: var(--panel);
   box-shadow: var(--shadow-sm);
   transition: transform var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast);
@@ -263,7 +373,17 @@
   letter-spacing: 0.8px;
 }
 
-.course-card-meta span:last-child {
+.course-level-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-full);
+  background: var(--raised);
+  color: var(--text);
+}
+
+.course-duration {
   display: inline-flex;
   align-items: center;
   gap: 4px;
