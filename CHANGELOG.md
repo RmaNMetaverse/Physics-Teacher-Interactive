@@ -1,6 +1,15 @@
 # Changelog
 
+## 2026-09-14 — Precision Physics Lab & Floating Liquid Glass Playback HUD
+
+- Enclosed simulation viewports in a precision dark anodized aluminum instrument housing (`.lab-canvas-frame`, `#0b121e`, 18px squircle radii, subtle inner depth).
+- Floated playback controls as a centered Liquid Glass HUD pill (`.playback-hud`) over the bottom canvas with primary filled Play/Pause button (44px min touch target), Step button (1/60s advance), Reset button, segmented speed switcher (`0.5×`, `1×`, `2×`), and monospace tabular timecode display (`tabular-nums`).
+- Designed tactile knurled hardware sliders (`.hardware-slider`) with multi-stripe knurled thumb grips, live value unit pills (`.live-unit-badge`), and keyboard focus rings.
+- Styled telemetry meters as Apple Watch modular readout tiles with hairline dividers, colored status glow dots, and tabular figures (`font-variant-numeric: tabular-nums`) to prevent layout jitter during 60 FPS animation.
+- Added comprehensive unit tests in `tests/simulation-boundary.test.tsx`.
+
 ## 2026-09-14 — macOS Segmented Desktop Toolbar & Responsive Shell
+
 
 - Rebuilt `<AppShell />` with a macOS-style segmented control (`.macos-segmented-nav`) featuring Explore, Learn, and Progress segments with active page indicators and min 44px touch targets.
 - Added sticky 56px Liquid Glass topbar with specular top highlight and integrated telemetry stats pill displaying live XP and streak counts.
