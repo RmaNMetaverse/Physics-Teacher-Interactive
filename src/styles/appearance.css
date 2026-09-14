@@ -22,18 +22,48 @@
 :root[data-liquid-glass="true"] .adventure-shell::before { top: -26vw; right: -16vw; }
 :root[data-liquid-glass="true"] .adventure-shell::after { bottom: -32vw; left: -22vw; background: var(--teal); opacity: .13; }
 
+/* Content cards use crisp standard materials — no backdrop blur on cards */
+:is(
+  .course-card,
+  .continue-hero,
+  .mission-player,
+  .mission-step,
+  .deep-dive-section,
+  .lab,
+  .xp-card,
+  .streak-card,
+  .mastery-section,
+  .badge-shelf-section,
+  .progress-settings-section,
+  .setting-card,
+  .progress-summary-cards article
+) {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+/* Liquid Glass Layer Discipline:
+   Strictly restricted to floating functional controls (.adventure-topbar, .mobile-tab-bar, .playback-hud, .appearance-popover)
+   and utility classes (.liquid-glass-surface, .liquid-glass-hud).
+*/
 @supports (backdrop-filter: blur(1px)) {
   :root[data-liquid-glass="true"] :is(
-    .adventure-topbar, .primary-nav, .continue-hero, .course-card, .course-path-header,
-    .mission-player, .mission-step, .deep-dive-section, .lab, .xp-card, .streak-card,
-    .mastery-section, .badge-shelf-section, .progress-settings-section,
-    .progress-backup-section, .progress-summary-cards article, .setting-card
+    .adventure-topbar,
+    .mobile-tab-bar,
+    .playback-hud,
+    .appearance-popover,
+    .liquid-glass-surface,
+    .liquid-glass-hud
   ) {
-    background-color: color-mix(in srgb, var(--panel) 70%, transparent);
-    border-color: color-mix(in srgb, white 22%, var(--line));
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .2), inset 0 -1px 0 rgba(255, 255, 255, .04), var(--shadow);
-    backdrop-filter: blur(24px) saturate(145%);
-    -webkit-backdrop-filter: blur(24px) saturate(145%);
+    background-color: color-mix(in srgb, var(--panel) 72%, transparent);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18), var(--shadow);
+    backdrop-filter: blur(20px) saturate(160%);
+    -webkit-backdrop-filter: blur(20px) saturate(160%);
+  }
+
+  :root[data-liquid-glass="true"] .adventure-topbar {
+    background: linear-gradient(120deg, color-mix(in srgb, var(--panel) 78%, transparent), color-mix(in srgb, var(--accent) 7%, transparent));
   }
 
   :root[data-liquid-glass="true"] :is(button, .filter-chips a, .prereq-chip, .secondary-button) {
@@ -41,21 +71,45 @@
   }
 }
 
-:root[data-liquid-glass="true"] :is(.course-card, .continue-hero, .mission-player, .lab, .setting-card) {
-  border-radius: calc(var(--radius-lg) + 8px);
-}
-
-:root[data-liquid-glass="true"] .adventure-topbar {
-  background: linear-gradient(120deg, color-mix(in srgb, var(--panel) 78%, transparent), color-mix(in srgb, var(--accent) 7%, transparent));
-}
-
 :root[data-liquid-glass="true"] .primary-button,
 :root[data-liquid-glass="true"] .adventure-primary-action {
   background: linear-gradient(145deg, color-mix(in srgb, var(--accent) 82%, white), var(--accent));
 }
 
+/* High Contrast Theme Fallback: Enforce opaque surfaces and crisp separation */
+[data-theme="high-contrast"] :is(
+  .adventure-topbar,
+  .mobile-tab-bar,
+  .playback-hud,
+  .appearance-popover,
+  .liquid-glass-surface,
+  .liquid-glass-hud
+),
+:root[data-theme="high-contrast"][data-liquid-glass="true"] :is(
+  .adventure-topbar,
+  .mobile-tab-bar,
+  .playback-hud,
+  .appearance-popover,
+  .liquid-glass-surface,
+  .liquid-glass-hud
+) {
+  background-color: var(--panel) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border: 1px solid var(--line) !important;
+  box-shadow: none !important;
+}
+
+/* Reduced Transparency Preference: Fall back to solid panel materials */
 @media (prefers-reduced-transparency: reduce) {
-  :root[data-liquid-glass="true"] :is(.adventure-topbar, .primary-nav, .course-card, .mission-player, .lab, .setting-card) {
+  :root[data-liquid-glass="true"] :is(
+    .adventure-topbar,
+    .mobile-tab-bar,
+    .playback-hud,
+    .appearance-popover,
+    .liquid-glass-surface,
+    .liquid-glass-hud
+  ) {
     background-color: var(--panel);
     backdrop-filter: none;
     -webkit-backdrop-filter: none;

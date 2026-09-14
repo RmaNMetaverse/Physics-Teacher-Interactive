@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-09-14 — Apple HIG Design Tokens & Liquid Glass Layer Discipline
+
+- Calibrated semantic color tokens for dark and light themes to exceed WCAG AA contrast (normal text >= 4.5:1, subtle text >= 4.5:1, headings/primary text >= 7.0:1).
+- Defined Apple SF Pro font stack, squircle radii (`--radius-sm: 8px;`, `--radius-md: 12px;`, `--radius-lg: 18px;`, `--radius-xl: 22px;`), and tabular numeric alignment token (`--font-tabular: tabular-nums;`).
+- Enforced Apple HIG Liquid Glass layer discipline: restricted backdrop-filter blur and specular hairline highlights strictly to floating functional controls (`.adventure-topbar`, `.mobile-tab-bar`, `.playback-hud`, `.appearance-popover`) and utility classes (`.liquid-glass-surface`, `.liquid-glass-hud`).
+- Guaranteed crisp standard opaque materials without backdrop blur for all content cards (`.course-card`, `.mission-player`, `.setting-card`, `.lab`, etc.).
+- Enforced opaque fallbacks for `prefers-reduced-transparency: reduce` and `[data-theme="high-contrast"]`.
+
 ## 2026-09-12 — Progress dashboard layout redesign
 
 - Rebuilt the progress page layout with explicit component-aligned dashboard styles, consistent card surfaces, readable typography, and intentional whitespace between every progress section.

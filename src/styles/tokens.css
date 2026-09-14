@@ -5,18 +5,23 @@
  */
 
 :root {
-  /* Default: Dark Mode (Science Adventure Theme) */
-  --bg: #0d1117;
-  --panel: #161b22;
-  --raised: #21262d;
-  --sunken: #090d13;
-  --line: #30363d;
-  --line-subtle: #21262d;
+  /* Typography & Font Stack */
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-tabular: tabular-nums;
 
-  /* Typography Colors */
-  --text: #f0f6fc;
-  --muted: #8b949e;
-  --text-subtle: #6e7681;
+  /* Default: Dark Mode (Science Adventure Theme - Apple HIG Calibrated) */
+  --bg: #090d16;
+  --panel: #121824;
+  --raised: #1c2436;
+  --sunken: #060910;
+  --line: #263249;
+  --line-subtle: #192233;
+
+  /* Typography Colors - WCAG AA Calibrated */
+  --text: #f5f8fc;
+  --muted: #9bb0cb;
+  --text-subtle: #8297b5;
 
   /* Brand & Journey Accent (Violet) */
   --accent: #a78bfa;
@@ -45,10 +50,11 @@
   --shadow: 0 8px 30px rgba(0, 0, 0, 0.55);
   --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.65);
 
-  /* Radii */
-  --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-lg: 14px;
+  /* Apple Squircle Radii */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+  --radius-xl: 22px;
   --radius-full: 9999px;
 
   /* Touch & Controls */
@@ -68,19 +74,19 @@
   color-scheme: dark;
 }
 
-/* Warm Off-White Light Mode */
+/* Warm Off-White Light Mode (Apple HIG Calibrated) */
 [data-theme="light"] {
-  --bg: #fbfbfe;
+  --bg: #f8fafc;
   --panel: #ffffff;
-  --raised: #f3f5fa;
-  --sunken: #eef1f8;
-  --line: #e2e8f0;
-  --line-subtle: #edf2f7;
+  --raised: #edf2f7;
+  --sunken: #e2e8f0;
+  --line: #d8e2ed;
+  --line-subtle: #eef3f8;
 
-  /* Deep Navy Text */
-  --text: #0d192e;
-  --muted: #53647e;
-  --text-subtle: #76869e;
+  /* Deep Navy Text - WCAG AA Calibrated */
+  --text: #0f172a;
+  --muted: #475569;
+  --text-subtle: #5b6e87;
 
   /* Journey Accent (Vibrant Violet) */
   --accent: #7c3aed;
