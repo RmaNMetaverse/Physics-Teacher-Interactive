@@ -14,15 +14,12 @@ The interface uses a responsive Apple-inspired Liquid Glass visual system with a
 
 ![Foundations course path](docs/assets/app-course-path.png)
 
-![Interactive mission lab](docs/assets/app-mission-lab.png)
 
 ### 3D simulation gallery
 
 Mission laboratories include interactive 3D scenes with adjustable parameters, camera controls, and live scientific readouts.
 
 ![Measurement laboratory simulation](docs/assets/simulation-measurement.png)
-![Quantum light simulation](docs/assets/simulation-quantum.png)
-![Cosmology expansion simulation](docs/assets/simulation-cosmology.png)
 
 ![Progress report dashboard](docs/assets/app-progress.png)
 
