@@ -13,7 +13,28 @@ VITE_SUPABASE_URL=https://your-project-ref.supabase.co
 VITE_SUPABASE_PUBLISHABLE_KEY=your-public-publishable-key
 ```
 
-Both values are designed to be present in browser code. Never use a Supabase secret key or `service_role` key in this project. In **Authentication → URL Configuration**, set the production Site URL and add every permitted GitHub Pages, Vercel, and local development redirect URL. Enable email/password sign-up under **Authentication → Providers**.
+Both values are designed to be present in browser code. Never use a Supabase secret key or `service_role` key in this project.
+
+For this deployed GitHub Pages app, configure **Supabase → Authentication → URL Configuration** with the exact values below:
+
+```text
+Site URL
+https://rmanmetaverse.github.io/Physics-Teacher-Interactive/
+
+Redirect URLs
+https://rmanmetaverse.github.io/Physics-Teacher-Interactive/
+http://localhost:5173/
+```
+
+The app now supplies that redirect URL for both social login and email confirmation. In Supabase's email confirmation template, use `{{ .RedirectTo }}` rather than `{{ .SiteURL }}` if the template has been customized.
+
+To enable Google, create a Web OAuth client in Google Cloud. Add `https://rmanmetaverse.github.io` as an authorized JavaScript origin and add this exact callback URI as an authorized redirect URI:
+
+```text
+https://nwjijntqqmocmforvdiz.supabase.co/auth/v1/callback
+```
+
+Then paste that Google Client ID and Client Secret into **Supabase → Authentication → Providers → Google** and enable the provider. For GitHub, create an OAuth App with the same callback URI, add its Client ID and Client Secret in **Supabase → Authentication → Providers → GitHub**, and enable GitHub. The external provider callback is always the Supabase callback; the final return to the app is controlled by the Supabase Site URL and Redirect URLs above.
 
 The app remains fully usable without these variables. Anonymous progress stays in localStorage. After sign-in, the app merges the browser and cloud documents, writes the result to both locations, and debounces later cloud updates.
 

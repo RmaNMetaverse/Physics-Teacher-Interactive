@@ -5,6 +5,7 @@ import { saveProgressV2 } from '../progress/progress';
 import type { LearnerProgressV2 } from '../progress/types';
 import { loadAndMergeProgress, saveCloudProgress, type SyncState } from './progress-sync';
 import { isCloudConfigured, supabase } from './supabase';
+import { authRedirectUrl } from './redirect';
 
 export type OAuthProvider = 'google' | 'github';
 
@@ -96,7 +97,11 @@ export function useCloudAccount(
     error,
     async signUp(email, password) {
       if (!supabase) throw new Error('Cloud sync is not configured.');
-      const { data, error: authError } = await supabase.auth.signUp({ email, password });
+      const { data, error: authError } = await supabase.auth.signUp({
+        email,
+        password,
+        options: { emailRedirectTo: authRedirectUrl(window.location) },
+      });
       if (authError) throw authError;
       return data.session ? 'Account created and signed in.' : 'Check your email to confirm your account.';
     },
@@ -110,7 +115,7 @@ export function useCloudAccount(
       const { error: authError } = await supabase.auth.signInWithOAuth({
         provider,
         options: {
-          redirectTo: window.location.origin + window.location.pathname,
+          redirectTo: authRedirectUrl(window.location),
         },
       });
       if (authError) throw authError;

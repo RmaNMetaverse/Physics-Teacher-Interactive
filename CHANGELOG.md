@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-09-14 — Auth redirect reliability
+
+- Added an explicit email confirmation redirect to the current static-host URL, matching the existing OAuth return behavior and preserving the GitHub Pages repository subpath.
+- Documented the exact Supabase URL configuration and Google/GitHub OAuth callback needed for the public GitHub Pages deployment.
+
 ## 2026-09-14 — GitHub Pages cloud configuration fix
 
 - Assigned the GitHub Pages build job to the `github-pages` environment so its Supabase variables are available when Vite creates the production bundle.
