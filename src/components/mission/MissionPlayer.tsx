@@ -17,6 +17,21 @@ import { ExplainStep } from './ExplainStep';
 import { RecapStep } from './RecapStep';
 import { SimulationStep } from '../simulation/SimulationStep';
 
+interface JourneyStage {
+  kind: 'observe' | 'predict' | 'simulate' | 'explain' | 'math' | 'check' | 'recap';
+  label: string;
+}
+
+const JOURNEY_STAGES: readonly JourneyStage[] = [
+  { kind: 'observe', label: 'Observe' },
+  { kind: 'predict', label: 'Predict' },
+  { kind: 'simulate', label: 'Simulate' },
+  { kind: 'explain', label: 'Explain' },
+  { kind: 'math', label: 'Math' },
+  { kind: 'check', label: 'Check' },
+  { kind: 'recap', label: 'Recap' },
+] as const;
+
 interface MissionPlayerProps {
   course: CourseDefinition;
   mission: MissionDefinition;
@@ -115,7 +130,42 @@ export function MissionPlayer({ course, mission, progress, onProgressChange }: M
 
   const currentStep = mission.steps[state.currentStepIndex];
   const stepCount = mission.steps.length;
-  const progressPercent = Math.round(((state.currentStepIndex + 1) / stepCount) * 100);
+
+  const getStageStatus = (stageKind: string, stageIdx: number): 'completed' | 'active' | 'upcoming' => {
+    if (state.isComplete) {
+      return 'completed';
+    }
+    if (currentStep.kind === stageKind) {
+      return 'active';
+    }
+
+    const matchingIndices = mission.steps
+      .map((step, idx) => (step.kind === stageKind ? idx : -1))
+      .filter(idx => idx !== -1);
+
+    if (matchingIndices.length > 0) {
+      if (matchingIndices.every(idx => idx < state.currentStepIndex)) {
+        return 'completed';
+      }
+      if (matchingIndices.every(idx => idx > state.currentStepIndex)) {
+        return 'upcoming';
+      }
+      if (matchingIndices.includes(state.currentStepIndex)) {
+        return 'active';
+      }
+    }
+
+    const currentStageIndex = JOURNEY_STAGES.findIndex(s => s.kind === currentStep.kind);
+    if (currentStageIndex !== -1) {
+      if (stageIdx < currentStageIndex) return 'completed';
+      if (stageIdx > currentStageIndex) return 'upcoming';
+      return 'active';
+    }
+
+    return stageIdx <= Math.floor((state.currentStepIndex / mission.steps.length) * 7)
+      ? 'completed'
+      : 'upcoming';
+  };
 
   const handleContinue = useCallback(() => {
     // Navigate to next mission in course, or back to course path
@@ -167,19 +217,28 @@ export function MissionPlayer({ course, mission, progress, onProgressChange }: M
         </a>
       </header>
 
-      {/* Progress Bar */}
-      <div className="mission-progress-container">
-        <progress
-          className="mission-step-progress"
-          value={state.currentStepIndex + 1}
-          max={stepCount}
-          aria-label={`Mission progress: Step ${state.currentStepIndex + 1} of ${stepCount}`}
-        >
-          {progressPercent}%
-        </progress>
-        <span className="mission-progress-text">
-          Step {state.currentStepIndex + 1} of {stepCount}
-        </span>
+      {/* 7-Segment Apple-Style Journey Progress Bar */}
+      <nav className="mission-journey-bar" aria-label="Mission journey progress">
+        {JOURNEY_STAGES.map((stage, idx) => {
+          const status = getStageStatus(stage.kind, idx);
+          return (
+            <div
+              key={stage.kind}
+              className={`journey-segment is-${status}`}
+              data-stage={stage.kind}
+              data-status={status}
+              aria-current={status === 'active' ? 'step' : undefined}
+            >
+              <div className="journey-segment-pill" aria-hidden="true" />
+              <span className="journey-segment-label">
+                {`${idx + 1} · ${stage.label}`}
+              </span>
+            </div>
+          );
+        })}
+      </nav>
+      <div className="sr-only" aria-live="polite">
+        Step {state.currentStepIndex + 1} of {stepCount}: {currentStep.kind}
       </div>
 
       {/* Step View Area */}

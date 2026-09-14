@@ -16,6 +16,7 @@ export interface ProgressPageProps {
 
 export function ProgressPage({ progress, onProgressChange }: ProgressPageProps) {
   const [importStatus, setImportStatus] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
+  const [isDragging, setIsDragging] = useState(false);
   const fileInputId = useId();
 
   useEffect(() => {
@@ -83,6 +84,39 @@ export function ProgressPage({ progress, onProgressChange }: ProgressPageProps) 
     }
   };
 
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+  };
+
+  const handleDrop = async (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+
+    const file = e.dataTransfer.files?.[0];
+    if (!file) return;
+
+    try {
+      const text = await file.text();
+      const imported = parseProgressV2(text, courseCatalog, new Date());
+      onProgressChange?.(imported);
+      setImportStatus({ type: 'success', message: 'Progress imported successfully.' });
+    } catch (err) {
+      setImportStatus({
+        type: 'error',
+        message: err instanceof Error ? err.message : 'Invalid progress file format.',
+      });
+    }
+  };
+
   const handleReset = () => {
     const confirmed = window.confirm(
       'Are you sure you want to reset all learning progress? Your preferences and settings will be preserved.'
@@ -132,16 +166,16 @@ export function ProgressPage({ progress, onProgressChange }: ProgressPageProps) 
         <div className="progress-streak-and-goals">
           <StreakCard streak={progress.streak} />
 
-          <div className="daily-goals-card">
+          <div className="daily-goals-card inset-card">
             <span className="goal-eyebrow">Daily Learning Goal</span>
             <p className="goal-description">Choose your daily mission target:</p>
-            <div className="goal-options" role="group" aria-label="Daily mission target">
+            <div className="goal-options goal-segmented-control" role="group" aria-label="Daily mission target">
               {([1, 3, 5] as const).map(goal => (
                 <button
                   key={goal}
                   type="button"
                   aria-pressed={progress.dailyGoal === goal}
-                  className={`goal-btn ${progress.dailyGoal === goal ? 'is-selected' : ''}`}
+                  className={`goal-btn goal-segment-btn ${progress.dailyGoal === goal ? 'is-selected' : ''}`}
                   onClick={() => handleGoalChange(goal)}
                 >
                   {goal} {goal === 1 ? 'mission' : 'missions'} / day
@@ -153,7 +187,7 @@ export function ProgressPage({ progress, onProgressChange }: ProgressPageProps) 
       </section>
 
       {/* Course Mastery Section */}
-      <section className="progress-mastery-section" aria-labelledby="mastery-heading">
+      <section className="progress-mastery-section inset-card" aria-labelledby="mastery-heading">
         <div className="mastery-section-header">
           <h2 id="mastery-heading">Course Mastery</h2>
           <span className="total-completed-missions">{completedMissionsCopy}</span>
@@ -182,7 +216,7 @@ export function ProgressPage({ progress, onProgressChange }: ProgressPageProps) 
       <BadgeShelf earnedBadges={progress.badges} />
 
       {/* Recent Activity from Validated Ledger Events */}
-      <section className="progress-activity-section" aria-labelledby="recent-activity-heading">
+      <section className="progress-activity-section inset-card" aria-labelledby="recent-activity-heading">
         <h2 id="recent-activity-heading">Recent activity</h2>
         {ledgerEntries.length === 0 ? (
           <p className="empty-activity-copy">No activity recorded yet.</p>
@@ -201,33 +235,40 @@ export function ProgressPage({ progress, onProgressChange }: ProgressPageProps) 
         )}
       </section>
 
-      {/* Settings & Preferences */}
-      <section className="progress-settings-section" aria-labelledby="settings-heading">
-        <h2 id="settings-heading">Settings & Preferences</h2>
-        <p className="settings-entry-copy">Appearance, colors, and Liquid Glass are available here from the Appearance button in the top bar.</p>
+      {/* Settings & Preferences - iOS Grouped Inset Cards */}
+      <section className="progress-settings-section inset-card" aria-labelledby="settings-heading">
+        <div className="settings-section-header">
+          <h2 id="settings-heading">Settings & Preferences</h2>
+          <p className="settings-entry-copy">Appearance, colors, and Liquid Glass are available here from the Appearance button in the top bar.</p>
+        </div>
 
         <div className="settings-grid">
-          <fieldset className="setting-card appearance-card">
-            <legend><Palette size={17} aria-hidden="true" /> Color theme</legend>
+          {/* Color theme preset swatches */}
+          <fieldset className="setting-card appearance-card settings-grouped-card">
+            <legend className="settings-group-legend"><Palette size={17} aria-hidden="true" /> Color theme</legend>
             <p>Choose a preset designed for a different environment or reading need.</p>
             <div className="theme-preset-grid">
               {themePresets.map(preset => (
                 <button
                   key={preset.theme}
                   type="button"
-                  className="theme-preset"
+                  className={`theme-preset ${progress.settings.theme === preset.theme ? 'is-selected' : ''}`}
                   aria-pressed={progress.settings.theme === preset.theme}
                   aria-label={preset.theme === 'light' ? 'Light mode' : `${preset.label} theme`}
                   onClick={() => updateSettings({ theme: preset.theme, primaryColor: preset.primaryColor, secondaryColor: preset.secondaryColor })}
                 >
                   <span className="theme-preview" style={{ '--preview-primary': preset.primaryColor, '--preview-secondary': preset.secondaryColor } as React.CSSProperties} aria-hidden="true" />
-                  <span><strong>{preset.label}</strong><small>{preset.description}</small></span>
+                  <span className="theme-preset-info">
+                    <strong>{preset.label}</strong>
+                    <small>{preset.description}</small>
+                  </span>
                 </button>
               ))}
             </div>
           </fieldset>
 
-          <div className="setting-card custom-color-card">
+          {/* Custom colors */}
+          <div className="setting-card custom-color-card settings-grouped-card">
             <div className="setting-info">
               <strong>Custom colors</strong>
               <small>Personalize actions and progress accents</small>
@@ -246,90 +287,140 @@ export function ProgressPage({ progress, onProgressChange }: ProgressPageProps) 
             }}>Reset theme colors</button>
           </div>
 
-          <div className="setting-card">
-            <div className="setting-info">
-              <strong>Liquid Glass</strong>
-              <small>Layer translucent, refractive-looking surfaces over any theme</small>
-            </div>
-            <button type="button" role="switch" aria-checked={progress.settings.liquidGlass ?? true} className={`toggle-switch ${(progress.settings.liquidGlass ?? true) ? 'is-checked' : ''}`} onClick={() => updateSettings({ liquidGlass: !(progress.settings.liquidGlass ?? true) })} aria-label="Liquid Glass">
-              <Layers3 size={16} aria-hidden="true" />
-              <span>{(progress.settings.liquidGlass ?? true) ? 'Enabled' : 'Disabled'}</span>
-            </button>
-          </div>
+          {/* iOS Grouped Switches List */}
+          <div className="setting-card settings-grouped-card switches-card">
+            <div className="settings-switch-list">
+              {/* Liquid Glass */}
+              <div className="settings-switch-row">
+                <div className="setting-info">
+                  <div className="setting-title-with-icon">
+                    <Layers3 size={17} className="setting-row-icon" aria-hidden="true" />
+                    <strong>Liquid Glass</strong>
+                  </div>
+                  <small>Layer translucent, refractive-looking surfaces over any theme</small>
+                </div>
+                <button
+                  type="button"
+                  role="switch"
+                  aria-checked={progress.settings.liquidGlass ?? true}
+                  className={`toggle-switch ios-switch ${(progress.settings.liquidGlass ?? true) ? 'is-checked' : ''}`}
+                  onClick={() => updateSettings({ liquidGlass: !(progress.settings.liquidGlass ?? true) })}
+                  aria-label="Liquid Glass"
+                >
+                  <span className="ios-switch-track" aria-hidden="true">
+                    <span className="ios-switch-thumb" />
+                  </span>
+                  <span className="switch-label">{(progress.settings.liquidGlass ?? true) ? 'Enabled' : 'Disabled'}</span>
+                </button>
+              </div>
 
-          {/* Sound Toggle */}
-          <div className="setting-card">
-            <div className="setting-info">
-              <strong>Sound</strong>
-              <small>Play restrained synthesized feedback</small>
-            </div>
-            <button
-              type="button"
-              role="switch"
-              aria-checked={progress.settings.sound}
-              className={`toggle-switch ${progress.settings.sound ? 'is-checked' : ''}`}
-              onClick={() => updateSettings({ sound: !progress.settings.sound })}
-              aria-label="Sound"
-            >
-              {progress.settings.sound ? (
-                <Volume2 size={16} aria-hidden="true" />
-              ) : (
-                <VolumeX size={16} aria-hidden="true" />
-              )}
-              <span>{progress.settings.sound ? 'Enabled' : 'Disabled'}</span>
-            </button>
-          </div>
+              {/* Sound Toggle */}
+              <div className="settings-switch-row">
+                <div className="setting-info">
+                  <div className="setting-title-with-icon">
+                    {progress.settings.sound ? (
+                      <Volume2 size={17} className="setting-row-icon" aria-hidden="true" />
+                    ) : (
+                      <VolumeX size={17} className="setting-row-icon" aria-hidden="true" />
+                    )}
+                    <strong>Sound</strong>
+                  </div>
+                  <small>Play restrained synthesized feedback</small>
+                </div>
+                <button
+                  type="button"
+                  role="switch"
+                  aria-checked={progress.settings.sound}
+                  className={`toggle-switch ios-switch ${progress.settings.sound ? 'is-checked' : ''}`}
+                  onClick={() => updateSettings({ sound: !progress.settings.sound })}
+                  aria-label="Sound"
+                >
+                  <span className="ios-switch-track" aria-hidden="true">
+                    <span className="ios-switch-thumb" />
+                  </span>
+                  <span className="switch-label">{progress.settings.sound ? 'Enabled' : 'Disabled'}</span>
+                </button>
+              </div>
 
-          {/* Reduced Motion Toggle */}
-          <div className="setting-card">
-            <div className="setting-info">
-              <strong>Reduced motion</strong>
-              <small>Minimize animations and transitions</small>
-            </div>
-            <button
-              type="button"
-              role="switch"
-              aria-checked={progress.settings.reducedMotion}
-              className={`toggle-switch ${progress.settings.reducedMotion ? 'is-checked' : ''}`}
-              onClick={() =>
-                updateSettings({ reducedMotion: !progress.settings.reducedMotion })
-              }
-              aria-label="Reduced motion"
-            >
-              <Zap size={16} aria-hidden="true" />
-              <span>{progress.settings.reducedMotion ? 'Enabled' : 'Disabled'}</span>
-            </button>
-          </div>
+              {/* Reduced Motion Toggle */}
+              <div className="settings-switch-row">
+                <div className="setting-info">
+                  <div className="setting-title-with-icon">
+                    <Zap size={17} className="setting-row-icon" aria-hidden="true" />
+                    <strong>Reduced motion</strong>
+                  </div>
+                  <small>Minimize animations and transitions</small>
+                </div>
+                <button
+                  type="button"
+                  role="switch"
+                  aria-checked={progress.settings.reducedMotion}
+                  className={`toggle-switch ios-switch ${progress.settings.reducedMotion ? 'is-checked' : ''}`}
+                  onClick={() =>
+                    updateSettings({ reducedMotion: !progress.settings.reducedMotion })
+                  }
+                  aria-label="Reduced motion"
+                >
+                  <span className="ios-switch-track" aria-hidden="true">
+                    <span className="ios-switch-thumb" />
+                  </span>
+                  <span className="switch-label">{progress.settings.reducedMotion ? 'Enabled' : 'Disabled'}</span>
+                </button>
+              </div>
 
-          {/* Celebrations Toggle */}
-          <div className="setting-card">
-            <div className="setting-info">
-              <strong>Celebrations</strong>
-              <small>Display celebratory bursts on accomplishments</small>
+              {/* Celebrations Toggle */}
+              <div className="settings-switch-row">
+                <div className="setting-info">
+                  <div className="setting-title-with-icon">
+                    <Sparkles size={17} className="setting-row-icon" aria-hidden="true" />
+                    <strong>Celebrations</strong>
+                  </div>
+                  <small>Display celebratory bursts on accomplishments</small>
+                </div>
+                <button
+                  type="button"
+                  role="switch"
+                  aria-checked={progress.settings.celebrations}
+                  className={`toggle-switch ios-switch ${progress.settings.celebrations ? 'is-checked' : ''}`}
+                  onClick={() =>
+                    updateSettings({ celebrations: !progress.settings.celebrations })
+                  }
+                  aria-label="Celebrations"
+                >
+                  <span className="ios-switch-track" aria-hidden="true">
+                    <span className="ios-switch-thumb" />
+                  </span>
+                  <span className="switch-label">{progress.settings.celebrations ? 'Enabled' : 'Disabled'}</span>
+                </button>
+              </div>
             </div>
-            <button
-              type="button"
-              role="switch"
-              aria-checked={progress.settings.celebrations}
-              className={`toggle-switch ${progress.settings.celebrations ? 'is-checked' : ''}`}
-              onClick={() =>
-                updateSettings({ celebrations: !progress.settings.celebrations })
-              }
-              aria-label="Celebrations"
-            >
-              <Sparkles size={16} aria-hidden="true" />
-              <span>{progress.settings.celebrations ? 'Enabled' : 'Disabled'}</span>
-            </button>
           </div>
         </div>
       </section>
 
       {/* Data Management & Backup Controls */}
-      <section className="progress-backup-section" aria-labelledby="backup-heading">
-        <h2 id="backup-heading">Data & Backup</h2>
-        <p className="backup-description">
-          Export your progress file for personal backup, or import your learning record from another device.
-        </p>
+      <section className="progress-backup-section inset-card" aria-labelledby="backup-heading">
+        <div className="backup-section-header">
+          <h2 id="backup-heading">Data & Backup</h2>
+          <p className="backup-description">
+            Export your progress file for personal backup, or import your learning record from another device.
+          </p>
+        </div>
+
+        {/* Drag & Drop Target Zone */}
+        <div
+          className={`backup-drop-zone ${isDragging ? 'is-dragging' : ''}`}
+          onDragOver={handleDragOver}
+          onDragEnter={handleDragOver}
+          onDragLeave={handleDragLeave}
+          onDrop={handleDrop}
+        >
+          <Upload size={24} className="drop-zone-icon" aria-hidden="true" />
+          <div className="drop-zone-text">
+            <strong>Drag and drop your progress JSON file here</strong>
+            <span>or use the file selector below to restore</span>
+          </div>
+        </div>
 
         {importStatus && (
           <div

@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-09-14 — Mission Player Journey Flow & iOS Inset Settings Redesign
+
+- Overhauled Mission Player with an Apple-style 7-segment journey progress bar (`.mission-journey-bar`) tracking Observe, Predict, Simulate, Explain, Math, Check, and Recap stages with active/completed indicators.
+- Redesigned assessment options with tactile squircle card containers (`.answer-option`, `.option-card`), active borders, elevation on hover, and accessible circular radio indicators.
+- Added smooth inline feedback transitions featuring mint highlights for correct answers and coral retry hints without disruptive alert dialogs.
+- Polished KaTeX formula presentation with continuous squircles and smooth foundation mode disclosure.
+- Upgraded Recap step with Apple Activity-style rewards summary, gold star sparkle badges, XP awards pill, and prominent continue CTA.
+- Overhauled Progress page with iOS Settings-style grouped inset cards (`border-radius: 18px`), Apple segmented daily goal control (1, 3, 5 missions), theme swatches, native-styled toggle switches for Liquid Glass and Reduced Motion, and drag-and-drop progress JSON backup/restore.
+
 ## 2026-09-14 — Apple Squircle Design Overhaul for Explore Gallery & Course Path
 
 - Overhauled Explore Page with Spotlight-style course search (search icon, single-click clear button, keyboard shortcut hint with `Cmd/Ctrl + K` and `/` focus listeners).
