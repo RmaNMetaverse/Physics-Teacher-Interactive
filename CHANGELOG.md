@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-09-14 — iOS-Style Mobile Floating Bottom Tab Bar
+
+- Implemented `<MobileTabBar />` floating Liquid Glass navigation bar anchored at `bottom: calc(12px + env(safe-area-inset-bottom))` for mobile viewports.
+- Added primary tabs for Explore (`Compass`), Learn (`Map`), and Progress (`ChartNoAxesColumn`) with active page indicators, tactile press feedback, and filled visual icon states.
+- Guaranteed accessible touch targets (min 48px × 48px) exceeding WCAG AA minimum 44px touch requirements.
+- Added unit test suite in `tests/mobile-navigation.test.tsx`.
+
 ## 2026-09-14 — Apple HIG Appearance Popover & Quick Navigation
 
 - Added `<AppearancePopover />` floating Liquid Glass dialog enabling in-place theme switching (dark, light, eye-comfort, ocean, high-contrast) and visual effect toggles (Liquid Glass, Reduced Motion) without losing user learning context.
