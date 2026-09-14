@@ -89,6 +89,14 @@
 .spin { animation: account-spin .9s linear infinite; }
 @keyframes account-spin { to { transform: rotate(360deg); } }
 
+.account-sso-divider { display: flex; align-items: center; gap: 12px; margin: 16px 0; color: var(--muted); font-size: 12px; font-weight: 600; }
+.account-sso-divider::before,
+.account-sso-divider::after { content: ''; flex: 1; height: 1px; background: var(--line); }
+.account-sso-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.account-sso-button { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 46px; border: 1px solid var(--line); border-radius: 12px; color: var(--text); background: var(--raised); font-size: 13px; font-weight: 700; }
+.account-sso-button:hover { border-color: var(--accent); background: var(--accent-soft); }
+.account-sso-button:disabled { opacity: .5; pointer-events: none; }
+
 @media (max-width: 768px) {
   .telemetry-pill { display: none; }
   .account-popover { position: fixed; top: 62px; right: 12px; left: 12px; width: auto; }

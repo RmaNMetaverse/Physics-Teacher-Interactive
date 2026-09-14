@@ -6,6 +6,8 @@ import type { LearnerProgressV2 } from '../progress/types';
 import { loadAndMergeProgress, saveCloudProgress, type SyncState } from './progress-sync';
 import { isCloudConfigured, supabase } from './supabase';
 
+export type OAuthProvider = 'google' | 'github';
+
 export interface CloudAccount {
   configured: boolean;
   user: User | null;
@@ -14,6 +16,7 @@ export interface CloudAccount {
   error: string;
   signUp(email: string, password: string): Promise<string>;
   signIn(email: string, password: string): Promise<void>;
+  signInWithProvider(provider: OAuthProvider): Promise<void>;
   signOut(): Promise<void>;
   syncNow(): Promise<void>;
 }
@@ -100,6 +103,16 @@ export function useCloudAccount(
     async signIn(email, password) {
       if (!supabase) throw new Error('Cloud sync is not configured.');
       const { error: authError } = await supabase.auth.signInWithPassword({ email, password });
+      if (authError) throw authError;
+    },
+    async signInWithProvider(provider) {
+      if (!supabase) throw new Error('Cloud sync is not configured.');
+      const { error: authError } = await supabase.auth.signInWithOAuth({
+        provider,
+        options: {
+          redirectTo: window.location.origin + window.location.pathname,
+        },
+      });
       if (authError) throw authError;
     },
     async signOut() {
