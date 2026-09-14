@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-09-14 — Apple HIG Appearance Popover & Quick Navigation
+
+- Added `<AppearancePopover />` floating Liquid Glass dialog enabling in-place theme switching (dark, light, eye-comfort, ocean, high-contrast) and visual effect toggles (Liquid Glass, Reduced Motion) without losing user learning context.
+- Implemented accessible modal controls with Escape key dismissal, click-outside dismissal, and direct navigation to full settings.
+- Added comprehensive unit tests in `tests/appearance-popover.test.tsx`.
+
 ## 2026-09-14 — Apple HIG Design Tokens & Liquid Glass Layer Discipline
 
 - Calibrated semantic color tokens for dark and light themes to exceed WCAG AA contrast (normal text >= 4.5:1, subtle text >= 4.5:1, headings/primary text >= 7.0:1).
