@@ -8,27 +8,37 @@ The goal is to make physics feel like a skill you practice every day: curious, v
 
 ## App Preview
 
-The interface uses a responsive, liquid-glass-inspired visual system with a focused mission player and a progress dashboard for long-term mastery.
+The interface uses a responsive Apple-inspired Liquid Glass visual system with a focused mission player, cinematic simulation labs, and a progress report dashboard for long-term mastery.
 
-![Progress dashboard mockup](docs/assets/progress-dashboard-mockup.svg)
+![Explore course gallery](docs/assets/app-explore.png)
 
-![Interactive mission lab mockup](docs/assets/mission-lab-mockup.svg)
+![Foundations course path](docs/assets/app-course-path.png)
+
+![Interactive mission lab](docs/assets/app-mission-lab.png)
+
+![Progress report dashboard](docs/assets/app-progress.png)
+
+The screenshots above are captured from the running app. The repository currently exposes Explore, Learn, and Progress tabs; the Progress screen is the learner-facing report dashboard.
 
 Run the app locally with `npm run dev` to explore the live simulations and responsive layouts.
 
 ## What you can do
 
 - Follow a complete Physics Foundations course from measurement and vectors through mechanics and oscillations.
-- Explore starter paths covering topics such as waves, thermodynamics, electromagnetism, optics, relativity, quantum physics, and astrophysics.
+- Explore 14 released course paths with 89 normal missions and 13 checkpoints, covering classical mechanics, waves, thermodynamics, electromagnetism, optics, relativity, quantum physics, atomic physics, nuclear physics, particles, condensed matter, astrophysics, and cosmology.
 - Learn with bite-sized missions built around **Observe → Predict → Simulate → Explain → Check**.
 - Open the math behind an equation in two ways: a quick explanation or a step-by-step foundation lesson.
 - Change values in interactive experiments and see the physics respond immediately.
-- Track XP, streaks, daily goals, course mastery, and checkpoint badges locally or sync them securely across devices with an optional account.
-- Use light, night, eye-comfort, ocean, high-contrast, custom-color, and optional Liquid Glass themes.
+- See bounded, model-derived 3D scenes with responsive materials, lighting, particle systems, scientific readouts, graphs, accessible data tables, and autoplaying lesson simulations.
+- Track XP, streaks, daily goals, course mastery, activity, checkpoint badges, and backup/restore data in the Progress report dashboard.
+- Use anonymous localStorage mode or create an account with email/password, Google, or GitHub through Supabase Auth.
+- Merge and sync progress, answers, settings, themes, and achievements across devices through a protected Supabase database with per-user row-level security.
+- Use Light, Night, Eye Comfort, Ocean, High Contrast, custom primary/secondary colors, and optional Liquid Glass styling.
+- Keep learning when WebGL is unavailable: simulations fall back to controls, measurements, graphs, explanations, and tables.
 
 Every simulation is designed to remain useful on mobile devices. If a device cannot run WebGL, the app keeps the controls, explanations, graphs, and measurements available in a reduced visual mode.
 
-The app is free and open source. An account is optional: anonymous learners keep their progress in the browser and can export a backup, while signed-in learners sync the same progress through Supabase.
+The app is free and open source. An account is optional: anonymous learners keep their progress in the browser and can export a backup, while signed-in learners sync the same progress through Supabase. The frontend remains a static Vite build suitable for GitHub Pages; Vercel can provide branch previews, and neither deployment requires Docker or a custom application server.
 
 ## Run Locally
 
