@@ -21,7 +21,9 @@ The app remains fully usable without these variables. Anonymous progress stays i
 
 In GitHub, open **Settings → Pages** and set **Source** to **GitHub Actions**. The workflow has only the permissions Pages requires: read repository contents, write Pages, and request an OIDC identity token. The `github-pages` environment exposes the deployed URL and GitHub environment protection rules can be added without changing the build.
 
-To enable accounts on GitHub Pages, add `VITE_SUPABASE_URL` and `VITE_SUPABASE_PUBLISHABLE_KEY` under **Settings → Secrets and variables → Actions → Variables**. The workflow passes them to Vite during its build. If they are omitted, the deployed app stays local-only.
+To enable accounts on GitHub Pages, open **Settings → Environments → github-pages → Environment variables** and add `VITE_SUPABASE_URL` and `VITE_SUPABASE_PUBLISHABLE_KEY`. The build job explicitly uses the `github-pages` environment so those values are available while Vite bundles the browser application. The workflow fails with a clear configuration error instead of silently deploying a local-only build when either value is missing.
+
+GitHub's `github-pages` environment is the only environment used by this workflow. Vercel's Production, Preview, and Development variable scopes are separate Vercel concepts and are only needed if the repository is also deployed through Vercel.
 
 The workflow uses one `pages` concurrency group and does not cancel an active deployment. A newer queued run replaces an older queued run while preserving the deployment already in progress.
 

@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-09-14 — GitHub Pages cloud configuration fix
+
+- Assigned the GitHub Pages build job to the `github-pages` environment so its Supabase variables are available when Vite creates the production bundle.
+- Added an explicit workflow check that stops deployment when either required Supabase variable is missing instead of silently publishing a local-only build.
+- Clarified that Vercel's Production, Preview, and Development scopes are unrelated to the single GitHub Pages environment.
+
 ## 2026-09-14 — OAuth single sign-on (Google and GitHub)
 
 - Added `signInWithProvider` method to `CloudAccount` supporting Google and GitHub OAuth via `supabase.auth.signInWithOAuth`.

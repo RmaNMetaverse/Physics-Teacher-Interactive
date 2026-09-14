@@ -18,6 +18,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    environment:
+      name: github-pages
     env:
       VITE_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL }}
       VITE_SUPABASE_PUBLISHABLE_KEY: ${{ vars.VITE_SUPABASE_PUBLISHABLE_KEY }}
@@ -35,6 +37,13 @@ jobs:
         run: npm ci
       - name: Install Chromium
         run: npx playwright install --with-deps chromium
+      - name: Verify cloud configuration
+        shell: bash
+        run: |
+          if [[ -z "$VITE_SUPABASE_URL" || -z "$VITE_SUPABASE_PUBLISHABLE_KEY" ]]; then
+            echo "Supabase variables are missing from the github-pages environment." >&2
+            exit 1
+          fi
       - name: Validate application
         run: npm run check
       - name: Run browser tests
