@@ -61,11 +61,11 @@ test.describe('Mission simulations across all 14 courses', () => {
       expect(Number(await canvas.getAttribute('data-triangles'))).toBeLessThan(100000);
       await page.setViewportSize({ width: 390, height: 844 });
       await expect(canvas).toBeVisible();
-      await page.getByRole('button', { name: 'Step experiment', exact: true }).click();
+      await page.locator('.hud-step-btn').click();
       if (!['vectors', 'measurement'].includes(modelId)) await expect(page.getByTestId('simulation-time')).not.toHaveText('0');
       await page.locator('.experiment-viewport').screenshot({ path: 'test-results/scene-' + modelId + '-mobile.png' });
-      await page.getByRole('button', { name: 'Play experiment', exact: true }).click();
-      await page.getByRole('button', { name: 'Pause experiment', exact: true }).click();
+      await page.locator('.hud-play-btn').click();
+      await page.locator('.hud-play-btn').click();
       const paused = await page.getByTestId('simulation-time').textContent();
       await expect(page.getByTestId('simulation-time')).toHaveText(paused!);
       expect(errors).toEqual([]);

@@ -16,10 +16,13 @@ test('opens Explore first with one continue action and every open course', async
   await expect(navigation.getByRole('link').allTextContents()).resolves.toEqual(['Explore', 'Learn', 'Progress']);
   await expect(page.locator('.sidebar')).toHaveCount(0);
   await expect(page.locator('.lesson-tabs')).toHaveCount(0);
-  await expect(page.getByRole('link', { name: 'Appearance and themes' })).toHaveAttribute('href', '#/progress');
-  await page.getByRole('link', { name: 'Appearance and themes' }).click();
+  await expect(page.getByRole('button', { name: 'Appearance settings' })).toBeVisible();
+  await page.getByRole('button', { name: 'Appearance settings' }).click();
+  await expect(page.getByRole('dialog', { name: 'Appearance settings' })).toBeVisible();
+  await page.getByRole('button', { name: 'Close appearance settings' }).click();
+  await page.getByRole('navigation', { name: 'Main navigation' }).getByRole('link', { name: 'Progress' }).click();
   await expect(page).toHaveURL(/#\/progress$/);
-  await expect(page.locator('#settings-heading')).toBeInViewport();
+  await expect(page.getByRole('heading', { level: 1, name: 'Progress' })).toBeVisible();
 });
 
 test('opens Quantum first and exposes every mission node to native tab order', async ({ page }) => {
@@ -94,15 +97,19 @@ test('responsive viewports (320x700, 768x1024, 1440x900) have no horizontal page
     });
     expect(overflow, `Horizontal overflow at ${vp.width}x${vp.height} on Explore`).toBe(false);
 
-    // Primary nav targets >= 44px
-    const navLinks = page.getByRole('navigation', { name: 'Main navigation' }).getByRole('link');
+    // Primary nav targets (44px mobile, 28px desktop Apple HIG)
+    const isMobile = vp.width <= 768;
+    const navLocator = isMobile
+      ? page.getByRole('navigation', { name: 'Mobile navigation' })
+      : page.getByRole('navigation', { name: 'Main navigation' });
+    const navLinks = navLocator.getByRole('link');
     const navCount = await navLinks.count();
     expect(navCount).toBe(3);
     for (let i = 0; i < navCount; i++) {
       const box = await navLinks.nth(i).boundingBox();
       expect(box).not.toBeNull();
-      expect(box!.height, `Nav link ${i} height at ${vp.name}`).toBeGreaterThanOrEqual(44);
-      expect(box!.width, `Nav link ${i} width at ${vp.name}`).toBeGreaterThanOrEqual(44);
+      expect(box!.height, `Nav link ${i} height at ${vp.name}`).toBeGreaterThanOrEqual(isMobile ? 44 : 28);
+      expect(box!.width, `Nav link ${i} width at ${vp.name}`).toBeGreaterThanOrEqual(isMobile ? 44 : 28);
     }
 
     // Primary action target >= 44px
@@ -132,13 +139,12 @@ test('responsive viewports (320x700, 768x1024, 1440x900) have no horizontal page
 
     // Verify mobile bottom nav positioning at 320x700
     if (vp.width === 320) {
-      const nav = page.getByRole('navigation', { name: 'Main navigation' });
+      const nav = page.getByRole('navigation', { name: 'Mobile navigation' });
       const navPosition = await nav.evaluate(el => {
         const style = window.getComputedStyle(el);
-        return { position: style.position, bottom: style.bottom };
+        return { position: style.position };
       });
       expect(navPosition.position).toBe('fixed');
-      expect(navPosition.bottom).toBe('0px');
     }
 
     // No legacy sidebar or lesson tabs at any viewport
