@@ -272,12 +272,12 @@ describe('AppearancePopover', () => {
 
     // Clicking inside the popover dialog does NOT call onClose
     const dialog = screen.getByRole('dialog', { name: 'Appearance settings' });
-    fireEvent.mouseDown(dialog);
+    fireEvent.pointerDown(dialog);
     expect(onClose).not.toHaveBeenCalled();
 
     // Clicking outside the popover dialog calls onClose
     const outsideArea = screen.getByTestId('outside-area');
-    fireEvent.mouseDown(outsideArea);
+    fireEvent.pointerDown(outsideArea);
     expect(onClose).toHaveBeenCalledTimes(1);
   });
 });
