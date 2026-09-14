@@ -1,5 +1,21 @@
 # Changelog
 
+## 2026-09-14 — OAuth single sign-on (Google and GitHub)
+
+- Added `signInWithProvider` method to `CloudAccount` supporting Google and GitHub OAuth via `supabase.auth.signInWithOAuth`.
+- Added "or continue with" divider and branded SSO buttons (inline Google multi-color logo, GitHub mark) to the account popover.
+- SSO buttons share the disabled state with the email form during authentication and inherit the existing session hydration and progress merge flow.
+- Added CSS for `.account-sso-divider`, `.account-sso-buttons`, and `.account-sso-button` matching the glassmorphism design system.
+- Exported `OAuthProvider` type from `useCloudAccount.ts` for downstream consumers.
+
+## 2026-09-14 — Supabase accounts and durable progress sync
+
+- Added optional email registration, sign-in, sign-out, sync status, and manual synchronization controls without removing anonymous localStorage use.
+- Added a conflict-aware progress merge that preserves completed missions, best stars, badges, XP, math work, attempts, and the newest settings across devices.
+- Added a protected `user_progress` Supabase migration with per-user row-level security and no anonymous database access.
+- Added environment-based Supabase configuration and documented GitHub Pages, Vercel production, and branch-preview deployment without Docker.
+- Added focused cloud merge tests; unconfigured builds continue to operate as the original local-only app.
+
 ## 2026-09-14 — Cinematic simulations and continuous autoplay
 
 - Added a deterministic, model-derived 3D quantum probability cloud whose bead density follows the existing |ψ|² bins while retaining all exact quantitative bars and readouts.
