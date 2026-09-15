@@ -157,9 +157,21 @@
 .foundation-footer,
 .recap-takeaways,
 .recap-deep-dive-container,
-.assessment-hints {
+.assessment-hints,
+.foundation-check,
+.foundation-worked-example,
+.math-symbols,
+.foundation-prerequisites > div,
+.foundation-visual > div,
+.math-widget-fallback {
   display: grid;
   gap: var(--stack-md);
+}
+
+.mission-step > section,
+.mission-step > div,
+.mission-step section > div {
+  min-width: 0;
 }
 
 .step-kind-badge {
@@ -415,7 +427,7 @@
   display: flex;
   align-items: center;
   gap: 14px;
-  margin-top: 0;
+  margin-top: 4px;
   flex-wrap: wrap;
   width: 100%;
 }
@@ -668,6 +680,7 @@
   border: 1px solid var(--line);
   border-radius: var(--radius-md);
   background: var(--raised);
+  gap: var(--stack-lg);
 }
 
 .prereq-chips {

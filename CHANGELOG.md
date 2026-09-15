@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-09-15 — Nested lesson card spacing fix
+
+- Made math foundation check cards explicit vertical stacks so prompts, inputs, action rows, hints, and feedback no longer touch in quick-check and expanded math views.
+- Widened remaining compact vertical stacks in course-path mission cards, progress theme controls, settings descriptions, backup helper text, and mobile daily-goal buttons.
+- Added a regression assertion for foundation check card spacing and verified representative desktop, tablet, and mobile routes with a stricter spacing audit.
+
 ## 2026-09-15 — Mission step vertical spacing and row alignment
 
 - Structured `#main-content > section > main > article > div` and `.assessment-body` into flex columns with consistent 20px vertical spacing on desktop and 16px on mobile.

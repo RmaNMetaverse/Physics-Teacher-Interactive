@@ -122,7 +122,7 @@
 .course-path-stats dl div {
   display: flex;
   flex-direction: column;
-  gap: 7px;
+  gap: 10px;
 }
 
 .course-path-stats dt {
@@ -267,7 +267,7 @@
 .mission-node-copy {
   display: flex;
   flex-direction: column;
-  gap: 7px;
+  gap: 10px;
   min-width: 0;
 }
 

@@ -27,6 +27,12 @@ describe('Mission Step vertical spacing and alignment', () => {
     expect(missionCss).toMatch(/\.assessment-hints\s*\{/);
   });
 
+  it('styles foundation check cards as vertical stacks with explicit gaps', () => {
+    expect(missionCss).toMatch(/\.foundation-check/);
+    expect(missionCss).toMatch(/\.foundation-check[\s\S]*?display:\s*grid[\s\S]*?gap:/i);
+    expect(missionCss).toMatch(/\.math-quick-check[\s\S]*?gap:\s*var\(--stack-lg\)/i);
+  });
+
   it('provides mobile vertical spacing and action stacking in responsive.css', () => {
     // Should contain responsive rules for the article div and assessment actions
     expect(responsiveCss).toMatch(/#main-content\s*>\s*section\s*>\s*main\s*>\s*article\s*>\s*div/);

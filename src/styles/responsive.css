@@ -275,9 +275,9 @@ html, body {
   .assessment-actions {
     flex-direction: column;
     align-items: stretch;
-    gap: 10px;
+    gap: 12px;
     width: 100%;
-    margin-top: 0;
+    margin-top: 6px;
   }
 
   .assessment-actions button,
@@ -307,6 +307,11 @@ html, body {
   .feedback {
     padding: 14px 16px;
     font-size: 14px;
+  }
+
+  .foundation-check,
+  .math-quick-check {
+    gap: 16px;
   }
 
   .mission-player-footer {
@@ -428,7 +433,10 @@ html, body {
   }
 
   .xp-counts { justify-content: flex-start; }
-  .goal-options { grid-template-columns: 1fr; }
+  .goal-options {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
   .mastery-rings-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 16px; }
   .course-mastery-item { min-height: 154px; padding: 14px 8px; }
   .mastery-section-header,
