@@ -1,5 +1,16 @@
 # Physics Teacher Interactive
 
+[![CI](https://github.com/RmaNMetaverse/Physics-Teacher-Interactive/actions/workflows/ci.yml/badge.svg)](https://github.com/RmaNMetaverse/Physics-Teacher-Interactive/actions/workflows/ci.yml)
+[![GitHub Pages](https://github.com/RmaNMetaverse/Physics-Teacher-Interactive/actions/workflows/deploy.yml/badge.svg?label=pages)](https://github.com/RmaNMetaverse/Physics-Teacher-Interactive/actions/workflows/deploy.yml)
+![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=111827)
+![Vite](https://img.shields.io/badge/Vite-6-646CFF?logo=vite&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?logo=typescript&logoColor=white)
+![Three.js](https://img.shields.io/badge/Three.js-3D%20labs-000000?logo=threedotjs&logoColor=white)
+![Supabase](https://img.shields.io/badge/Supabase-cloud%20sync-3FCF8E?logo=supabase&logoColor=white)
+![Playwright](https://img.shields.io/badge/Playwright-E2E-2EAD33?logo=playwright&logoColor=white)
+![Node.js](https://img.shields.io/badge/Node.js-%E2%89%A522.20-5FA04E?logo=nodedotjs&logoColor=white)
+![Courses](https://img.shields.io/badge/courses-16%20released-f97316)
+
 Physics Teacher Interactive is an interactive physics teacher inspired by **Brilliant** and **Duolingo**—but built for physics.
 
 It teaches through short, guided lessons instead of long textbook chapters. You make predictions, run simulations, work through examples, and explain what happened. When a lesson needs algebra, vectors, trigonometry, or another prerequisite, the app teaches that background math as part of the lesson.

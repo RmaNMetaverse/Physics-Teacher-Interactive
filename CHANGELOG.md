@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-09-15 — README badge polish
+
+- Added shields.io badges for CI, GitHub Pages, the main frontend stack, cloud sync, browser testing, supported Node.js version and released course count.
+
 ## 2026-09-15 — GitHub Pages browser-check fix
 
 - Updated Explore, Progress and release browser checks to derive course counts from the published catalog. The new Electronics and Arduino/ESP32 paths raised the visible course count from 14 to 16, while older hard-coded expectations stopped CI and Pages before artifact upload.
