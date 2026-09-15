@@ -1,4 +1,4 @@
-import { useState, type ReactNode, type RefObject } from 'react';
+import { useEffect, useRef, useState, type ReactNode, type RefObject } from 'react';
 import { Atom, ChartNoAxesColumn, Cloud, Compass, Flame, Map, Palette, Trophy, UserRound } from 'lucide-react';
 import type { AppRoute } from './router';
 import { toHash } from './router';
@@ -45,6 +45,9 @@ export function AppShell({
 }: AppShellProps) {
   const [isAppearanceOpen, setIsAppearanceOpen] = useState(false);
   const [isAccountOpen, setIsAccountOpen] = useState(false);
+  const [isAccountGateOpen, setIsAccountGateOpen] = useState(false);
+  const [accountReminder, setAccountReminder] = useState('');
+  const initialAccountResolved = useRef(false);
   const current = route.page === 'course' || route.page === 'mission' ? 'learn' : route.page;
 
   const activeSettings = settings ?? progress?.settings ?? DEFAULT_SETTINGS;
@@ -63,6 +66,24 @@ export function AppShell({
 
   const totalXp = progress?.totalXp ?? 0;
   const streakCount = progress?.streak?.current ?? 0;
+
+  useEffect(() => {
+    if (!account?.ready || initialAccountResolved.current) return;
+    initialAccountResolved.current = true;
+    setIsAccountGateOpen(account.configured && !account.user);
+  }, [account?.configured, account?.ready, account?.user]);
+
+  useEffect(() => {
+    if (account?.user) {
+      setIsAccountGateOpen(false);
+      setAccountReminder('');
+    }
+  }, [account?.user]);
+
+  const continueLocally = () => {
+    setIsAccountGateOpen(false);
+    setAccountReminder("You're continuing with progress saved only on this device. To protect and sync it, be sure to sign in later from the avatar in the top bar.");
+  };
 
   return (
     <div className="adventure-shell">
@@ -163,7 +184,11 @@ export function AppShell({
                 aria-label={account.user ? 'Account and cloud sync' : 'Sign in or register'}
                 aria-expanded={isAccountOpen}
                 aria-haspopup="dialog"
-                onClick={() => { setIsAccountOpen(previous => !previous); setIsAppearanceOpen(false); }}
+                onClick={() => {
+                  setIsAccountOpen(previous => !previous);
+                  setIsAppearanceOpen(false);
+                  setAccountReminder('');
+                }}
               >
                 {account.syncState === 'syncing' ? <Cloud className="syncing-cloud" size={18} aria-hidden="true" /> : <UserRound size={18} aria-hidden="true" />}
                 <span className="sr-only">Account</span>
@@ -175,11 +200,17 @@ export function AppShell({
       </header>
 
       {recoveryMessage && <div className="route-recovery" role="status">{recoveryMessage}</div>}
+      {accountReminder && <div className="account-local-notice" role="status">{accountReminder}</div>}
       <main ref={mainRef} id="main-content" className="adventure-main" tabIndex={-1}>
         {children}
       </main>
 
       <MobileTabBar currentRoute={route} learnHash={learnHash} />
+      {account && isAccountGateOpen && (
+        <div className="account-gate-backdrop">
+          <AccountPopover account={account} isOpen variant="gate" onClose={continueLocally} />
+        </div>
+      )}
     </div>
   );
 }

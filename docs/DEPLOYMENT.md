@@ -38,6 +38,14 @@ Then paste that Google Client ID and Client Secret into **Supabase → Authentic
 
 The app remains fully usable without these variables. Anonymous progress stays in localStorage. After sign-in, the app merges the browser and cloud documents, writes the result to both locations, and debounces later cloud updates.
 
+When Supabase is configured, the app waits for the initial authentication check
+and presents signed-out visitors with a centered account prompt. Visitors may
+close it and continue with local progress; a reminder points them to the avatar
+in the top bar, which reopens the same account controls. The prompt is shown
+again on a new page load until the browser has an authenticated session. Builds
+without Supabase variables do not show the prompt because their authentication
+actions are unavailable.
+
 ## Repository setup
 
 In GitHub, open **Settings → Pages** and set **Source** to **GitHub Actions**. The workflow has only the permissions Pages requires: read repository contents, write Pages, and request an OIDC identity token. The `github-pages` environment exposes the deployed URL and GitHub environment protection rules can be added without changing the build.

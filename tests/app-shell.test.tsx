@@ -6,6 +6,7 @@ import '@testing-library/jest-dom/vitest';
 import { AppShell } from '../src/app/AppShell';
 import type { AppRoute } from '../src/app/router';
 import type { LearnerProgressV2 } from '../src/progress/types';
+import type { CloudAccount } from '../src/cloud/useCloudAccount';
 
 const mockProgress: LearnerProgressV2 = {
   version: 2,
@@ -45,6 +46,18 @@ afterEach(() => {
 describe('AppShell', () => {
   const mainRef = createRef<HTMLElement>();
   const defaultLearnHash = '#/course/foundations-of-motion';
+  const unsignedAccount = (): CloudAccount => ({
+    configured: true,
+    user: null,
+    ready: true,
+    syncState: 'local',
+    error: '',
+    signUp: vi.fn().mockResolvedValue('Check your email to confirm your account.'),
+    signIn: vi.fn().mockResolvedValue(undefined),
+    signInWithProvider: vi.fn().mockResolvedValue(undefined),
+    signOut: vi.fn().mockResolvedValue(undefined),
+    syncNow: vi.fn().mockResolvedValue(undefined),
+  });
 
   it('renders skip link, brand header, main content, and recovery message when present', () => {
     const route: AppRoute = { page: 'explore' };
@@ -240,5 +253,92 @@ describe('AppShell', () => {
     const mobileNav = screen.getByRole('navigation', { name: 'Mobile navigation' });
     expect(mobileNav).toBeInTheDocument();
     expect(mobileNav).toHaveClass('mobile-tab-bar');
+  });
+
+  it('opens a centered sign-in gate once auth is ready and the visitor is signed out', () => {
+    render(
+      <AppShell
+        route={{ page: 'explore' }}
+        learnHash={defaultLearnHash}
+        recoveryMessage=""
+        mainRef={mainRef}
+        progress={mockProgress}
+        account={unsignedAccount()}
+      >
+        <div>Course gallery</div>
+      </AppShell>
+    );
+
+    const gate = screen.getByRole('dialog', { name: 'Sign in to sync progress' });
+    expect(gate).toHaveClass('account-popover-gate');
+    expect(gate).toHaveAttribute('aria-modal', 'true');
+    expect(screen.getByText(/keep your physics progress/i)).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Google' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'GitHub' })).toBeInTheDocument();
+  });
+
+  it('lets a visitor close the gate, explains local progress, and keeps avatar sign-in available', () => {
+    render(
+      <AppShell
+        route={{ page: 'explore' }}
+        learnHash={defaultLearnHash}
+        recoveryMessage=""
+        mainRef={mainRef}
+        progress={mockProgress}
+        account={unsignedAccount()}
+      >
+        <div>Course gallery</div>
+      </AppShell>
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: 'Continue without signing in' }));
+    expect(screen.queryByRole('dialog', { name: 'Sign in to sync progress' })).not.toBeInTheDocument();
+    expect(screen.getByRole('status')).toHaveTextContent(/sign in later from the avatar/i);
+
+    fireEvent.click(screen.getByRole('button', { name: 'Sign in or register' }));
+    expect(screen.getByRole('dialog', { name: 'Account and cloud sync' })).toBeInTheDocument();
+  });
+
+  it('does not show the gate while auth is loading or after sign-in', () => {
+    const account = unsignedAccount();
+    account.ready = false;
+    const { rerender } = render(
+      <AppShell
+        route={{ page: 'explore' }}
+        learnHash={defaultLearnHash}
+        recoveryMessage=""
+        mainRef={mainRef}
+        account={account}
+      >
+        <div>Course gallery</div>
+      </AppShell>
+    );
+    expect(screen.queryByRole('dialog', { name: 'Sign in to sync progress' })).not.toBeInTheDocument();
+
+    rerender(
+      <AppShell
+        route={{ page: 'explore' }}
+        learnHash={defaultLearnHash}
+        recoveryMessage=""
+        mainRef={mainRef}
+        account={{ ...account, configured: false, ready: true }}
+      >
+        <div>Course gallery</div>
+      </AppShell>
+    );
+    expect(screen.queryByRole('dialog', { name: 'Sign in to sync progress' })).not.toBeInTheDocument();
+
+    rerender(
+      <AppShell
+        route={{ page: 'explore' }}
+        learnHash={defaultLearnHash}
+        recoveryMessage=""
+        mainRef={mainRef}
+        account={{ ...account, ready: true, user: { id: 'learner-1', email: 'learner@example.com' } as CloudAccount['user'] }}
+      >
+        <div>Course gallery</div>
+      </AppShell>
+    );
+    expect(screen.queryByRole('dialog', { name: 'Sign in to sync progress' })).not.toBeInTheDocument();
   });
 });

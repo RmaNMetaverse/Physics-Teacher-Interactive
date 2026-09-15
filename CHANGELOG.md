@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-09-15 — First-load cloud progress prompt
+
+- Added a prominent centered account prompt after the configured Supabase client finishes checking the initial session and finds no signed-in user.
+- Reused the existing email registration, email/password sign-in, Google OAuth, GitHub OAuth, and local-to-cloud progress merge flow.
+- Let visitors close the prompt immediately to explore locally, then show a clear reminder that the top-bar avatar reopens sign-in and cloud sync.
+- Kept unconfigured static builds local-first without presenting unavailable authentication actions, and automatically remove the prompt after successful authentication.
+- Added accessible modal semantics, initial heading focus, contained keyboard tabbing, responsive sizing, and inline OAuth error reporting.
+
 ## 2026-09-14 — Opaque account panel
 
 - Made the account and cloud-sync popover fully opaque with no backdrop blur, preventing the authentication form from blending into the toolbar behind it.
