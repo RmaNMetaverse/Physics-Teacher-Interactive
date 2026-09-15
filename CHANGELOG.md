@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-09-15 — Mission step vertical spacing and row alignment
+
+- Structured `#main-content > section > main > article > div` and `.assessment-body` into flex columns with consistent 20px vertical spacing on desktop and 16px on mobile.
+- Separated assessment choices, input rows, action buttons, hints, and feedback messages so they no longer stick together or crowd vertically.
+- Aligned action buttons (`.primary-button` and `.text-button` / `.hint-button`) with matching minimum heights, touch targets, and centered inline-flex geometry.
+- Added responsive full-width vertical action stacking on mobile viewports for clean touch alignment.
+- Added automated test suite verifying desktop and mobile layout rules for mission step containers.
+
 ## 2026-09-15 — Typography and simulation control polish
 
 - Added locally bundled Space Grotesk, JetBrains Mono, and IBM Plex Mono fonts, with the official hosted sources as fallback.

@@ -249,7 +249,64 @@ html, body {
 
   /* Mission Player on Mobile */
   .mission-step {
-    padding: 18px 16px;
+    padding: 20px 16px;
+    gap: 18px;
+  }
+
+  /* Direct child div in mission step card (assessment-body, step-content, etc.) */
+  #main-content > section > main > article > div,
+  .mission-step > .assessment-body,
+  .mission-step > .step-content {
+    gap: 16px;
+  }
+
+  .answer-options {
+    gap: 12px;
+  }
+
+  .answer-option,
+  .option-card {
+    min-height: 48px;
+    padding: 12px 16px;
+    gap: 12px;
+    font-size: 14px;
+  }
+
+  .assessment-actions {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    width: 100%;
+    margin-top: 0;
+  }
+
+  .assessment-actions button,
+  .assessment-actions .primary-button,
+  .assessment-actions .text-button,
+  .assessment-actions .hint-button {
+    width: 100%;
+    min-height: 46px;
+    justify-content: center;
+  }
+
+  .numeric-answer {
+    width: 100%;
+    gap: 10px;
+  }
+
+  .numeric-answer input {
+    max-width: 100%;
+    width: 100%;
+  }
+
+  .hint-message {
+    padding: 12px 14px;
+    font-size: 13.5px;
+  }
+
+  .feedback {
+    padding: 14px 16px;
+    font-size: 14px;
   }
 
   .mission-player-footer {

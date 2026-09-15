@@ -113,6 +113,9 @@
 
 /* Focused Mission Step Card - Squircle geometry */
 .mission-step {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
   padding: 28px;
   border: 1px solid var(--line);
   border-radius: 18px;
@@ -124,7 +127,7 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
-  margin-bottom: 22px;
+  margin-bottom: 0;
 }
 
 .step-kind-badge {
@@ -138,10 +141,27 @@
   color: var(--accent);
 }
 
+/* Container & vertical row spacing for mission step content */
+#main-content > section > main > article > div,
+.mission-step > .assessment-body,
+.mission-step > .step-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.step-content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
 .step-content p {
   line-height: 1.8;
   color: var(--text);
-  margin: 0 0 14px 0;
+  margin: 0;
   font-size: 15px;
 }
 
@@ -235,27 +255,38 @@
 .answer-options {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 14px;
+  width: 100%;
 }
 
 .answer-option,
 .option-card {
   display: flex;
   align-items: center;
-  gap: 14px;
-  min-height: 48px;
+  gap: 16px;
+  min-height: 52px;
   padding: 14px 20px;
   border: 1.5px solid var(--line);
   border-radius: 14px;
   background: var(--panel);
   color: var(--text);
-  font-size: 14.5px;
+  font-size: 15px;
+  line-height: 1.5;
   text-align: left;
   cursor: pointer;
+  width: 100%;
+  box-sizing: border-box;
   transition: border-color var(--transition-fast) ease,
               background-color var(--transition-fast) ease,
               transform var(--transition-fast) ease,
               box-shadow var(--transition-fast) ease;
+}
+
+.option-text {
+  flex: 1;
+  font-size: 15px;
+  line-height: 1.5;
+  color: inherit;
 }
 
 .answer-option:hover,
@@ -323,33 +354,95 @@
 .numeric-answer {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
   flex-wrap: wrap;
+  width: 100%;
 }
 
 .numeric-answer input,
 .text-input {
-  min-height: 44px;
-  height: 44px;
-  padding: 8px 14px;
-  border: 1px solid var(--line);
+  min-height: 48px;
+  height: 48px;
+  padding: 10px 16px;
+  border: 1.5px solid var(--line);
   border-radius: var(--radius-md);
   background: var(--sunken);
   color: var(--text);
-  font-size: 14px;
+  font-size: 15px;
   box-sizing: border-box;
+  max-width: 280px;
+  width: 100%;
 }
 
 .assessment-actions {
   display: flex;
   align-items: center;
-  gap: 12px;
-  margin-top: 8px;
+  gap: 14px;
+  margin-top: 0;
+  flex-wrap: wrap;
+  width: 100%;
 }
 
-.assessment-actions button {
+.assessment-actions button,
+.assessment-actions .primary-button,
+.assessment-actions .text-button,
+.assessment-actions .hint-button {
+  min-height: 46px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.text-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
   min-height: 44px;
-  min-width: 44px;
+  padding: 10px 18px;
+  border-radius: var(--radius-md);
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--accent);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-fast) ease;
+}
+
+.text-button:hover:not(:disabled) {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.text-button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.hint-button {
+  color: var(--accent);
+}
+
+/* Assessment Hints Row */
+.assessment-hints {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.hint-message {
+  margin: 0;
+  padding: 14px 18px;
+  border-radius: var(--radius-md);
+  background: var(--raised);
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--accent);
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text);
 }
 
 /* Assessment Feedback - Inline Mint / Coral */
@@ -361,6 +454,8 @@
   color: var(--text);
   font-size: 14.5px;
   line-height: 1.6;
+  width: 100%;
+  box-sizing: border-box;
   transition: all var(--transition-base) ease;
 }
 
