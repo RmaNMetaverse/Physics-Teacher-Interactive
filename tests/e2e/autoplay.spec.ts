@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from './fixtures';
 
 async function openQuantumLab(page: import('@playwright/test').Page) {
   await page.addInitScript(() => {

@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from './fixtures';
 
 test('opens Explore first with one continue action and every open course', async ({ page }) => {
   await page.goto('/');

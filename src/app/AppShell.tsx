@@ -30,6 +30,15 @@ const DEFAULT_SETTINGS: LearnerProgressV2['settings'] = {
   primaryColor: '#a78bfa',
   secondaryColor: '#34d399',
 };
+const ACCOUNT_GATE_DISMISSED_KEY = 'physics-account-gate-dismissed';
+
+function accountGateDismissedForSession() {
+  try {
+    return sessionStorage.getItem(ACCOUNT_GATE_DISMISSED_KEY) === 'true';
+  } catch {
+    return false;
+  }
+}
 
 export function AppShell({
   route,
@@ -70,7 +79,7 @@ export function AppShell({
   useEffect(() => {
     if (!account?.ready || initialAccountResolved.current) return;
     initialAccountResolved.current = true;
-    setIsAccountGateOpen(account.configured && !account.user);
+    setIsAccountGateOpen(account.configured && !account.user && !accountGateDismissedForSession());
   }, [account?.configured, account?.ready, account?.user]);
 
   useEffect(() => {
@@ -81,6 +90,11 @@ export function AppShell({
   }, [account?.user]);
 
   const continueLocally = () => {
+    try {
+      sessionStorage.setItem(ACCOUNT_GATE_DISMISSED_KEY, 'true');
+    } catch {
+      // The current mounted shell still remembers the dismissal in component state.
+    }
     setIsAccountGateOpen(false);
     setAccountReminder("You're continuing with progress saved only on this device. To protect and sync it, be sure to sign in later from the avatar in the top bar.");
   };

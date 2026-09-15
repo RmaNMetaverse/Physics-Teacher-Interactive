@@ -42,9 +42,10 @@ When Supabase is configured, the app waits for the initial authentication check
 and presents signed-out visitors with a centered account prompt. Visitors may
 close it and continue with local progress; a reminder points them to the avatar
 in the top bar, which reopens the same account controls. The prompt is shown
-again on a new page load until the browser has an authenticated session. Builds
-without Supabase variables do not show the prompt because their authentication
-actions are unavailable.
+again in a new tab or browser session until the browser has an authenticated
+session. A close choice survives reloads only in the current tab. Builds without
+Supabase variables do not show the prompt because their authentication actions
+are unavailable.
 
 ## Repository setup
 

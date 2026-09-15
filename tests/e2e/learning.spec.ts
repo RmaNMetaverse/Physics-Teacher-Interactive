@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from './fixtures';
 
 test('curriculum search and topic filters navigate to real courses and missions', async ({ page }) => {
   await page.goto('/');

@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from './fixtures';
 
 test.describe('Progress page and rewards dashboard (v2)', () => {
   test('renders level, XP progress, daily streak, mastery rings, and badge shelf', async ({ page }) => {

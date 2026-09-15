@@ -41,6 +41,7 @@ const mockProgress: LearnerProgressV2 = {
 afterEach(() => {
   cleanup();
   vi.restoreAllMocks();
+  sessionStorage.clear();
 });
 
 describe('AppShell', () => {
@@ -297,6 +298,22 @@ describe('AppShell', () => {
 
     fireEvent.click(screen.getByRole('button', { name: 'Sign in or register' }));
     expect(screen.getByRole('dialog', { name: 'Account and cloud sync' })).toBeInTheDocument();
+  });
+
+  it('remembers a local continuation for reloads in the same tab session', () => {
+    const props = {
+      route: { page: 'explore' } as AppRoute,
+      learnHash: defaultLearnHash,
+      recoveryMessage: '',
+      mainRef,
+      account: unsignedAccount(),
+    };
+    const first = render(<AppShell {...props}><div>Course gallery</div></AppShell>);
+    fireEvent.click(screen.getByRole('button', { name: 'Continue without signing in' }));
+    first.unmount();
+
+    render(<AppShell {...props} account={unsignedAccount()}><div>Course gallery</div></AppShell>);
+    expect(screen.queryByRole('dialog', { name: 'Sign in to sync progress' })).not.toBeInTheDocument();
   });
 
   it('does not show the gate while auth is loading or after sign-in', () => {

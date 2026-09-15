@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from './fixtures';
 
 test.describe('Mission player and layered math', () => {
   test('plays through a Foundations mission with expanded math, deep dive, and completion', async ({ page }) => {
@@ -229,4 +229,3 @@ test.describe('Mission player and layered math', () => {
     ).toBe(true);
   });
 });
-

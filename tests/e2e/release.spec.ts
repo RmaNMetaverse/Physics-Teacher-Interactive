@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from './fixtures';
 
 test('release journey: first visit Explore, open Quantum, complete mission with math, earn XP once, replay without duplicate XP, view path & Progress, switch to Foundations', async ({ page }) => {
   // 1. First visit Explore
