@@ -1,13 +1,15 @@
 export type ThemeName = 'light' | 'dark' | 'eye-comfort' | 'ocean' | 'high-contrast';
+export type FontName = 'modern-sans' | 'technical-mono' | 'retro-computer';
 
 export interface AppearanceSettings {
   theme: ThemeName;
   primaryColor: string;
   secondaryColor: string;
   liquidGlass: boolean;
+  font: FontName;
 }
 
-export const themePresets: ReadonlyArray<AppearanceSettings & { label: string; description: string }> = [
+export const themePresets: ReadonlyArray<Omit<AppearanceSettings, 'font'> & { label: string; description: string }> = [
   { theme: 'light', label: 'Light', description: 'Bright and clean', primaryColor: '#7c3aed', secondaryColor: '#059669', liquidGlass: true },
   { theme: 'dark', label: 'Night', description: 'Deep, low-glare surfaces', primaryColor: '#a78bfa', secondaryColor: '#34d399', liquidGlass: true },
   { theme: 'eye-comfort', label: 'Eye Comfort', description: 'Warm paper tones', primaryColor: '#8b5e34', secondaryColor: '#477a5b', liquidGlass: true },
@@ -16,6 +18,7 @@ export const themePresets: ReadonlyArray<AppearanceSettings & { label: string; d
 ];
 
 const themes = new Set<ThemeName>(themePresets.map(preset => preset.theme));
+const fonts = new Set<FontName>(['modern-sans', 'technical-mono', 'retro-computer']);
 export const isHexColor = (value: unknown): value is string => typeof value === 'string' && /^#[0-9a-f]{6}$/i.test(value);
 
 export function normalizeAppearanceSettings(value: unknown): AppearanceSettings {
@@ -27,7 +30,8 @@ export function normalizeAppearanceSettings(value: unknown): AppearanceSettings 
   const secondaryColor = input.secondaryColor ?? preset.secondaryColor;
   if (!isHexColor(primaryColor) || !isHexColor(secondaryColor)) throw new Error('Custom colors must use six-digit hex colors.');
   if (input.liquidGlass !== undefined && typeof input.liquidGlass !== 'boolean') throw new Error('Liquid Glass setting is invalid.');
-  return { theme: preset.theme, primaryColor: primaryColor.toLowerCase(), secondaryColor: secondaryColor.toLowerCase(), liquidGlass: input.liquidGlass ?? preset.liquidGlass };
+  if (input.font !== undefined && !fonts.has(input.font as FontName)) throw new Error('Font setting is invalid.');
+  return { theme: preset.theme, primaryColor: primaryColor.toLowerCase(), secondaryColor: secondaryColor.toLowerCase(), liquidGlass: input.liquidGlass ?? preset.liquidGlass, font: (input.font as FontName | undefined) ?? 'modern-sans' };
 }
 
 export function accentContrast(hex: string): '#0b1020' | '#ffffff' {

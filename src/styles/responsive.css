@@ -34,7 +34,8 @@ html, body {
   .parameters {
     border-left: none;
     border-top: 1px solid var(--line);
-    max-height: 320px;
+    max-height: none;
+    overflow: visible;
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 12px 20px;

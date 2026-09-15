@@ -112,8 +112,7 @@ describe('AppearancePopover', () => {
     const highContrastBtn = screen.getByRole('button', { name: /high contrast/i });
     fireEvent.click(highContrastBtn);
     expect(onUpdateSettings).toHaveBeenCalledWith({ theme: 'high-contrast' });
-
-    // Rerender with 'ocean' active and verify active state moves
+// Rerender with 'ocean' active and verify active state moves
     rerender(
       <AppearancePopover
         isOpen={true}
@@ -124,6 +123,24 @@ describe('AppearancePopover', () => {
     );
     expect(screen.getByRole('button', { name: /ocean/i })).toHaveAttribute('aria-pressed', 'true');
     expect(screen.getByRole('button', { name: /dark/i })).toHaveAttribute('aria-pressed', 'false');
+  });
+
+  it('offers readable and technical font choices', () => {
+    const onClose = vi.fn();
+    const onUpdateSettings = vi.fn();
+    render(
+      <AppearancePopover
+        isOpen={true}
+        onClose={onClose}
+        settings={defaultSettings}
+        onUpdateSettings={onUpdateSettings}
+      />
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: /Technical Mono/i }));
+    expect(onUpdateSettings).toHaveBeenCalledWith({ font: 'technical-mono' });
+    expect(screen.getByRole('button', { name: /Modern Sans/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Retro Computer/i })).toBeInTheDocument();
   });
 
   it('toggles Liquid Glass setting', () => {

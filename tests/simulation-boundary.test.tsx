@@ -143,15 +143,17 @@ describe('Precision Lab & Floating Playback HUD', () => {
     cleanup();
   });
 
-  it('structures playback controls within .playback-hud over .lab-canvas-frame', () => {
+  it('keeps playback controls below the visual and outside the 3D canvas', () => {
     render(<Lab modelId="motion" />);
     const frame = document.querySelector('.lab-canvas-frame');
     expect(frame).toBeInTheDocument();
 
-    const hud = frame?.querySelector('.playback-hud');
+    const hud = document.querySelector('.lab-playback-bar .playback-hud');
     expect(hud).toBeInTheDocument();
     expect(hud).toHaveAttribute('role', 'toolbar');
+    expect(frame?.contains(hud)).toBe(false);
     expect(hud).toHaveAttribute('aria-label', 'Playback controls');
+    expect(document.querySelector('.parameters')).toHaveClass('lab-controls-panel');
   });
 
   it('provides accessible Play/Pause labels on the primary button', async () => {

@@ -1,4 +1,4 @@
-import type { ThemeName } from '../appearance';
+import type { FontName, ThemeName } from '../appearance';
 
 export type StarCount = 1 | 2 | 3;
 
@@ -30,6 +30,7 @@ export interface LearnerProgressV2 {
     primaryColor?: string;
     secondaryColor?: string;
     liquidGlass?: boolean;
+    font?: FontName;
   };
   savedAt: string;
 }

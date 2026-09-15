@@ -69,6 +69,7 @@ export function App() {
     const appearance = normalizeAppearanceSettings(progress.settings);
     document.documentElement.dataset.theme = appearance.theme;
     document.documentElement.dataset.liquidGlass = appearance.liquidGlass ? 'true' : 'false';
+    document.documentElement.dataset.font = appearance.font;
     document.documentElement.dataset.reducedMotion = progress.settings.reducedMotion ? 'true' : 'false';
     document.documentElement.style.setProperty('--accent', appearance.primaryColor);
     document.documentElement.style.setProperty('--journey-violet', appearance.primaryColor);

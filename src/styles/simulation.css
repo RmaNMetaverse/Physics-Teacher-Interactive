@@ -683,3 +683,96 @@ input[type="range"].hardware-slider,
   color: var(--muted);
   background: var(--raised);
 }
+
+/* Persistent playback sits beside the experiment, never over it. */
+.lab-playback-bar {
+  display: flex;
+  justify-content: center;
+  padding: 12px 16px;
+  border-top: 1px solid var(--line);
+  background: var(--panel);
+}
+
+.lab-playback-bar .playback-hud {
+  position: static;
+  transform: none;
+  z-index: auto;
+  width: min(100%, 620px);
+  max-width: 100%;
+  justify-content: center;
+  border-radius: var(--radius-md);
+  background: var(--raised);
+  border-color: var(--line);
+  box-shadow: var(--shadow-sm);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  color: var(--text);
+}
+
+.lab-playback-bar .hud-btn,
+.lab-playback-bar .hud-speed-group {
+  background: var(--sunken);
+  border-color: var(--line);
+  color: var(--text);
+}
+
+.lab-playback-bar .hud-speed-btn,
+.lab-playback-bar .hud-timecode,
+.lab-playback-bar .hud-timecode span,
+.lab-playback-bar .hud-timecode b {
+  color: var(--text);
+}
+
+.lab-playback-bar .hud-speed-btn.active,
+.lab-playback-bar .hud-speed-btn[aria-pressed="true"] {
+  background: var(--accent-soft);
+  color: var(--text);
+}
+
+.lab-playback-bar .hud-divider {
+  background: var(--line);
+}
+
+.hud-timecode {
+  min-inline-size: 12.75rem;
+  justify-content: flex-end;
+}
+
+.scene-axis-hint {
+  bottom: 16px;
+}
+
+.parameters,
+.parameters.lab-controls-panel {
+  max-height: none;
+  overflow: visible;
+  overscroll-behavior: auto;
+}
+
+.feedback {
+  margin-top: 14px;
+}
+
+@media (max-width: 1024px) {
+  .parameters,
+  .parameters.lab-controls-panel {
+    max-height: none;
+    overflow: visible;
+  }
+}
+
+@media (max-width: 520px) {
+  .lab-playback-bar {
+    padding: 10px 12px;
+  }
+
+  .lab-playback-bar .playback-hud {
+    gap: 6px;
+    padding: 8px;
+  }
+
+  .hud-timecode {
+    min-inline-size: 0;
+    flex: 1 1 auto;
+  }
+}

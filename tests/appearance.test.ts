@@ -8,6 +8,13 @@ describe('appearance settings', () => {
     expect(normalizeAppearanceSettings({ theme: 'dark', sound: true, reducedMotion: false, celebrations: true }))
       .toMatchObject({ theme: 'dark', primaryColor: '#a78bfa', secondaryColor: '#34d399', liquidGlass: true });
   });
+  it('accepts a saved technical type setting and defaults old progress to Modern Sans', () => {
+    expect(normalizeAppearanceSettings({ theme: 'dark', font: 'technical-mono' }))
+      .toMatchObject({ font: 'technical-mono' });
+    expect(normalizeAppearanceSettings({ theme: 'dark' }))
+      .toMatchObject({ font: 'modern-sans' });
+  });
+
 
   it('accepts all presets and strict six-digit custom colors', () => {
     expect(normalizeAppearanceSettings({ theme: 'eye-comfort', primaryColor: '#7c3aed', secondaryColor: '#059669', liquidGlass: false })).toMatchObject({ theme: 'eye-comfort', liquidGlass: false });
@@ -54,7 +61,15 @@ describe('design tokens and WCAG contrast', () => {
     expect(tokensCss).toMatch(/--radius-lg:\s*18px;/);
     expect(tokensCss).toMatch(/--radius-xl:\s*22px;/);
     expect(tokensCss).toMatch(/--radius-full:\s*9999px;/);
+
     expect(tokensCss).toMatch(/--font-tabular:\s*tabular-nums;/);
+  });
+
+  it('ships local technical and readable font faces with web fallbacks', () => {
+    expect(tokensCss).toMatch(/@font-face\s*\{[^}]*font-family:\s*'Space Grotesk'/s);
+    expect(tokensCss).toMatch(/@font-face\s*\{[^}]*font-family:\s*'JetBrains Mono'/s);
+    expect(tokensCss).toMatch(/--font-sans:.*Space Grotesk/s);
+    expect(tokensCss).toMatch(/--font-mono:.*JetBrains Mono/s);
   });
 
   it('calibrates dark theme tokens with WCAG AA contrast against panel and background', () => {
@@ -135,11 +150,10 @@ describe('liquid glass layer discipline', () => {
     }
   });
 
-  it('restricts liquid glass strictly to floating functional controls and HUDs', () => {
+  it('restricts liquid glass strictly to floating navigation and appearance controls', () => {
     const floatingControls = [
       '.adventure-topbar',
       '.mobile-tab-bar',
-      '.playback-hud',
       '.appearance-popover',
     ];
 

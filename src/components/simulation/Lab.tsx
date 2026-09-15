@@ -408,72 +408,8 @@ export function Lab({
               <GraphView modelId={id} parameters={parameters} state={state} duration={duration} />
             </div>
           )}
-
-          {/* Floating Liquid Glass Playback HUD */}
-          <div className="playback-hud liquid-glass-surface" role="toolbar" aria-label="Playback controls">
-            <button
-              type="button"
-              className="hud-btn hud-reset-btn"
-              aria-label="Reset"
-              title="Reset experiment (t = 0)"
-              onClick={() => {
-                manuallyPaused.current = true;
-                setTime(0);
-                setPlaying(false);
-              }}
-            >
-              <RotateCcw size={15} />
-            </button>
-
-            <button
-              type="button"
-              className="hud-play-btn"
-              aria-label={playing ? 'Pause' : 'Play'}
-              title={playing ? 'Pause' : 'Play'}
-              onClick={play}
-            >
-              {playing ? <Pause size={18} fill="currentColor" /> : <Play size={18} fill="currentColor" />}
-            </button>
-
-            <button
-              type="button"
-              className="hud-btn hud-step-btn"
-              aria-label="Step"
-              title="Step forward (1/60s)"
-              onClick={() => {
-                manuallyPaused.current = true;
-                setPlaying(false);
-                setTime(t => Math.min(duration, t + baseSpeed / 60));
-              }}
-            >
-              <SkipForward size={15} />
-            </button>
-
-            <span className="hud-divider" aria-hidden="true" />
-
-            <div className="hud-speed-group segmented" role="group" aria-label="Playback speed">
-              {[0.5, 1, 2].map(s => (
-                <button
-                  key={s}
-                  type="button"
-                  className={`hud-speed-btn ${speed === s ? 'active' : ''}`}
-                  aria-pressed={speed === s}
-                  onClick={() => setSpeed(s)}
-                >
-                  {s}×
-                </button>
-              ))}
-            </div>
-
-            <span className="hud-divider" aria-hidden="true" />
-
-            <div className="hud-timecode tabular-nums" aria-label="Simulation timecode">
-              t = <span data-testid="simulation-time">{fmt(state.time, 2)}</span> s / {fmt(duration, 2)} s
-            </div>
-          </div>
         </div>
-
-        <div className="parameters">
+        <div className="parameters lab-controls-panel">
           <p className="panel-label">
             <SlidersHorizontal size={12} />
             Experiment controls
@@ -502,7 +438,69 @@ export function Lab({
           </div>
         </div>
       </div>
+      <div className="lab-playback-bar">
+        <div className="playback-hud" role="toolbar" aria-label="Playback controls">
+          <button
+            type="button"
+            className="hud-btn hud-reset-btn"
+            aria-label="Reset"
+            title="Reset experiment (t = 0)"
+            onClick={() => {
+              manuallyPaused.current = true;
+              setTime(0);
+              setPlaying(false);
+            }}
+          >
+            <RotateCcw size={15} />
+          </button>
 
+          <button
+            type="button"
+            className="hud-play-btn"
+            aria-label={playing ? 'Pause' : 'Play'}
+            title={playing ? 'Pause' : 'Play'}
+            onClick={play}
+          >
+            {playing ? <Pause size={18} fill="currentColor" /> : <Play size={18} fill="currentColor" />}
+          </button>
+
+          <button
+            type="button"
+            className="hud-btn hud-step-btn"
+            aria-label="Step"
+            title="Step forward (1/60s)"
+            onClick={() => {
+              manuallyPaused.current = true;
+              setPlaying(false);
+              setTime(t => Math.min(duration, t + baseSpeed / 60));
+            }}
+          >
+            <SkipForward size={15} />
+          </button>
+
+          <span className="hud-divider" aria-hidden="true" />
+
+          <div className="hud-speed-group segmented" role="group" aria-label="Playback speed">
+            {[0.5, 1, 2].map(s => (
+              <button
+                key={s}
+                type="button"
+                className={`hud-speed-btn ${speed === s ? 'active' : ''}`}
+                aria-pressed={speed === s}
+                onClick={() => setSpeed(s)}
+              >
+                {s}×
+              </button>
+            ))}
+          </div>
+
+          <span className="hud-divider" aria-hidden="true" />
+
+          <div className="hud-timecode tabular-nums" aria-label="Simulation timecode">
+            t = <span data-testid="simulation-time">{fmt(state.time, 2)}</span> s / {fmt(duration, 2)} s
+          </div>
+        </div>
+      </div>
       <div className="telemetry" aria-label="Numerical observations">
         {state.observations.slice(0, 4).map(o => (
           <div className="measurement" key={o.key}>

@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-09-15 — Typography and simulation control polish
+
+- Added locally bundled Space Grotesk, JetBrains Mono, and IBM Plex Mono fonts, with the official hosted sources as fallback.
+- Added saved Modern Sans, Technical Mono, and Retro Computer type choices in Appearance; existing learner progress upgrades to Modern Sans automatically.
+- Standardized icon-and-label control spacing, including lesson hints, segmented laboratory tabs, and other icon-bearing buttons.
+- Added clear vertical separation between answer actions and feedback.
+- Moved playback controls below the simulation and parameter grid, removed their canvas overlay, and fixed the time readout width so changing values do not shift the interface.
+- Removed parameter-panel nested scrolling at desktop, tablet, and mobile widths.
 ## 2026-09-15 — First-load cloud progress prompt
 
 - Added a prominent centered account prompt after the configured Supabase client finishes checking the initial session and finds no signed-in user.

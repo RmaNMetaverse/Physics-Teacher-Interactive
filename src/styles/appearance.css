@@ -43,14 +43,13 @@
 }
 
 /* Liquid Glass Layer Discipline:
-   Strictly restricted to floating functional controls (.adventure-topbar, .mobile-tab-bar, .playback-hud, .appearance-popover)
+   Strictly restricted to floating functional controls (.adventure-topbar, .mobile-tab-bar, .appearance-popover)
    and utility classes (.liquid-glass-surface, .liquid-glass-hud).
 */
 @supports (backdrop-filter: blur(1px)) {
   :root[data-liquid-glass="true"] :is(
     .adventure-topbar,
     .mobile-tab-bar,
-    .playback-hud,
     .appearance-popover,
     .liquid-glass-surface,
     .liquid-glass-hud
@@ -80,7 +79,6 @@
 [data-theme="high-contrast"] :is(
   .adventure-topbar,
   .mobile-tab-bar,
-  .playback-hud,
   .appearance-popover,
   .liquid-glass-surface,
   .liquid-glass-hud
@@ -88,7 +86,6 @@
 :root[data-theme="high-contrast"][data-liquid-glass="true"] :is(
   .adventure-topbar,
   .mobile-tab-bar,
-  .playback-hud,
   .appearance-popover,
   .liquid-glass-surface,
   .liquid-glass-hud
@@ -105,7 +102,6 @@
   :root[data-liquid-glass="true"] :is(
     .adventure-topbar,
     .mobile-tab-bar,
-    .playback-hud,
     .appearance-popover,
     .liquid-glass-surface,
     .liquid-glass-hud
@@ -113,5 +109,65 @@
     background-color: var(--panel);
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
+  }
+}
+
+.appearance-font-options {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.appearance-font-choice {
+  min-height: 76px;
+  padding: 10px;
+  text-align: left;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--panel) 88%, var(--raised));
+  color: var(--text);
+  cursor: pointer;
+}
+
+.appearance-font-choice.is-active {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  box-shadow: var(--focus-ring-shadow);
+}
+
+.appearance-font-choice-label,
+.appearance-font-choice-description {
+  display: block;
+}
+
+.appearance-font-choice-label {
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.appearance-font-choice-description {
+  margin-top: 5px;
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1.35;
+}
+
+.appearance-font-technical-mono,
+.appearance-font-technical-mono .appearance-font-choice-label {
+  font-family: var(--font-mono);
+}
+
+.appearance-font-retro-computer,
+.appearance-font-retro-computer .appearance-font-choice-label {
+  font-family: 'IBM Plex Mono', 'Cascadia Mono', Consolas, monospace;
+}
+
+@media (max-width: 520px) {
+  .appearance-font-options {
+    grid-template-columns: 1fr;
+  }
+
+  .appearance-font-choice {
+    min-height: 56px;
   }
 }

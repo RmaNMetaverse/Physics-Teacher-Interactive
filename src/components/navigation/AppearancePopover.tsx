@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { Layers3, X, Zap } from 'lucide-react';
-import type { ThemeName } from '../../appearance';
+import type { FontName, ThemeName } from '../../appearance';
 import type { LearnerProgressV2 } from '../../progress/types';
 
 export interface AppearancePopoverProps {
@@ -24,6 +24,12 @@ const THEME_OPTIONS: readonly ThemeOption[] = [
   { id: 'eye-comfort', label: 'Eye Comfort', description: 'Warm paper tones', previewPrimary: '#8b5e34', previewSecondary: '#477a5b' },
   { id: 'ocean', label: 'Ocean', description: 'Cool blue focus', previewPrimary: '#38bdf8', previewSecondary: '#2dd4bf' },
   { id: 'high-contrast', label: 'High Contrast', description: 'Maximum separation', previewPrimary: '#ffd400', previewSecondary: '#00e5ff' },
+];
+
+const FONT_OPTIONS: ReadonlyArray<{ id: FontName; label: string; description: string }> = [
+  { id: 'modern-sans', label: 'Modern Sans', description: 'Space Grotesk for clear, everyday reading' },
+  { id: 'technical-mono', label: 'Technical Mono', description: 'JetBrains Mono for a precise lab-console feel' },
+  { id: 'retro-computer', label: 'Retro Computer', description: 'IBM Plex Mono for a softer vintage-computer character' },
 ];
 
 export function AppearancePopover({
@@ -108,6 +114,27 @@ export function AppearancePopover({
                   aria-hidden="true"
                 />
                 <span className="appearance-theme-label">{theme.label}</span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      <div className="appearance-popover-section">
+        <span className="appearance-popover-section-title">Type</span>
+        <div className="appearance-font-options" role="group" aria-label="Font options">
+          {FONT_OPTIONS.map(font => {
+            const selected = (settings.font ?? 'modern-sans') === font.id;
+            return (
+              <button
+                key={font.id}
+                type="button"
+                aria-pressed={selected}
+                className={`appearance-font-choice appearance-font-${font.id} ${selected ? 'is-active' : ''}`}
+                onClick={() => onUpdateSettings({ font: font.id })}
+              >
+                <span className="appearance-font-choice-label">{font.label}</span>
+                <span className="appearance-font-choice-description">{font.description}</span>
               </button>
             );
           })}

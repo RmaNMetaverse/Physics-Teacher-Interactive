@@ -7,7 +7,7 @@ import { normalizeAppearanceSettings, presetFor } from '../appearance';
 export const PROGRESS_V2_STORAGE_KEY = 'physics-teacher-interactive-progress-v2';
 
 const V2_KEYS = ['answers', 'badges', 'completedMathSteps', 'completedMissions', 'dailyGoal', 'missionStars', 'nextMissionByCourse', 'savedAt', 'selectedCourseId', 'settings', 'stepAttempts', 'streak', 'totalXp', 'version', 'xpLedger'];
-const SETTINGS_KEYS = new Set(['celebrations', 'liquidGlass', 'primaryColor', 'reducedMotion', 'secondaryColor', 'sound', 'theme']);
+const SETTINGS_KEYS = new Set(['celebrations', 'liquidGlass', 'primaryColor', 'reducedMotion', 'secondaryColor', 'sound', 'theme', 'font']);
 const STREAK_KEYS = ['current', 'lastActiveDate', 'longest'];
 
 type IndexedMission = { mission: MissionDefinition; steps: Map<string, MissionStep> };
@@ -97,7 +97,7 @@ function updateStreak(streak: LearnerProgressV2['streak'], now: Date): LearnerPr
 
 export function createProgressV2(now: Date): LearnerProgressV2 {
   assertNow(now);
-  return { version: 2, selectedCourseId: '', nextMissionByCourse: {}, completedMissions: [], missionStars: {}, stepAttempts: {}, answers: {}, completedMathSteps: [], xpLedger: {}, totalXp: 0, streak: { current: 0, longest: 0, lastActiveDate: '' }, dailyGoal: 3, badges: [], settings: { theme: 'dark', primaryColor: '#a78bfa', secondaryColor: '#34d399', liquidGlass: true, sound: true, reducedMotion: false, celebrations: true }, savedAt: now.toISOString() };
+  return { version: 2, selectedCourseId: '', nextMissionByCourse: {}, completedMissions: [], missionStars: {}, stepAttempts: {}, answers: {}, completedMathSteps: [], xpLedger: {}, totalXp: 0, streak: { current: 0, longest: 0, lastActiveDate: '' }, dailyGoal: 3, badges: [], settings: { theme: 'dark', primaryColor: '#a78bfa', secondaryColor: '#34d399', liquidGlass: true, font: 'modern-sans', sound: true, reducedMotion: false, celebrations: true }, savedAt: now.toISOString() };
 }
 
 function parseV2(value: unknown, catalog: CourseCatalog): LearnerProgressV2 {

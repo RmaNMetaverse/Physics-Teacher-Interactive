@@ -27,6 +27,7 @@ const DEFAULT_SETTINGS: LearnerProgressV2['settings'] = {
   reducedMotion: false,
   celebrations: true,
   liquidGlass: true,
+  font: 'modern-sans',
   primaryColor: '#a78bfa',
   secondaryColor: '#34d399',
 };
