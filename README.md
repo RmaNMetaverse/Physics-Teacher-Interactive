@@ -21,6 +21,14 @@ Mission laboratories include interactive 3D scenes with adjustable parameters, c
 
 ![Measurement laboratory simulation](docs/assets/simulation-measurement.png)
 
+### Electronics workbenches
+
+Circuit and board lessons use lightweight live schematics and wiring views, with controls for switches, buttons, component values and timing.
+
+![Interactive DC circuit workbench](docs/assets/electronics-circuit-workbench.png)
+
+![Arduino and ESP32 beginner board workbench](docs/assets/arduino-esp32-workbench.png)
+
 ![Progress report dashboard](docs/assets/app-progress.png)
 
 The screenshots above are captured from the running app. The repository currently exposes Explore, Learn, and Progress tabs; the Progress screen is the learner-facing report dashboard.
@@ -30,7 +38,8 @@ Run the app locally with `npm run dev` to explore the live simulations and respo
 ## What you can do
 
 - Follow a complete Physics Foundations course from measurement and vectors through mechanics and oscillations.
-- Explore 14 released course paths with 89 normal missions and 13 checkpoints, covering classical mechanics, waves, thermodynamics, electromagnetism, optics, relativity, quantum physics, atomic physics, nuclear physics, particles, condensed matter, astrophysics, and cosmology.
+- Explore 16 released course paths with 99 normal missions and 15 checkpoints, including Electronics and a separate Arduino/ESP32 beginner lab after Electromagnetism.
+- Read circuit schematics and breadboard-style diagrams, compare series and parallel resistor networks, switch an LED loop, and try guided Blink, button, PWM, and analog-sensor board examples.
 - Learn with bite-sized missions built around **Observe → Predict → Simulate → Explain → Check**.
 - Open the math behind an equation in two ways: a quick explanation or a step-by-step foundation lesson.
 - Change values in interactive experiments and see the physics respond immediately.
@@ -66,7 +75,7 @@ Cloud accounts require a Supabase project. Copy `.env.example` to `.env.local`, 
 ## Project Guides
 
 - [Architecture](docs/ARCHITECTURE.md) — System components, boundaries, state machine, and data flow
-- [Curriculum](docs/CURRICULUM.md) — Complete 14-course syllabus, starter paths, and math roadmap
+- [Curriculum](docs/CURRICULUM.md) — Complete 16-course syllabus, starter paths, and math roadmap
 - [Authoring Guide](docs/AUTHORING.md) — Authoring courses, missions, layered math, and physics models
 - [Scientific Validation](docs/SCIENTIFIC_VALIDATION.md) — Dimensional consistency, reference cases, and model limits
 - [Sources and Citations](docs/SOURCES.md) — Open educational citations, reference maps, and boundary limits

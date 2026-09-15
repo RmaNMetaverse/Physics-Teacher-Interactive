@@ -1,0 +1,43 @@
+.electronics-workbench {
+  width: 100%; min-height: 100%; display: grid; gap: 14px; align-content: start;
+  padding: clamp(12px, 2vw, 24px); color: #e8f4f5;
+  background: radial-gradient(circle at 72% 10%, #184f62 0, transparent 45%), #09202b;
+  overflow: auto;
+}
+.lab-electronics .experiment-viewport { height: auto; min-height: 420px; overflow: visible; }
+.lab-electronics .parameters { max-height: none; }
+.electronics-workbench-head, .electronics-readouts, .electronics-view-tabs { display: flex; gap: 10px; align-items: center; }
+.electronics-workbench-head { justify-content: space-between; flex-wrap: wrap; }
+.electronics-workbench-head > div:first-child { display: grid; gap: 4px; }
+.electronics-workbench-head strong { font-size: 17px; }
+.electronics-overline { font-size: 10px; font-weight: 800; letter-spacing: .18em; color: #8ddacb; }
+.electronics-view-tabs { padding: 3px; border: 1px solid #436575; border-radius: 10px; background: #102e3c; }
+.electronics-view-tabs button, .workbench-toggle { border: 0; border-radius: 8px; color: #c6dbe0; background: transparent; padding: 8px 11px; font-weight: 700; cursor: pointer; }
+.electronics-view-tabs button.active { color: #09202b; background: #99e5d4; }
+.workbench-toggle { justify-self: start; border: 1px solid #8ddacb; background: #1c4851; color: #e8f4f5; }
+.electronics-diagram { display: block; width: 100%; max-height: 330px; border: 1px solid #335666; border-radius: 14px; background: #102a39; }
+.wire-live { stroke: #5fe2cf; } .wire-idle { stroke: #63808a; }
+.diagram-component { fill: none; stroke: #f8c87c; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+.diagram-component text { fill: #eaf5f2; stroke: none; font-size: 14px; font-weight: 700; }
+.diagram-caption { fill: #a8c8ce; font-size: 13px; }
+.board-svg-name { fill: #e8f4f5; font-size: 19px; font-weight: 800; }.board-svg-small { fill: #b8d9d4; font-size: 14px; }
+.electronics-wiring-view, .board-demo { min-height: 250px; display: flex; align-items: center; justify-content: center; gap: 16px; flex-wrap: wrap; border: 1px solid #335666; border-radius: 14px; background: linear-gradient(130deg, #173848, #0c2632); padding: 22px; }
+.electronics-wiring-view > p { width: 100%; text-align: center; color: #b4d2d5; }
+.virtual-supply, .virtual-board, .board-peripheral { display: grid; gap: 8px; border: 2px solid #70a5b4; border-radius: 13px; padding: 16px; background: #203b49; box-shadow: 0 12px 18px #061a2499; }
+.virtual-supply { min-width: 105px; }.virtual-supply strong { font-size: 26px; color: #f8c87c; }
+.virtual-supply small, .virtual-board small { color: #b8d1d5; }.virtual-lead { height: 4px; width: 34px; background: #5fe2cf; }
+.virtual-breadboard { display: grid; gap: 8px; min-width: min(100%, 290px); background: #dce5df; color: #15313b; border-radius: 12px; border: 5px solid #adbbb8; padding: 13px; }
+.breadboard-rail { color: #b0393b; font-weight: 900; letter-spacing: .22em; white-space: nowrap; overflow: hidden; }.breadboard-rail.ground { color: #24638c; }
+.breadboard-row { display: flex; gap: 8px; justify-content: space-around; align-items: center; min-height: 47px; border-block: 1px dotted #77918f; }
+.breadboard-row span { background: #314a57; color: #fff; border-radius: 8px; padding: 8px; text-align: center; font-size: 11px; font-weight: 700; }
+.breadboard-gap { font-size: 10px; color: #57716e; text-align: center; }.breadboard-row.holes { letter-spacing: .25em; color: #607b7a; font-size: 11px; overflow: hidden; }
+.virtual-board { min-width: 180px; border-color: #4abf9f; background: #164541; }.virtual-board strong { color: #e8dc9d; }.board-pin-row { color: #e6c267; letter-spacing: .2em; }
+.board-wires { display: grid; gap: 18px; min-width: 55px; }.board-wires span { display: block; height: 4px; background: #557780; }.board-wires span.live { background: #5fe2cf; box-shadow: 0 0 14px #5fe2cf; }
+.board-peripheral { min-width: 145px; text-align: center; }.board-peripheral strong { color: #f8c87c; }
+.virtual-led { display: inline-grid; place-items: center; min-width: 46px; height: 46px; border-radius: 50%; background: #6a3d2d; color: #fff; font-size: 11px; font-weight: 900; }
+.virtual-led.on { background: #ef9b3b; box-shadow: 0 0 23px #efad56, inset 0 0 10px #fff5b3; }
+.board-code { margin: 0; padding: 13px; border: 1px solid #355563; border-radius: 9px; background: #071a25; color: #aedfd3; overflow-x: auto; white-space: pre-wrap; font-size: 12px; }
+.electronics-readouts { flex-wrap: wrap; }.electronics-readouts span { display: grid; gap: 5px; flex: 1 1 110px; min-width: 0; border: 1px solid #3d6671; border-radius: 10px; background: #143643; padding: 10px; }
+.electronics-readouts small { color: #bad3d6; }.electronics-readouts strong { font-size: 15px; color: #a9efdd; font-variant-numeric: tabular-nums; }
+.electronics-model-note { margin: 0; font-size: 11px; line-height: 1.5; color: #aec8cc; }
+@media (max-width: 600px) { .electronics-workbench { gap: 12px; padding: 12px; }.electronics-workbench-head strong { font-size: 14px; }.electronics-view-tabs button { padding: 7px; font-size: 11px; }.electronics-wiring-view, .board-demo { padding: 12px; }.electronics-readouts strong { font-size: 13px; } }

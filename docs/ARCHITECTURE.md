@@ -7,14 +7,15 @@ Physics Teacher Interactive is a client-only React 19 and TypeScript application
 The application is structured into decoupled, strictly typed subsystems:
 
 - **Learning Catalog (`src/learning/`)**:
-  - `catalog.ts`: Immutable registry validating the 14 open courses, 89 normal missions, and 13 checkpoints. Enforces unique kebab-case IDs, closed acyclic prerequisite graphs, required instructional content, and valid KaTeX equations.
+  - `catalog.ts`: Immutable registry validating the 16 open courses, 99 normal missions, and 15 checkpoints. Enforces unique kebab-case IDs, closed acyclic prerequisite graphs, required instructional content, and valid KaTeX equations.
   - `mission-engine.ts`: Pure, deterministic state machine controlling mission step sequencing (Observe, Predict, Simulate, Explain, Layered Math, Check, Recap), assessment checking, hints, simulation tracking, restore state, and 1–3 star mastery scoring.
   - `math-layers.ts`: Converts mathematical tutorials into two-layer representations (Quick formula mode and expandable Foundation mode with interactive visual manipulatives).
 - **Physics Engine (`src/physics/`)**:
-  - Contains 20 deterministic, analytical SI physics models (`src/physics/models/`) and a central registry (`src/physics/catalog.ts`).
+  - Contains 22 deterministic, analytical SI physics models (`src/physics/models/`) and a central registry (`src/physics/catalog.ts`).
   - Independent of React, Three.js, DOM APIs, and rendering code. Input parameters and output kinematics/observations use SI units exclusively.
 - **Simulation Laboratory & Resilient Fallback (`src/components/simulation/`)**:
   - `Lab.tsx`: Shared experiment viewport with bounded controls (maximum 3 primary controls before disclosure), play/pause, time scrubbing, and telemetry readouts.
+  - `ElectronicsWorkbench.tsx`: Lightweight SVG circuit schematic, breadboard-style connection view, and guided board visualizer driven only by pure SI models; it avoids WebGL overhead on circuit lessons.
   - `SimulationBoundary.tsx`: Resilient error boundary wrapping 3D rendering. When WebGL context loss or hardware rendering errors occur, it activates **Reduced Visual Mode**—preserving the active physics loop, control sliders, SVG parameter plots, and accessible measurement data tables.
 - **Progress & Rewards (Version 2) (`src/progress/`)**:
   - `progress.ts` & `types.ts`: Manages level calculations (`Math.floor(xp / 500) + 1`), local-day streak tracking, daily mission goals (1, 3, 5 missions/day), course mastery statistics, and checkpoint badges.

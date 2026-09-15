@@ -1,5 +1,5 @@
 export type Family = 'measurement' | 'vectors' | 'motion' | 'forces' | 'energy' | 'collisions' | 'gravity' | 'oscillations';
-export type AdvancedModelId = 'waves' | 'thermal' | 'electromagnetism' | 'optics' | 'relativity' | 'quantum' | 'atomic' | 'nuclear' | 'particle' | 'condensed' | 'astrophysics' | 'cosmology';
+export type AdvancedModelId = 'waves' | 'thermal' | 'electromagnetism' | 'circuits' | 'microcontroller' | 'optics' | 'relativity' | 'quantum' | 'atomic' | 'nuclear' | 'particle' | 'condensed' | 'astrophysics' | 'cosmology';
 export type ModelId = Family | AdvancedModelId;
 export type Parameters = Record<string, number>;
 export interface Assessment {
@@ -39,4 +39,3 @@ export interface LearnerProgress {
 }
 
 export type { LearnerProgressV2, MissionCompletionInput, ProgressStepInput, StarCount } from './progress/types';
-

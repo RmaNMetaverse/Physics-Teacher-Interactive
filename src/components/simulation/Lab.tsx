@@ -19,6 +19,7 @@ import { advancePlayback, shouldAutoplay } from './playback-policy';
 import { formatNumber as fmt } from '../../lib/format';
 import { GraphView } from './GraphView';
 import { SimulationBoundary } from './SimulationBoundary';
+import { ElectronicsWorkbench } from './ElectronicsWorkbench';
 
 const Scene = lazy(() => import('./Scene'));
 
@@ -75,6 +76,8 @@ const labels: Record<string, string> = {
 
 const motionModes = ['Constant velocity', 'Constant acceleration', 'Free fall', 'Projectile'];
 const oscillationModes = ['Spring oscillator', 'Pendulum'];
+const electronicsModes = ['Resistor loop', 'Series pair', 'Parallel branches', 'LED loop'];
+const microcontrollerModes = ['Blink', 'Button input', 'PWM dimming', 'Analog sensor'];
 
 export function Lab({
   modelId,
@@ -193,13 +196,14 @@ export function Lab({
   function renderParameter(p: ParameterDefinition) {
     const labelText = labels[p.key] || p.label;
     const isMode = p.key === 'mode';
+    const isChoice = isMode || ['board', 'switchClosed', 'buttonPressed'].includes(p.key);
     const value = parameters[p.key] ?? p.default;
 
     return (
       <div className="parameter" key={p.key}>
         <div className="parameter-top">
           <label htmlFor={`param-${p.key}`}>{labelText}</label>
-          {!isMode && (
+          {!isChoice && (
             <span className="parameter-value">
               <input
                 id={`param-num-${p.key}`}
@@ -228,7 +232,7 @@ export function Lab({
             </span>
           )}
         </div>
-        {isMode ? (
+        {isChoice ? (
           <select
             className="text-input hardware-select"
             style={{ width: '100%', fontSize: 11, padding: 7 }}
@@ -237,7 +241,7 @@ export function Lab({
             value={value}
             onChange={e => update(p.key, Number(e.target.value))}
           >
-            {(id === 'motion' ? motionModes : oscillationModes).map((name, i) => (
+            {(isMode ? id === 'motion' ? motionModes : id === 'oscillations' ? oscillationModes : id === 'circuits' ? electronicsModes : microcontrollerModes : p.key === 'board' ? ['Arduino UNO R3', 'Original ESP32'] : p.key === 'switchClosed' ? ['Open', 'Closed'] : ['Released', 'Pressed']).map((name, i) => (
               <option key={name} value={i}>
                 {name}
               </option>
@@ -277,7 +281,7 @@ export function Lab({
   }
 
   return (
-    <section className="lab" ref={container} aria-label={definition.title}>
+    <section className={`lab${id === 'circuits' || id === 'microcontroller' ? ' lab-electronics' : ''}`} ref={container} aria-label={definition.title}>
       <div className="lab-topline">
         <div className="lab-label">
           <span className="live-dot" />
@@ -294,7 +298,7 @@ export function Lab({
             }}
           >
             <Box size={12} />
-            3D scene
+            {id === 'circuits' || id === 'microcontroller' ? 'Workbench' : '3D scene'}
           </button>
           <button
             type="button"
@@ -310,7 +314,9 @@ export function Lab({
 
       <div className="lab-content">
         <div className="experiment-viewport lab-canvas-frame">
-          {view === '3d' && !reducedModeActive ? (
+          {(id === 'circuits' || id === 'microcontroller') && view === '3d' ? (
+            <ElectronicsWorkbench modelId={id} parameters={parameters} state={state} onChange={update}/>
+          ) : view === '3d' && !reducedModeActive ? (
             <>
               <SimulationBoundary
                 key={id + ':' + camera}

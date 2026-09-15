@@ -56,6 +56,7 @@ interface StarterCourse {
     sources: SourceReference[];
     limitations: string[];
     missions: StarterMission[];
+    reviewedAt?: string;
 }
 function choice(id: string, data: Choice): Assessment {
     return {
@@ -77,7 +78,7 @@ export function starterCourse(course: StarterCourse): CourseDefinition {
         return {
             id, kind: 'mission', title: draft.title, summary: draft.summary, objectives: [draft.takeaway, `Use the worked example to explain ${draft.title.toLowerCase()}.`],
             minutes: 7, xp: 60, requiredMath, modelId, scienceStatus: draft.status ?? 'established',
-            equation: draft.equation, symbols: draft.symbols.map(([symbol, meaning]) => `${symbol}: ${meaning}`).join('; '), workedExample: draft.example, reviewedAt,
+            equation: draft.equation, symbols: draft.symbols.map(([symbol, meaning]) => `${symbol}: ${meaning}`).join('; '), workedExample: draft.example, reviewedAt: course.reviewedAt ?? reviewedAt,
             steps: [
                 {
                     id: `${id}-observe`, kind: 'observe', title: draft.title, body: [draft.summary]
@@ -129,7 +130,7 @@ export function starterCourse(course: StarterCourse): CourseDefinition {
     });
     const checkpointId = `${course.id}-checkpoint`;
     return {
-        id: course.id, title: course.title, description: course.description, group: course.group, scope: 'Released five-mission starter; deeper course planned', color: course.color, access: 'open', recommendations: [], estimatedMinutes: 40, sources: course.sources, limitations: course.limitations, reviewedAt,
+        id: course.id, title: course.title, description: course.description, group: course.group, scope: 'Released five-mission starter; deeper course planned', color: course.color, access: 'open', recommendations: [], estimatedMinutes: 40, sources: course.sources, limitations: course.limitations, reviewedAt: course.reviewedAt ?? reviewedAt,
         missions: [...missions, {
                 id: checkpointId, kind: 'checkpoint', title: `${course.title} checkpoint`, summary: `Connect the five starter ideas in ${course.title.toLowerCase()}.`, objectives: [course.missions[0].takeaway, course.missions[4].takeaway], minutes: 5, xp: 100, requiredMath: [], scienceStatus: course.missions[4].status ?? 'established', sources: course.sources, limitations: course.limitations,
                 checkpoint: {

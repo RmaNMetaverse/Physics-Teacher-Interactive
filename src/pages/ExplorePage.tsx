@@ -24,6 +24,7 @@ const levels: Record<CourseGroup, string> = {
   space: 'Intermediate',
   frontier: 'Advanced',
 };
+const courseLevel = (course: CourseDefinition) => ['electronics', 'arduino-esp32'].includes(course.id) ? 'Beginner' : levels[course.group];
 
 const courseKey = (courseId: string, missionId: string) => `${courseId}/${missionId}`;
 const completedFor = (course: CourseDefinition, progress: LearnerProgressV2) =>
@@ -80,7 +81,7 @@ export function ExplorePage({ courses, progress }: ExplorePageProps) {
       <div className="continue-hero-info">
         <div className="continue-hero-meta">
           <p className="eyebrow">Continue learning</p>
-          <span className="continue-badge">{levels[next.course.group]}</span>
+          <span className="continue-badge">{courseLevel(next.course)}</span>
           <span className="continue-stats">{nextCompleted} of {next.course.missions.length} complete ({nextPercent}%)</span>
         </div>
         <h2 id="continue-title">{next.course.title}</h2>
@@ -129,7 +130,7 @@ export function ExplorePage({ courses, progress }: ExplorePageProps) {
           const percent = Math.round((completed / course.missions.length) * 100);
           return <article className="course-card" key={course.id} style={{ '--course-color': course.color } as CSSProperties}>
             <div className="course-card-meta">
-              <span className="course-level-badge">{levels[course.group]}</span>
+              <span className="course-level-badge">{courseLevel(course)}</span>
               <span className="course-duration"><Clock3 aria-hidden="true" />{course.estimatedMinutes} min</span>
             </div>
             <h3>{course.title}</h3>

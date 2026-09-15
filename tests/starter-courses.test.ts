@@ -10,6 +10,8 @@ const expectedPaths: Record<string, string[]> = {
   'waves-sound': ['Oscillation', 'Traveling waves', 'Superposition', 'Resonance', 'Sound and spectra'],
   thermodynamics: ['Microscopic temperature', 'Ideal gas', 'First law', 'Entropy', 'Engines and limits'],
   electromagnetism: ['Charge and field', 'Potential', 'Current', 'Magnetic force', "Maxwell's synthesis"],
+  electronics: ['Voltage, current, resistance', 'Schematics and breadboards', 'Series and parallel', 'LEDs, polarity and components', 'Power and measurements'],
+  'arduino-esp32': ['Boards, pins and safe wiring', 'Blink: output and timing', 'Buttons and digital input', 'PWM and LED dimming', 'Analog sensors and ADC'],
   optics: ['Reflection', 'Refraction', 'Lenses', 'Interference', 'Photons and imaging'],
   relativity: ['Events and frames', 'Light-clock dilation', 'Length and simultaneity', 'Energy-momentum', 'Curved spacetime'],
   quantum: ['Light quanta', 'Build a wavefunction', 'Measurement probabilities', 'Uncertainty', 'Tunneling'],
@@ -26,10 +28,10 @@ function catalog(): CourseCatalog {
   return result!;
 }
 describe('released starter course content', () => {
-  it('publishes fourteen open courses and eighty-nine normal missions', () => {
+  it('publishes sixteen open courses and ninety-nine normal missions', () => {
     const all = catalog();
-    expect(all.courses.size).toBe(14);
-    expect([...all.missions.values()].filter(m => m.kind === 'mission')).toHaveLength(89);
+    expect(all.courses.size).toBe(16);
+    expect([...all.missions.values()].filter(m => m.kind === 'mission')).toHaveLength(99);
     expect([...all.courses.values()].every(c => c.access === 'open')).toBe(true);
     expect(() => catalogModule.createCourseCatalog([...all.courses.values()])).not.toThrow();
   });
@@ -43,7 +45,7 @@ describe('released starter course content', () => {
       expect(checkpoints[0].checkpoint.requiredMissionIds, id).toEqual(normal.map(m => m.id));
       expect(course.missions.at(-1)).toBe(checkpoints[0]);
       expect(new Set(course.sources.map(s => s.url)).size, id).toBeGreaterThanOrEqual(2);
-      expect(course.reviewedAt).toBe('2026-09-09');
+      expect(course.reviewedAt).toBe(['electronics', 'arduino-esp32'].includes(id) ? '2026-09-15' : '2026-09-09');
     }
   });
   it('authors distinctive complete missions with valid layered math and honest model references', () => {
@@ -56,7 +58,7 @@ describe('released starter course content', () => {
       expect(mission.limitations.join(' ').length).toBeGreaterThan(40);
       expect(mission.steps.at(-1)?.kind).toBe('recap');
       if (mission.kind === 'checkpoint') continue;
-      expect(mission.reviewedAt).toBe('2026-09-09');
+      expect(mission.reviewedAt).toBe(['electronics', 'arduino-esp32'].includes(id) ? '2026-09-15' : '2026-09-09');
       expect(mission.requiredMath.length).toBeGreaterThan(0);
       mission.requiredMath.forEach(mathId => expect(knownMath.has(mathId), mission.id).toBe(true));
       const layers = mission.steps.filter(s => s.kind === 'math');

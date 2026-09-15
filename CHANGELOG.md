@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-09-15 — Electronics and Arduino/ESP32 starter paths
+
+- Added an Electronics course after Electromagnetism with five authored missions on DC circuits, schematics, breadboards, resistors, LEDs, component roles and measurements, plus a checkpoint.
+- Added a separate beginner Arduino/ESP32 course with five authored missions covering safe board wiring, Blink, button input, PWM and analog sensing, plus a checkpoint.
+- Marked both entry-level electronics paths as Beginner in Explore.
+- Added two pure SI classroom models and a lightweight interactive schematic, wiring and board workbench with live switch/button controls and readouts. The models explicitly limit themselves to ideal DC templates and predefined board behavior.
+- Added reference calculations, curriculum validations and desktop/mobile browser journeys for the new paths.
+- Captured both interactive workbench views for the README preview gallery.
+
 ## 2026-09-15 — Nested lesson card spacing fix
 
 - Made math foundation check cards explicit vertical stacks so prompts, inputs, action rows, hints, and feedback no longer touch in quick-check and expanded math views.

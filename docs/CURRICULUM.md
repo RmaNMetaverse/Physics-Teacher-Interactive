@@ -37,7 +37,7 @@ Mathematics expands alongside each release. Planned and theoretical material doe
 
 ## Open starter-course catalog
 
-The Balanced Science Adventure platform publishes **14 open courses, 89 normal missions, and 13 checkpoints**: the 24-mission complete Foundations path plus thirteen five-mission starters. Every course is fully integrated into the Explore gallery, Course Path maps, focused Mission Player, and Progress v2 dashboard.
+The platform publishes **16 open courses, 99 normal missions, and 15 checkpoints**: the 24-mission complete Foundations path plus fifteen five-mission starters. Every course is integrated into Explore, Course Path, Mission Player, and Progress.
 
 Every starter is directly addressable in `courseCatalog`, without completion gates or required earlier courses. Quantum begins at `quantum/quantum-light-quanta`. Checkpoint badges require all five normal missions, but course access and mission lookup remain open. Deeper treatments beyond these bounded starters are planned.
 
@@ -47,6 +47,8 @@ Every starter is directly addressable in `courseCatalog`, without completion gat
 | Waves and Sound | Oscillation; Traveling waves; Superposition; Resonance; Sound and spectra | waves |
 | Thermodynamics | Microscopic temperature; Ideal gas; First law; Entropy; Engines and limits | thermal |
 | Electromagnetism | Charge and field; Potential; Current; Magnetic force; Maxwell's synthesis | electromagnetism |
+| Electronics | Voltage/current/resistance; Schematics and breadboards; Series and parallel; LEDs and components; Power and measurement | circuits (interactive schematic and wiring views) |
+| Arduino & ESP32 beginner lab | Boards and safe wiring; Blink; Button input; PWM LED; Analog sensor | microcontroller (guided board behaviors and wiring view) |
 | Optics | Reflection; Refraction; Lenses; Interference; Photons and imaging | optics |
 | Relativity | Events and frames; Light-clock dilation; Length and simultaneity; Energy-momentum; Curved spacetime | relativity |
 | Quantum Physics | Light quanta; Build a wavefunction; Measurement probabilities; Uncertainty; Tunneling | quantum |
@@ -62,5 +64,7 @@ Each normal starter mission has seven steps: observe, predict, simulate, explain
 Expanded math defines the mission's notation and operations, works its own example, and links to one relevant foundational math tutorial with a return target. Those tutorials retain their existing closed, acyclic prerequisite chain. New operations such as logarithms, exponentials, summation, and inequalities are introduced locally; full calculus, complex-amplitude dynamics, field theory, and stellar-structure solvers are explicitly outside the starter scope.
 
 A registered simulation is not a claim to model every topic in a course. Every lab prompt states its actual calculation or a bounded comparison, and explains absent physics when using an analogy. For example, the electrostatic lab cannot calculate current or magnetic force, and the decay lab cannot predict fission multiplication or fusion rates. Model controls, equations, and limits are documented in [the physics registry guide](../src/physics/README.md).
+
+The Electronics workbench uses four ideal DC templates rather than solving arbitrary drawn circuits. The Arduino/ESP32 workbench runs four predefined teaching behaviors rather than compiling or executing sketches. Wiring art is illustrative; real builds require the exact board pinout and component datasheets.
 
 The editorial review snapshot is 2026-09-09. Quantum predictive formalism is established; the measurement lesson explicitly labels collapse/many-worlds narratives as interpretation. Neutrino mass mechanisms and the identities/causes behind dark-matter and dark-energy evidence are active research, while their measured evidence is described separately. String theory, loop quantum gravity, and multiverse scenarios are explicitly speculative in the final frontier mission. The course does not imply that matching one datum confirms such a framework.

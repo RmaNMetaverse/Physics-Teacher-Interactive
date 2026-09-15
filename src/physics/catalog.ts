@@ -3,6 +3,8 @@ import { simulations } from './legacy';
 import { waves } from './models/waves';
 import { thermal } from './models/thermal';
 import { electromagnetism } from './models/electromagnetism';
+import { circuits } from './models/circuits';
+import { microcontroller } from './models/microcontroller';
 import { optics } from './models/optics';
 import { relativity } from './models/relativity';
 import { quantum } from './models/quantum';
@@ -16,7 +18,7 @@ import { sanitizeControls } from './models/shared';
 
 /** One closed registry for course validation and model evaluation, including legacy families. */
 export const modelCatalog: Readonly<Record<ModelId, ModelDefinition>> = Object.freeze({
-  ...simulations, waves, thermal, electromagnetism, optics, relativity, quantum, atomic, nuclear, particle, condensed, astrophysics, cosmology,
+  ...simulations, waves, thermal, electromagnetism, circuits, microcontroller, optics, relativity, quantum, atomic, nuclear, particle, condensed, astrophysics, cosmology,
 });
 
 function definition(id: ModelId): ModelDefinition {

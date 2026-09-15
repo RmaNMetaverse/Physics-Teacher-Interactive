@@ -23,7 +23,7 @@ export function sanitizeControls(parameters: ParameterDefinition[], input: unkno
   return Object.fromEntries(parameters.map(p => {
     const candidate = Object.hasOwn(record, p.key) ? record[p.key] : undefined;
     let value = typeof candidate === 'number' && Number.isFinite(candidate) ? Math.max(p.min, Math.min(p.max, candidate)) : p.default;
-    if (p.key === 'n' || p.key === 'mode') value = Math.round(value);
+    if (p.key === 'n' || p.key === 'mode' || p.key === 'switchClosed' || p.key === 'buttonPressed' || p.key === 'board') value = Math.round(value);
     return [p.key, value];
   }));
 }

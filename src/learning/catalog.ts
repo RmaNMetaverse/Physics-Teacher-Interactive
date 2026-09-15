@@ -166,6 +166,8 @@ import { classicalMechanicsCourse } from './courses/classical-mechanics';
 import { wavesSoundCourse } from './courses/waves-sound';
 import { thermodynamicsCourse } from './courses/thermodynamics';
 import { electromagnetismCourse } from './courses/electromagnetism';
+import { electronicsCourse } from './courses/electronics';
+import { arduinoEsp32Course } from './courses/arduino-esp32';
 import { opticsCourse } from './courses/optics';
 import { relativityCourse } from './courses/relativity';
 import { quantumCourse } from './courses/quantum';
@@ -177,5 +179,5 @@ import { astrophysicsCourse } from './courses/astrophysics';
 import { cosmologyFrontiersCourse } from './courses/cosmology-frontiers';
 
 /** Open access is independent of recommended preparation or prior completion. */
-export const courses: readonly CourseDefinition[] = [foundationCourse, classicalMechanicsCourse, wavesSoundCourse, thermodynamicsCourse, electromagnetismCourse, opticsCourse, relativityCourse, quantumCourse, atomicMolecularCourse, nuclearCourse, particleCourse, condensedMatterCourse, astrophysicsCourse, cosmologyFrontiersCourse];
+export const courses: readonly CourseDefinition[] = [foundationCourse, classicalMechanicsCourse, wavesSoundCourse, thermodynamicsCourse, electromagnetismCourse, electronicsCourse, arduinoEsp32Course, opticsCourse, relativityCourse, quantumCourse, atomicMolecularCourse, nuclearCourse, particleCourse, condensedMatterCourse, astrophysicsCourse, cosmologyFrontiersCourse];
 export const courseCatalog = createCourseCatalog(courses);
