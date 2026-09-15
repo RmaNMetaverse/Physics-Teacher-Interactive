@@ -8,8 +8,6 @@
 ![Three.js](https://img.shields.io/badge/Three.js-3D%20labs-000000?logo=threedotjs&logoColor=white)
 ![Supabase](https://img.shields.io/badge/Supabase-cloud%20sync-3FCF8E?logo=supabase&logoColor=white)
 ![Playwright](https://img.shields.io/badge/Playwright-E2E-2EAD33?logo=playwright&logoColor=white)
-![Node.js](https://img.shields.io/badge/Node.js-%E2%89%A522.20-5FA04E?logo=nodedotjs&logoColor=white)
-![Courses](https://img.shields.io/badge/courses-16%20released-f97316)
 
 Physics Teacher Interactive is an interactive physics teacher inspired by **Brilliant** and **Duolingo**—but built for physics.
 
