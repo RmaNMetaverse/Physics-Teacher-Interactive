@@ -1,4 +1,5 @@
 import { expect, test } from './fixtures';
+import { courses } from '../../src/learning/catalog';
 
 test('opens Explore first with one continue action and every open course', async ({ page }) => {
   await page.goto('/');
@@ -6,8 +7,8 @@ test('opens Explore first with one continue action and every open course', async
   await expect(page).toHaveURL(/#\/explore$/);
   await expect(page.getByRole('heading', { name: 'Explore physics' })).toBeVisible();
   await expect(page.getByRole('link', { name: 'Continue learning' })).toHaveCount(1);
-  await expect(page.getByRole('link', { name: /^Open course:/ })).toHaveCount(14);
-  await expect(page.getByText('Open course', { exact: true })).toHaveCount(14);
+  await expect(page.getByRole('link', { name: /^Open course:/ })).toHaveCount(courses.length);
+  await expect(page.getByText('Open course', { exact: true })).toHaveCount(courses.length);
   await expect(page.getByRole('link', { name: 'Open course: Physics Foundations' }).locator('..').locator('dd').first()).toHaveText('24 missions');
   await expect(page.getByRole('link', { name: 'Open course: Quantum Physics' }).locator('..').locator('dd').first()).toHaveText('6 missions');
 

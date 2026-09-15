@@ -1,4 +1,5 @@
 import { expect, test } from './fixtures';
+import { courses } from '../../src/learning/catalog';
 
 test.describe('Progress page and rewards dashboard (v2)', () => {
   test('renders level, XP progress, daily streak, mastery rings, and badge shelf', async ({ page }) => {
@@ -40,7 +41,7 @@ test.describe('Progress page and rewards dashboard (v2)', () => {
 
     await expect(page.locator('.progress-rewards-dashboard')).toBeVisible();
     await expect(page.locator('.progress-mastery-section')).toBeVisible();
-    await expect(page.locator('.mastery-rings-grid .course-mastery-item')).toHaveCount(14);
+    await expect(page.locator('.mastery-rings-grid .course-mastery-item')).toHaveCount(courses.length);
     await expect(page.locator('.progress-activity-section')).toBeVisible();
 
     await page.setViewportSize({ width: 360, height: 800 });

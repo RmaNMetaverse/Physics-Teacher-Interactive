@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-09-15 — GitHub Pages browser-check fix
+
+- Updated Explore, Progress and release browser checks to derive course counts from the published catalog. The new Electronics and Arduino/ESP32 paths raised the visible course count from 14 to 16, while older hard-coded expectations stopped CI and Pages before artifact upload.
+- Clarified that the existing 3D simulation browser matrix covers the original physics models; the lightweight electronics workbenches have their own desktop and mobile journeys.
+
 ## 2026-09-15 — Electronics and Arduino/ESP32 starter paths
 
 - Added an Electronics course after Electromagnetism with five authored missions on DC circuits, schematics, breadboards, resistors, LEDs, component roles and measurements, plus a checkpoint.

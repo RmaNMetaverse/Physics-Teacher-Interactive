@@ -1,4 +1,5 @@
 import { expect, test } from './fixtures';
+import { courses } from '../../src/learning/catalog';
 
 test('release journey: first visit Explore, open Quantum, complete mission with math, earn XP once, replay without duplicate XP, view path & Progress, switch to Foundations', async ({ page }) => {
   // 1. First visit Explore
@@ -6,7 +7,7 @@ test('release journey: first visit Explore, open Quantum, complete mission with 
   await expect(page).toHaveURL(/#\/explore$/);
   await expect(page.getByRole('heading', { name: 'Explore physics' })).toBeVisible();
   await expect(page.getByRole('link', { name: 'Continue learning' })).toBeVisible();
-  await expect(page.getByRole('link', { name: /^Open course:/ })).toHaveCount(14);
+  await expect(page.getByRole('link', { name: /^Open course:/ })).toHaveCount(courses.length);
 
   // 2. Open Quantum course
   await page.getByRole('link', { name: 'Open course: Quantum Physics' }).click();

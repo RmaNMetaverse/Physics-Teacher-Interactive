@@ -25,7 +25,7 @@ const representativeCourses = [
   { courseId: 'cosmology-frontiers', missionId: 'cosmology-frontiers-expansion', modelId: 'cosmology' },
 ];
 
-test.describe('Mission simulations across all 14 courses', () => {
+test.describe('Mission simulations across the original physics course set', () => {
   for (const { courseId, missionId, modelId } of representativeCourses) {
     test(`renders interactive simulation and graph data for ${courseId} (${modelId})`, async ({ page }) => {
       const errors: string[] = [];
