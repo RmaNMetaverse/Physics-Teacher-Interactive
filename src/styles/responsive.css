@@ -380,14 +380,14 @@ html, body {
 
   /* Progress dashboard redesign */
   .progress-page-container {
-    gap: 18px;
+    gap: 22px;
     padding: 0 0 24px;
   }
 
   .progress-page-header {
     align-items: flex-start;
     flex-direction: column;
-    gap: 4px;
+    gap: 10px;
     padding: 4px 0 0;
   }
 
@@ -434,6 +434,32 @@ html, body {
   .mastery-section-header,
   .badge-shelf-header { align-items: flex-start; flex-direction: column; gap: 10px; }
   .activity-ledger-item { align-items: flex-start; padding: 13px 14px; }
+
+  .lab-topline {
+    min-height: 64px;
+    height: auto;
+    align-items: flex-start;
+    flex-direction: column;
+    justify-content: center;
+    padding: 12px 16px;
+  }
+
+  .mission-player-title,
+  .course-path-title-group {
+    gap: 10px;
+  }
+
+  .step-header {
+    gap: 14px;
+    margin-bottom: 24px;
+  }
+
+  .mission-step-view,
+  .assessment-body,
+  .math-quick-mode,
+  .foundation-content {
+    gap: 16px;
+  }
 }
 
 @media (max-width: 420px) {

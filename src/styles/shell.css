@@ -22,6 +22,10 @@ html, body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+:where(h1, h2, h3, h4, p, ul, ol, dl, figure, blockquote) {
+  overflow-wrap: break-word;
+}
+
 button, input, select, textarea {
   font: inherit;
   color: inherit;
@@ -160,7 +164,8 @@ summary:focus-visible,
 .adventure-brand span {
   display: flex;
   flex-direction: column;
-  line-height: 1.15;
+  gap: 3px;
+  line-height: 1.2;
 }
 
 .adventure-brand small {

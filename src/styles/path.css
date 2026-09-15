@@ -51,6 +51,8 @@
 .course-path-title-group {
   min-width: 0;
   text-align: center;
+  display: grid;
+  gap: 8px;
 }
 
 .course-path-title-group h1 {
@@ -61,7 +63,7 @@
 }
 
 .course-path-title-group .eyebrow {
-  margin: 0 0 4px 0;
+  margin: 0;
 }
 
 /* Header Progress Summary & Circular Mastery Ring */
@@ -120,7 +122,7 @@
 .course-path-stats dl div {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 7px;
 }
 
 .course-path-stats dt {
@@ -265,7 +267,7 @@
 .mission-node-copy {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 7px;
   min-width: 0;
 }
 
@@ -348,4 +350,3 @@
   background: var(--reward-soft);
   box-shadow: 0 0 10px var(--reward-soft);
 }
-

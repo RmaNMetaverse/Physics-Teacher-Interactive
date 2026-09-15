@@ -84,6 +84,13 @@
   /* Touch & Controls */
   --touch-target-min: 44px;
 
+  /* Layout Rhythm */
+  --stack-xs: 6px;
+  --stack-sm: 10px;
+  --stack-md: 14px;
+  --stack-lg: 20px;
+  --stack-xl: 28px;
+
   /* Focus Indicator */
   --focus-ring-color: var(--accent);
   --focus-ring-offset: 3px;

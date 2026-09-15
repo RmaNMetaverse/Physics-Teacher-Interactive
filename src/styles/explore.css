@@ -13,8 +13,13 @@
   margin-bottom: 28px;
 }
 
+.explore-heading > div:first-child {
+  display: grid;
+  gap: 8px;
+}
+
 .explore-heading h1 {
-  margin: 0 0 6px 0;
+  margin: 0;
   font-size: clamp(26px, 3vw, 36px);
   font-weight: 800;
   letter-spacing: -0.5px;
@@ -76,7 +81,7 @@
 .continue-hero-info {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 8px;
   min-width: 0;
 }
 
@@ -345,6 +350,7 @@
   position: relative;
   display: flex;
   flex-direction: column;
+  gap: 14px;
   min-width: 0;
   padding: 24px;
   border: 1px solid var(--line);
@@ -395,7 +401,7 @@
 }
 
 .course-card h3 {
-  margin: 14px 0 8px 0;
+  margin: 0;
   font-size: 19px;
   font-weight: 700;
   line-height: 1.3;
@@ -404,7 +410,7 @@
 
 .course-card > p {
   flex: 1;
-  margin: 0 0 18px 0;
+  margin: 0;
   color: var(--muted);
   font-size: 13px;
   line-height: 1.7;
@@ -413,7 +419,7 @@
 .course-card dl {
   display: grid;
   gap: 8px;
-  margin: 0 0 18px 0;
+  margin: 0;
   padding: 12px 14px;
   border-radius: var(--radius-sm);
   background: var(--raised);
@@ -442,7 +448,7 @@
   color: var(--muted);
   font-size: 11px;
   font-weight: 600;
-  margin-bottom: 6px;
+  margin: 0 0 2px;
 }
 
 .course-card progress {
@@ -461,7 +467,7 @@
   gap: 10px;
   min-height: 44px;
   min-width: 44px;
-  margin-top: 16px;
+  margin-top: 2px;
   padding: 10px 16px;
   border-radius: var(--radius-md);
   background: var(--raised);

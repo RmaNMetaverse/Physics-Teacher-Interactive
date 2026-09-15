@@ -26,6 +26,11 @@
 - Added accessible modal semantics, initial heading focus, contained keyboard tabbing, responsive sizing, and inline OAuth error reporting.
 - Added configured-cloud browser coverage for the prompt itself and a shared dismissed-gate fixture for the existing learning and simulation journeys.
 
+## 2026-09-15 - Responsive vertical spacing polish
+
+- Added explicit vertical rhythm across mission steps, math explainers, simulation controls, course cards, account notices, and progress/settings sections so stacked UI elements no longer touch on desktop, tablet, or mobile layouts.
+- Improved mobile lab headers and compact text groups with larger responsive gaps for clearer separation.
+
 ## 2026-09-14 — Opaque account panel
 
 - Made the account and cloud-sync popover fully opaque with no backdrop blur, preventing the authentication form from blending into the toolbar behind it.

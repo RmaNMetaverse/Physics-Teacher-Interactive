@@ -71,7 +71,7 @@
 .account-gate-intro { margin: -6px 0 18px; color: var(--muted); font-size: 14px; line-height: 1.6; }
 .account-signed-in { display: grid; gap: 14px; }
 .account-identity { gap: 12px; }
-.account-identity > div { min-width: 0; display: grid; }
+.account-identity > div { min-width: 0; display: grid; gap: 5px; }
 .account-identity strong { overflow: hidden; text-overflow: ellipsis; font-size: 14px; }
 .account-identity span { color: var(--muted); font-size: 12px; }
 .account-avatar { display: grid; place-items: center; width: 42px; height: 42px; flex: 0 0 42px; border-radius: 50%; color: var(--accent-contrast) !important; background: linear-gradient(145deg, var(--accent), var(--teal)); font-size: 16px !important; font-weight: 850; }
@@ -83,7 +83,7 @@
 .account-secondary-button:hover { border-color: var(--accent); }
 .account-notice { align-items: flex-start; gap: 12px; padding: 13px; border: 1px solid var(--line); border-radius: 14px; background: var(--raised); }
 .account-notice svg { flex: 0 0 auto; color: var(--muted); }
-.account-notice div { display: grid; gap: 3px; }
+.account-notice div { display: grid; gap: 6px; }
 .account-notice strong { font-size: 13px; }
 .account-notice span { color: var(--muted); font-size: 12px; line-height: 1.4; }
 .spin { animation: account-spin .9s linear infinite; }

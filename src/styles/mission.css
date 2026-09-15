@@ -30,6 +30,11 @@
   line-height: 1.25;
 }
 
+.mission-player-title {
+  display: grid;
+  gap: 8px;
+}
+
 .eyebrow {
   display: inline-block;
   font-size: 11px;
@@ -126,8 +131,35 @@
 .step-header {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 12px;
   margin-bottom: 0;
+}
+
+.step-header h2,
+.recap-takeaways h3,
+.foundation-concepts h4,
+.foundation-visual h4,
+.foundation-worked-example h4,
+.foundation-check-header h4,
+.math-symbols h3 {
+  margin: 0;
+}
+
+.mission-step-view,
+.assessment-body,
+.math-quick-mode,
+.foundation-content,
+.math-prereq-view,
+.foundation-concepts,
+.foundation-explanation,
+.foundation-prerequisites,
+.foundation-visual,
+.foundation-footer,
+.recap-takeaways,
+.recap-deep-dive-container,
+.assessment-hints {
+  display: grid;
+  gap: var(--stack-md);
 }
 
 .step-kind-badge {
@@ -163,6 +195,11 @@
   color: var(--text);
   margin: 0;
   font-size: 15px;
+}
+
+.step-content {
+  display: grid;
+  gap: var(--stack-md);
 }
 
 /* Mission Player Footer & One Prominent Action */
@@ -241,7 +278,7 @@
 .assessment {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: var(--stack-md);
   margin: 18px 0;
 }
 
@@ -465,6 +502,19 @@
   color: var(--text);
 }
 
+.hint-message,
+.foundation-concepts p,
+.foundation-explanation p,
+.foundation-prerequisites p,
+.foundation-visual p,
+.foundation-worked-example p,
+.foundation-check p,
+.math-quick-summary,
+.math-expand-guidance,
+.math-prereq-view p {
+  margin: 0;
+}
+
 /* Layered Mathematics */
 .equation-card {
   padding: 22px 24px;
@@ -488,7 +538,7 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 10px;
-  margin: 14px 0;
+  margin: 0;
 }
 
 .math-symbol-item {
@@ -512,7 +562,7 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 10px;
+  gap: var(--stack-sm);
   margin-top: 20px;
 }
 
@@ -569,6 +619,7 @@
 .foundation-concepts ul {
   padding-left: 20px;
   line-height: 1.7;
+  margin: 0;
 }
 
 .foundation-worked-example {
@@ -582,6 +633,7 @@
 .worked-steps-list {
   padding-left: 20px;
   line-height: 1.7;
+  margin: 0;
 }
 
 .foundation-check {
@@ -596,7 +648,9 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 12px;
+  gap: var(--stack-sm);
+  margin-bottom: 0;
+  flex-wrap: wrap;
 }
 
 .math-check-badge {
@@ -711,6 +765,7 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
+  margin: 0;
 }
 
 .recap-takeaways li {
