@@ -5,6 +5,7 @@ import { parseHash, toHash } from './router';
 import type { LearnerProgressV2 } from '../progress/types';
 import { AppearancePopover } from '../components/navigation/AppearancePopover';
 import { MobileTabBar } from '../components/navigation/MobileTabBar';
+import { LiquidTabBubble } from '../components/navigation/LiquidTabBubble';
 import { AccountPopover } from '../components/navigation/AccountPopover';
 import type { CloudAccount } from '../cloud/useCloudAccount';
 
@@ -61,6 +62,7 @@ export function AppShell({
   const [accountReminder, setAccountReminder] = useState('');
   const initialAccountResolved = useRef(false);
   const current = route.page === 'course' || route.page === 'mission' ? 'learn' : route.page;
+  const activeTabIndex = current === 'explore' ? 0 : current === 'learn' ? 1 : 2;
 
   const activeSettings = settings ?? progress?.settings ?? DEFAULT_SETTINGS;
 
@@ -138,6 +140,7 @@ export function AppShell({
         </div>
 
         <nav className="macos-segmented-nav" aria-label="Main navigation">
+          <LiquidTabBubble activeIndex={activeTabIndex} />
           <a
             href={toHash({ page: 'explore' })}
             onClick={event => navigateFromTab(event, { page: 'explore' })}

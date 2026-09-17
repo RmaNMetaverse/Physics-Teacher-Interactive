@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-09-17 — Bubbly Liquid Glass tab switch
+
+- Replaced the separate active-tab fills with one persistent Liquid Glass selection lens shared by Explore, Learn and Progress on desktop and mobile.
+- Added a spring glide, elastic lens deformation and a short-lived trailing droplet inspired by Kube's lip-bezel switch, while keeping the effect event-driven and inexpensive when idle.
+- Added reduced-motion, reduced-transparency, high-contrast and disabled-glass fallbacks, plus component coverage for the indicator's route position.
+
 ## 2026-09-17 — Stable refraction and instant tab routing
 
 - Patched the LiquidGlass fragment shader so chromatic dispersion is confined to the curved dock bevel. Narrow colored card and mission-node edges no longer recombine with adjacent light surfaces into broad white bands inside the flat glass area.

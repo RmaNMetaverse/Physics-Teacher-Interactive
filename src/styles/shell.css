@@ -178,7 +178,11 @@ summary:focus-visible,
 
 /* macOS-Style Segmented Navigation (Desktop Toolbar Center) */
 .macos-segmented-nav {
-  display: inline-flex;
+  --liquid-tab-gap: 2px;
+  --liquid-tab-edge: 3px;
+  position: relative;
+  display: inline-grid;
+  grid-template-columns: repeat(3, minmax(96px, 1fr));
   align-items: center;
   gap: 2px;
   padding: 3px;
@@ -190,7 +194,75 @@ summary:focus-visible,
   -webkit-backdrop-filter: none;
 }
 
+/* Kube-inspired moving lip bezel: a single lens glides and briefly deforms
+   between the three tab wells instead of remounting at the destination. */
+.liquid-tab-bubble {
+  position: absolute;
+  z-index: 0;
+  top: var(--liquid-tab-edge);
+  bottom: var(--liquid-tab-edge);
+  left: var(--liquid-tab-edge);
+  width: calc((100% - var(--liquid-tab-edge) - var(--liquid-tab-edge) - var(--liquid-tab-gap) - var(--liquid-tab-gap)) / 3);
+  border: 1px solid color-mix(in srgb, var(--accent) 28%, rgba(255, 255, 255, .26));
+  border-radius: var(--radius-full);
+  pointer-events: none;
+  transform: translate3d(0, 0, 0);
+  transform-origin: center;
+  transition: transform 560ms cubic-bezier(.22, 1.34, .32, 1), border-color var(--transition-normal), background-color var(--transition-normal);
+  background:
+    radial-gradient(80% 48% at 50% 3%, rgba(255, 255, 255, .34), transparent 72%),
+    linear-gradient(150deg, color-mix(in srgb, var(--accent-soft) 78%, rgba(255, 255, 255, .1)), color-mix(in srgb, var(--panel) 74%, var(--accent-soft)));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .46),
+    inset 0 -1px 0 rgba(0, 0, 0, .12),
+    0 4px 12px rgba(0, 0, 0, .13),
+    0 0 18px color-mix(in srgb, var(--accent) 14%, transparent);
+  will-change: transform;
+}
+
+.liquid-tab-bubble[data-active-index="1"] {
+  transform: translate3d(calc(100% + var(--liquid-tab-gap)), 0, 0);
+}
+
+.liquid-tab-bubble[data-active-index="2"] {
+  transform: translate3d(calc(200% + var(--liquid-tab-gap) + var(--liquid-tab-gap)), 0, 0);
+}
+
+.liquid-tab-bubble-lens {
+  position: absolute;
+  inset: 2px;
+  overflow: hidden;
+  border-radius: inherit;
+  background:
+    radial-gradient(circle at 23% 28%, rgba(255, 255, 255, .48) 0 3%, transparent 24%),
+    radial-gradient(circle at 78% 74%, color-mix(in srgb, var(--teal) 18%, transparent), transparent 38%);
+  opacity: .82;
+}
+
+.liquid-tab-bubble-lens::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: inset 2px 2px 4px rgba(255, 255, 255, .22), inset -3px -3px 6px rgba(0, 0, 0, .1);
+}
+
+.liquid-tab-bubble-droplet {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 16px;
+  height: 16px;
+  margin: -8px 0 0 -8px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--accent-soft) 82%, rgba(255, 255, 255, .28));
+  box-shadow: inset 1px 1px 2px rgba(255, 255, 255, .45), 0 2px 7px rgba(0, 0, 0, .12);
+  opacity: 0;
+}
+
 .macos-segment-item {
+  position: relative;
+  z-index: 1;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -216,10 +288,10 @@ summary:focus-visible,
 .macos-segment-item.is-active,
 .macos-segment-item[aria-current="page"] {
   color: var(--accent);
-  background: var(--panel);
-  border-color: rgba(255, 255, 255, 0.08);
+  background: transparent;
+  border-color: transparent;
   font-weight: 700;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  box-shadow: none;
 }
 
 .macos-segment-item svg {

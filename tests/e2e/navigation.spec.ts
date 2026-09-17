@@ -15,6 +15,9 @@ test('opens Explore first with one continue action and every open course', async
   const navigation = page.getByRole('navigation', { name: 'Main navigation' });
   await expect(navigation.getByRole('link')).toHaveCount(3);
   await expect(navigation.getByRole('link').allTextContents()).resolves.toEqual(['Explore', 'Learn', 'Progress']);
+  const tabBubble = navigation.locator('.liquid-tab-bubble');
+  await expect(tabBubble).toHaveCount(1);
+  await expect(tabBubble).toHaveAttribute('data-active-index', '0');
   await expect(page.locator('.sidebar')).toHaveCount(0);
   await expect(page.locator('.lesson-tabs')).toHaveCount(0);
   await expect(page.getByRole('button', { name: 'Appearance settings' })).toBeVisible();
@@ -26,6 +29,7 @@ test('opens Explore first with one continue action and every open course', async
   });
   await page.getByRole('navigation', { name: 'Main navigation' }).getByRole('link', { name: 'Progress' }).click();
   await expect(page).toHaveURL(/#\/progress$/);
+  await expect(tabBubble).toHaveAttribute('data-active-index', '2');
   await expect.poll(() => page.evaluate(() => (
     window as Window & { __spaNavigationSentinel?: string }
   ).__spaNavigationSentinel)).toBe('mounted');
@@ -110,6 +114,7 @@ test('responsive viewports (320x700, 768x1024, 1440x900) have no horizontal page
       ? page.getByRole('navigation', { name: 'Mobile navigation' })
       : page.getByRole('navigation', { name: 'Main navigation' });
     const navLinks = navLocator.getByRole('link');
+    await expect(navLocator.locator('.liquid-tab-bubble')).toHaveCount(1);
     const navCount = await navLinks.count();
     expect(navCount).toBe(3);
     for (let i = 0; i < navCount; i++) {

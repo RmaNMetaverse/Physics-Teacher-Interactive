@@ -103,6 +103,7 @@ describe('AppShell', () => {
     const nav = screen.getByRole('navigation', { name: 'Main navigation' });
     expect(nav).toBeInTheDocument();
     expect(nav).toHaveClass('macos-segmented-nav');
+    expect(nav.querySelector('.liquid-tab-bubble')).toHaveAttribute('data-active-index', '0');
 
     // Desktop segmented links
     const desktopLinks = nav.querySelectorAll('a');
@@ -135,6 +136,7 @@ describe('AppShell', () => {
     );
     expect(learnLink).toHaveAttribute('aria-current', 'page');
     expect(exploreLink).not.toHaveAttribute('aria-current');
+    expect(nav.querySelector('.liquid-tab-bubble')).toHaveAttribute('data-active-index', '1');
 
     // Switch to Learn (mission route)
     rerender(
@@ -164,6 +166,7 @@ describe('AppShell', () => {
     );
     expect(progressLink).toHaveAttribute('aria-current', 'page');
     expect(learnLink).not.toHaveAttribute('aria-current');
+    expect(nav.querySelector('.liquid-tab-bubble')).toHaveAttribute('data-active-index', '2');
   });
 
   it('routes desktop tabs through the in-app navigator without default hash navigation', () => {

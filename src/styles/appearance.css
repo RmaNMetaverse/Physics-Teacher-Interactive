@@ -89,11 +89,26 @@
   background: linear-gradient(145deg, color-mix(in srgb, var(--accent) 82%, white), var(--accent));
 }
 
+:root[data-liquid-glass="false"] .liquid-tab-bubble {
+  background: var(--accent-soft);
+  border-color: color-mix(in srgb, var(--accent) 30%, var(--line));
+  box-shadow: none;
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  :root[data-liquid-glass="true"] .liquid-tab-bubble {
+    background: var(--accent-soft);
+    border-color: color-mix(in srgb, var(--accent) 30%, var(--line));
+    box-shadow: none;
+  }
+}
+
 /* High Contrast Theme Fallback: Enforce opaque surfaces and crisp separation */
 [data-theme="high-contrast"] :is(
   .adventure-topbar,
   .mobile-tab-bar,
   .appearance-popover,
+  .liquid-tab-bubble,
   .liquid-glass-surface,
   .liquid-glass-hud
 ),
@@ -101,6 +116,7 @@
   .adventure-topbar,
   .mobile-tab-bar,
   .appearance-popover,
+  .liquid-tab-bubble,
   .liquid-glass-surface,
   .liquid-glass-hud
 ) {

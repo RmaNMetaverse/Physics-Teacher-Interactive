@@ -3,6 +3,7 @@ import { LiquidGlass } from '@ybouane/liquidglass';
 import { parseHash, type AppRoute } from '../../app/router';
 import type { LearnerProgressV2 } from '../../progress/types';
 import { ChartNoAxesColumn, Compass, Map } from 'lucide-react';
+import { LiquidTabBubble } from './LiquidTabBubble';
 
 export interface MobileTabBarProps {
   currentRoute: AppRoute;
@@ -100,6 +101,7 @@ export function MobileTabBar({
   const isMobileViewport = useMediaQuery('(max-width: 768px)');
   const reducesTransparency = useMediaQuery('(prefers-reduced-transparency: reduce)');
   const shouldRenderGlass = liquidGlass && isMobileViewport && !reducesTransparency && theme !== 'high-contrast';
+  const activeTabIndex = TABS.findIndex(tab => tab.isActive(currentRoute));
 
   useEffect(() => {
     const nav = navRef.current;
@@ -200,6 +202,7 @@ export function MobileTabBar({
       }}
     >
       <div className="mobile-tab-bar-items">
+        <LiquidTabBubble activeIndex={Math.max(0, activeTabIndex)} />
         {TABS.map((tab) => {
           const active = tab.isActive(currentRoute);
           const Icon = tab.icon;
@@ -223,7 +226,6 @@ export function MobileTabBar({
                 minWidth: '48px',
               }}
             >
-              {active && <span className="mobile-tab-active-pill" aria-hidden="true" />}
               <Icon
                 size={22}
                 aria-hidden="true"

@@ -244,16 +244,18 @@ describe('MobileTabBar', () => {
 
   it('renders active indicator pill and tactile press styling', () => {
     const route: AppRoute = { page: 'explore' };
-    render(<MobileTabBar currentRoute={route} learnHash={defaultLearnHash} />);
+    const { rerender } = render(<MobileTabBar currentRoute={route} learnHash={defaultLearnHash} />);
 
     const exploreLink = screen.getByRole('link', { name: /explore/i });
     expect(exploreLink).toHaveClass('active:scale-95');
 
-    const pill = exploreLink.querySelector('.mobile-tab-active-pill');
-    expect(pill).toBeInTheDocument();
+    const nav = screen.getByRole('navigation', { name: 'Mobile navigation' });
+    const bubble = nav.querySelector('.liquid-tab-bubble');
+    expect(bubble).toBeInTheDocument();
+    expect(bubble).toHaveAttribute('data-active-index', '0');
+    expect(nav.querySelectorAll('.liquid-tab-bubble')).toHaveLength(1);
 
-    const learnLink = screen.getByRole('link', { name: /learn/i });
-    const learnPill = learnLink.querySelector('.mobile-tab-active-pill');
-    expect(learnPill).not.toBeInTheDocument();
+    rerender(<MobileTabBar currentRoute={{ page: 'progress' }} learnHash={defaultLearnHash} />);
+    expect(bubble).toHaveAttribute('data-active-index', '2');
   });
 });
