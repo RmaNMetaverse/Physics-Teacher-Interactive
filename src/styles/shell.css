@@ -516,6 +516,11 @@ summary:focus-visible,
   display: none;
 }
 
+.mobile-tab-bar-items {
+  position: relative;
+  z-index: 1;
+}
+
 /* Route Recovery Banner */
 .route-recovery {
   max-width: 1180px;
