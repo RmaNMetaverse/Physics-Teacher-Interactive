@@ -20,19 +20,22 @@ interface TabDefinition {
 }
 
 const MOBILE_GLASS_CONFIG = {
-  blurAmount: 0.42,
-  refraction: 0.92,
-  chromAberration: 0.024,
-  edgeHighlight: 0.22,
-  specular: 0.26,
+  // Preserve narrow saturated UI accents behind the dock. Heavy blur and
+  // white specular light previously spread a 4 px course stripe into a pale
+  // band; the crisper sample keeps its authored --course-color intact.
+  blurAmount: 0.14,
+  refraction: 0.74,
+  chromAberration: 0.09,
+  edgeHighlight: 0.14,
+  specular: 0.1,
   fresnel: 0.82,
-  distortion: 0.045,
+  distortion: 0.025,
   cornerRadius: 46,
-  zRadius: 32,
+  zRadius: 24,
   opacity: 1,
-  saturation: 0.12,
-  tintStrength: 0.14,
-  brightness: -0.03,
+  saturation: 0.42,
+  tintStrength: 0.05,
+  brightness: -0.08,
   shadowOpacity: 0.4,
   shadowSpread: 12,
   shadowOffsetY: 6,

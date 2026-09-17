@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-09-17 — Mobile glass color preservation
+
+- Retuned the mobile LiquidGlass shader to preserve narrow saturated course accents instead of spreading them into oversized white bands, while increasing chromatic aberration at the refracted edge.
+- Made the pre-render fallback fully opaque so the mobile dock does not briefly sample scrolling content before the WebGL canvas is ready.
+
 ## 2026-09-17 — Mobile interaction and bite-sized lesson polish
 
 - Kept the mobile LiquidGlass navigation synchronized through rapid and inertial scrolling with frame-coalesced updates, visual-viewport tracking, and a guaranteed settled redraw.

@@ -51,7 +51,13 @@ describe('MobileTabBar', () => {
     await waitFor(() => expect(liquidGlassInit).toHaveBeenCalledWith(expect.objectContaining({
       root,
       glassElements: [nav],
-      defaults: expect.objectContaining({ blurAmount: expect.any(Number), refraction: expect.any(Number) }),
+      defaults: expect.objectContaining({
+        blurAmount: 0.14,
+        refraction: 0.74,
+        chromAberration: 0.09,
+        saturation: 0.42,
+        specular: 0.1,
+      }),
     })));
     expect(nav).toHaveAttribute('data-liquid-glass-renderer', 'ready');
   });
