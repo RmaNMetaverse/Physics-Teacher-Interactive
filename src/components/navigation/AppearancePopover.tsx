@@ -72,7 +72,7 @@ export function AppearancePopover({
   return (
     <div
       ref={popoverRef}
-      className="appearance-popover liquid-glass-surface"
+      className="appearance-popover"
       role="dialog"
       aria-label="Appearance settings"
       aria-modal="true"
@@ -147,7 +147,7 @@ export function AppearancePopover({
           <div className="appearance-toggle-row">
             <div className="appearance-toggle-info">
               <span className="appearance-toggle-label">Liquid Glass</span>
-              <span className="appearance-toggle-desc">Translucent materials & specular highlights</span>
+              <span className="appearance-toggle-desc">Refraction, blur & specular highlights</span>
             </div>
             <button
               type="button"

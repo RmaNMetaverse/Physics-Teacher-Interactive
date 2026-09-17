@@ -43,14 +43,13 @@
 }
 
 /* Liquid Glass Layer Discipline:
-   Strictly restricted to floating functional controls (.adventure-topbar, .mobile-tab-bar, .appearance-popover)
+   Strictly restricted to floating functional controls (.adventure-topbar, .mobile-tab-bar)
    and utility classes (.liquid-glass-surface, .liquid-glass-hud).
 */
 @supports (backdrop-filter: blur(1px)) {
   :root[data-liquid-glass="true"] :is(
     .adventure-topbar,
     .mobile-tab-bar,
-    .appearance-popover,
     .liquid-glass-surface,
     .liquid-glass-hud
   ) {
@@ -102,7 +101,6 @@
   :root[data-liquid-glass="true"] :is(
     .adventure-topbar,
     .mobile-tab-bar,
-    .appearance-popover,
     .liquid-glass-surface,
     .liquid-glass-hud
   ) {

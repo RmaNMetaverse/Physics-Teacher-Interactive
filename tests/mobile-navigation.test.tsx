@@ -1,27 +1,60 @@
 // @vitest-environment jsdom
-import { afterEach, describe, expect, it } from 'vitest';
-import { cleanup, render, screen } from '@testing-library/react';
+import { afterEach, describe, expect, it, vi } from 'vitest';
+import { cleanup, render, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/vitest';
 import { MobileTabBar } from '../src/components/navigation/MobileTabBar';
 import type { AppRoute } from '../src/app/router';
 
+const liquidGlassInit = vi.hoisted(() => vi.fn());
+
+vi.mock('@ybouane/liquidglass', () => ({
+  LiquidGlass: { init: liquidGlassInit },
+}));
+
 afterEach(() => {
   cleanup();
+  liquidGlassInit.mockReset();
+  vi.unstubAllGlobals();
+  vi.restoreAllMocks();
 });
 
 describe('MobileTabBar', () => {
   const defaultLearnHash = '#/course/foundations-of-motion';
 
-  it('renders nav element with mobile-tab-bar liquid-glass-surface classes and accessible aria-label', () => {
+  it('marks the navigation as liquid-glass enabled by default', () => {
     const route: AppRoute = { page: 'explore' };
     render(<MobileTabBar currentRoute={route} learnHash={defaultLearnHash} />);
 
     const nav = screen.getByRole('navigation', { name: 'Mobile navigation' });
     expect(nav).toBeInTheDocument();
     expect(nav).toHaveClass('mobile-tab-bar');
-    expect(nav).toHaveClass('liquid-glass-surface');
+    expect(nav).toHaveAttribute('data-liquid-glass', 'true');
   });
 
+  it('initializes the requested refraction renderer for an enabled mobile navigation', async () => {
+    const destroy = vi.fn();
+    liquidGlassInit.mockResolvedValue({ destroy, markChanged: vi.fn() });
+    vi.stubGlobal('matchMedia', vi.fn().mockImplementation((query: string) => ({
+      matches: query === '(max-width: 768px)',
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+    })));
+
+    const { container } = render(
+      <div className="adventure-shell">
+        <MobileTabBar currentRoute={{ page: 'explore' }} learnHash={defaultLearnHash} />
+      </div>
+    );
+    const root = container.firstElementChild as HTMLElement;
+    const nav = screen.getByRole('navigation', { name: 'Mobile navigation' });
+
+    await waitFor(() => expect(liquidGlassInit).toHaveBeenCalledWith(expect.objectContaining({
+      root,
+      glassElements: [nav],
+      defaults: expect.objectContaining({ blurAmount: expect.any(Number), refraction: expect.any(Number) }),
+    })));
+    expect(nav).toHaveAttribute('data-liquid-glass-renderer', 'ready');
+  });
   it('renders the 3 primary tabs with correct links and accessible labels', () => {
     const route: AppRoute = { page: 'explore' };
     const customLearnHash = '#/course/gravity-orbits';

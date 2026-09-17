@@ -150,11 +150,10 @@ describe('liquid glass layer discipline', () => {
     }
   });
 
-  it('restricts liquid glass strictly to floating navigation and appearance controls', () => {
+  it('restricts CSS glass fallbacks to floating navigation and utility controls', () => {
     const floatingControls = [
       '.adventure-topbar',
       '.mobile-tab-bar',
-      '.appearance-popover',
     ];
 
     for (const control of floatingControls) {
@@ -168,6 +167,18 @@ describe('liquid glass layer discipline', () => {
     expect(appearanceCss).toMatch(/box-shadow:[^;]*inset 0 1px 0 rgba\(255,\s*255,\s*255,\s*0?\.18\)/);
   });
 
+  it('keeps the Appearance & Display menu opaque in every visual-effects mode', () => {
+    const shellCss = readFileSync(resolve(__dirname, '../src/styles/shell.css'), 'utf-8');
+    const popoverRule = shellCss.match(/\.appearance-popover\s*\{([^}]*)\}/s)?.[1] ?? '';
+
+    expect(popoverRule).toMatch(/background:\s*var\(--panel\)/);
+    expect(popoverRule).toMatch(/backdrop-filter:\s*none/);
+    expect(popoverRule).toMatch(/-webkit-backdrop-filter:\s*none/);
+
+    const transparentPopoverRules = appearanceCss.split('}')
+      .filter(rule => rule.includes('.appearance-popover') && /backdrop-filter:\s*blur/i.test(rule));
+    expect(transparentPopoverRules).toHaveLength(0);
+  });
   it('enforces opaque fallback for high contrast and reduced transparency', () => {
     expect(appearanceCss).toMatch(/prefers-reduced-transparency:\s*reduce/);
     expect(appearanceCss).toMatch(/\[data-theme="high-contrast"\]/);

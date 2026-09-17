@@ -220,7 +220,7 @@ export function AppShell({
         {children}
       </main>
 
-      <MobileTabBar currentRoute={route} learnHash={learnHash} />
+      <MobileTabBar currentRoute={route} learnHash={learnHash} liquidGlass={activeSettings.liquidGlass ?? true} theme={activeSettings.theme} />
       {account && isAccountGateOpen && (
         <div className="account-gate-backdrop">
           <AccountPopover account={account} isOpen variant="gate" onClose={continueLocally} />

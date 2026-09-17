@@ -256,6 +256,22 @@ describe('AppShell', () => {
     expect(mobileNav).toHaveClass('mobile-tab-bar');
   });
 
+  it('disables the mobile liquid-glass renderer when the appearance setting is off', () => {
+    const route: AppRoute = { page: 'explore' };
+    render(
+      <AppShell
+        route={route}
+        learnHash={defaultLearnHash}
+        recoveryMessage=""
+        mainRef={mainRef}
+        progress={{ ...mockProgress, settings: { ...mockProgress.settings, liquidGlass: false } }}
+      >
+        <div>Content</div>
+      </AppShell>
+    );
+
+    expect(screen.getByRole('navigation', { name: 'Mobile navigation' })).toHaveAttribute('data-liquid-glass', 'false');
+  });
   it('opens a centered sign-in gate once auth is ready and the visitor is signed out', () => {
     render(
       <AppShell

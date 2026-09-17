@@ -37,7 +37,7 @@ describe('AppearancePopover', () => {
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
   });
 
-  it('renders dialog with Apple HIG floating glass styling, title, and close button when isOpen is true', () => {
+  it('renders an opaque settings dialog with a title and close button when isOpen is true', () => {
     const onClose = vi.fn();
     const onUpdateSettings = vi.fn();
 
@@ -53,7 +53,7 @@ describe('AppearancePopover', () => {
     const dialog = screen.getByRole('dialog', { name: 'Appearance settings' });
     expect(dialog).toBeInTheDocument();
     expect(dialog).toHaveClass('appearance-popover');
-    expect(dialog).toHaveClass('liquid-glass-surface');
+    expect(dialog).not.toHaveClass('liquid-glass-surface');
 
     expect(screen.getByText('Appearance & Display')).toBeInTheDocument();
 
