@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { LiquidGlass } from '@ybouane/liquidglass';
-import type { AppRoute } from '../../app/router';
+import { parseHash, type AppRoute } from '../../app/router';
 import type { LearnerProgressV2 } from '../../progress/types';
 import { ChartNoAxesColumn, Compass, Map } from 'lucide-react';
 
@@ -9,6 +9,7 @@ export interface MobileTabBarProps {
   learnHash: string;
   liquidGlass?: boolean;
   theme?: LearnerProgressV2['settings']['theme'];
+  onNavigate?: (route: AppRoute) => void;
 }
 
 interface TabDefinition {
@@ -93,6 +94,7 @@ export function MobileTabBar({
   learnHash,
   liquidGlass = true,
   theme,
+  onNavigate,
 }: MobileTabBarProps) {
   const navRef = useRef<HTMLElement>(null);
   const isMobileViewport = useMediaQuery('(max-width: 768px)');
@@ -202,11 +204,17 @@ export function MobileTabBar({
           const active = tab.isActive(currentRoute);
           const Icon = tab.icon;
           const href = tab.getHref(learnHash);
+          const nextRoute = tab.id === 'learn' ? parseHash(href) : { page: tab.id } as AppRoute;
 
           return (
             <a
               key={tab.id}
               href={href}
+              onClick={event => {
+                if (!onNavigate || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+                event.preventDefault();
+                onNavigate(nextRoute);
+              }}
               aria-label={tab.label}
               aria-current={active ? 'page' : undefined}
               className={`mobile-tab-item active:scale-95 ${active ? 'active is-active' : ''}`}

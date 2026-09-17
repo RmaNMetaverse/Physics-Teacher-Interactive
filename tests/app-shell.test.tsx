@@ -46,7 +46,7 @@ afterEach(() => {
 
 describe('AppShell', () => {
   const mainRef = createRef<HTMLElement>();
-  const defaultLearnHash = '#/course/foundations-of-motion';
+  const defaultLearnHash = '#/course/foundations';
   const unsignedAccount = (): CloudAccount => ({
     configured: true,
     user: null,
@@ -164,6 +164,29 @@ describe('AppShell', () => {
     );
     expect(progressLink).toHaveAttribute('aria-current', 'page');
     expect(learnLink).not.toHaveAttribute('aria-current');
+  });
+
+  it('routes desktop tabs through the in-app navigator without default hash navigation', () => {
+    const onNavigate = vi.fn();
+    render(
+      <AppShell
+        route={{ page: 'explore' }}
+        learnHash={defaultLearnHash}
+        recoveryMessage=""
+        mainRef={mainRef}
+        progress={mockProgress}
+        onNavigate={onNavigate}
+      >
+        <div>Content</div>
+      </AppShell>
+    );
+
+    const nav = screen.getByRole('navigation', { name: 'Main navigation' });
+    fireEvent.click(nav.querySelector('a[href="#/progress"]')!);
+    expect(onNavigate).toHaveBeenCalledWith({ page: 'progress' });
+
+    fireEvent.click(nav.querySelector(`a[href="${defaultLearnHash}"]`)!);
+    expect(onNavigate).toHaveBeenCalledWith({ page: 'course', courseId: 'foundations' });
   });
 
   it('renders telemetry stats pill with XP and streak', () => {

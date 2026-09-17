@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { AppShell } from './app/AppShell';
 import { isSupabaseAuthHash, isValidAppHash, parseHash, toHash, type AppRoute } from './app/router';
 import { courseCatalog, courses } from './learning/catalog';
@@ -35,7 +35,29 @@ export function App() {
   const mainRef = useRef<HTMLElement>(null);
   const account = useCloudAccount(progress, setProgress);
 
+  const applyRoute = useCallback((next: AppRoute) => {
+    setRoute(next);
+    setRecoveryMessage('');
+    if (next.page === 'course' || next.page === 'mission') {
+      setProgress(current => current.selectedCourseId === next.courseId ? current : {
+        ...current,
+        selectedCourseId: next.courseId,
+        savedAt: new Date().toISOString(),
+      });
+    }
+    window.scrollTo(0, 0);
+  }, []);
+
+  const navigate = useCallback((next: AppRoute) => {
+    const nextHash = toHash(next);
+    if (window.location.hash !== nextHash) {
+      window.history.pushState(null, '', `${window.location.pathname}${window.location.search}${nextHash}`);
+    }
+    applyRoute(next);
+  }, [applyRoute]);
+
   useEffect(() => {
+    let canonicalTimer = 0;
     const syncRoute = () => {
       if (isSupabaseAuthHash(window.location.hash)) {
         setRoute({ page: 'explore' });
@@ -45,25 +67,33 @@ export function App() {
       }
       const valid = isValidAppHash(window.location.hash);
       const next = parseHash(window.location.hash);
-      setRoute(next);
-      if (next.page === 'course' || next.page === 'mission') {
-        setProgress(current => current.selectedCourseId === next.courseId ? current : {
-          ...current,
-          selectedCourseId: next.courseId,
-          savedAt: new Date().toISOString(),
-        });
-      }
+      applyRoute(next);
       setRecoveryMessage(valid ? '' : 'That route is unavailable, so we returned you to Explore.');
       const canonicalHash = toHash(next);
       if (window.location.hash !== canonicalHash) {
         window.history.replaceState(null, '', `${window.location.pathname}${window.location.search}${canonicalHash}`);
       }
-      window.scrollTo(0, 0);
     };
-    syncRoute();
+    // Initial state already comes from initialRoute(). Defer URL
+    // canonicalization until after Strict Mode's development remount so an
+    // invalid-route recovery announcement survives that remount.
+    const initialHash = window.location.hash;
+    if (!isSupabaseAuthHash(initialHash)) {
+      const canonicalHash = toHash(parseHash(initialHash));
+      if (initialHash !== canonicalHash) {
+        canonicalTimer = window.setTimeout(() => {
+          if (window.location.hash === initialHash) {
+            window.history.replaceState(null, '', `${window.location.pathname}${window.location.search}${canonicalHash}`);
+          }
+        }, 0);
+      }
+    }
     window.addEventListener('hashchange', syncRoute);
-    return () => window.removeEventListener('hashchange', syncRoute);
-  }, []);
+    return () => {
+      window.clearTimeout(canonicalTimer);
+      window.removeEventListener('hashchange', syncRoute);
+    };
+  }, [applyRoute]);
 
   useEffect(() => {
     applyAppearanceSettings(progress.settings, progress.settings.reducedMotion);
@@ -106,6 +136,7 @@ export function App() {
       progress={progress}
       onUpdateSettings={updateSettings}
       account={account}
+      onNavigate={navigate}
     >
       {page}
     </AppShell>

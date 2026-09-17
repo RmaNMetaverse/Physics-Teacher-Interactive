@@ -1,7 +1,7 @@
-import { useEffect, useRef, useState, type ReactNode, type RefObject } from 'react';
+import { useEffect, useRef, useState, type MouseEvent, type ReactNode, type RefObject } from 'react';
 import { Atom, ChartNoAxesColumn, Cloud, Compass, Flame, Map, Palette, Trophy, UserRound } from 'lucide-react';
 import type { AppRoute } from './router';
-import { toHash } from './router';
+import { parseHash, toHash } from './router';
 import type { LearnerProgressV2 } from '../progress/types';
 import { AppearancePopover } from '../components/navigation/AppearancePopover';
 import { MobileTabBar } from '../components/navigation/MobileTabBar';
@@ -19,6 +19,7 @@ export interface AppShellProps {
   settings?: LearnerProgressV2['settings'];
   onUpdateSettings?: (partial: Partial<LearnerProgressV2['settings']>) => void;
   account?: CloudAccount;
+  onNavigate?: (route: AppRoute) => void;
 }
 
 const DEFAULT_SETTINGS: LearnerProgressV2['settings'] = {
@@ -52,6 +53,7 @@ export function AppShell({
   settings,
   onUpdateSettings,
   account,
+  onNavigate,
 }: AppShellProps) {
   const [isAppearanceOpen, setIsAppearanceOpen] = useState(false);
   const [isAccountOpen, setIsAccountOpen] = useState(false);
@@ -100,6 +102,12 @@ export function AppShell({
     setAccountReminder("You're continuing with progress saved only on this device. To protect and sync it, be sure to sign in later from the avatar in the top bar.");
   };
 
+  const navigateFromTab = (event: MouseEvent<HTMLAnchorElement>, next: AppRoute) => {
+    if (!onNavigate || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    event.preventDefault();
+    onNavigate(next);
+  };
+
   return (
     <div className="adventure-shell">
       <a
@@ -119,6 +127,7 @@ export function AppShell({
             className="adventure-brand"
             href={toHash({ page: 'explore' })}
             aria-label="Physics Teacher Interactive home"
+            onClick={event => navigateFromTab(event, { page: 'explore' })}
           >
             <Atom aria-hidden="true" />
             <span>
@@ -131,6 +140,7 @@ export function AppShell({
         <nav className="macos-segmented-nav" aria-label="Main navigation">
           <a
             href={toHash({ page: 'explore' })}
+            onClick={event => navigateFromTab(event, { page: 'explore' })}
             className={`macos-segment-item ${current === 'explore' ? 'is-active' : ''}`}
             aria-current={current === 'explore' ? 'page' : undefined}
           >
@@ -139,6 +149,7 @@ export function AppShell({
           </a>
           <a
             href={learnHash}
+            onClick={event => navigateFromTab(event, parseHash(learnHash))}
             className={`macos-segment-item ${current === 'learn' ? 'is-active' : ''}`}
             aria-current={current === 'learn' ? 'page' : undefined}
           >
@@ -147,6 +158,7 @@ export function AppShell({
           </a>
           <a
             href={toHash({ page: 'progress' })}
+            onClick={event => navigateFromTab(event, { page: 'progress' })}
             className={`macos-segment-item ${current === 'progress' ? 'is-active' : ''}`}
             aria-current={current === 'progress' ? 'page' : undefined}
           >
@@ -160,6 +172,7 @@ export function AppShell({
             href={toHash({ page: 'progress' })}
             className="telemetry-pill"
             aria-label={`${totalXp} XP, ${streakCount} day streak`}
+            onClick={event => navigateFromTab(event, { page: 'progress' })}
           >
             <span className="telemetry-stat">
               <Trophy size={14} aria-hidden="true" />
@@ -220,7 +233,7 @@ export function AppShell({
         {children}
       </main>
 
-      <MobileTabBar currentRoute={route} learnHash={learnHash} liquidGlass={activeSettings.liquidGlass ?? true} theme={activeSettings.theme} />
+      <MobileTabBar currentRoute={route} learnHash={learnHash} liquidGlass={activeSettings.liquidGlass ?? true} theme={activeSettings.theme} onNavigate={onNavigate} />
       {account && isAccountGateOpen && (
         <div className="account-gate-backdrop">
           <AccountPopover account={account} isOpen variant="gate" onClose={continueLocally} />

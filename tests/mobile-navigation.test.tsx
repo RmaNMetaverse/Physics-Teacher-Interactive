@@ -19,7 +19,7 @@ afterEach(() => {
 });
 
 describe('MobileTabBar', () => {
-  const defaultLearnHash = '#/course/foundations-of-motion';
+  const defaultLearnHash = '#/course/foundations';
 
   it('marks the navigation as liquid-glass enabled by default', () => {
     const route: AppRoute = { page: 'explore' };
@@ -107,6 +107,23 @@ describe('MobileTabBar', () => {
     const progressLink = screen.getByRole('link', { name: /progress/i });
     expect(progressLink).toBeInTheDocument();
     expect(progressLink).toHaveAttribute('href', '#/progress');
+  });
+
+  it('routes tab presses through the in-app navigator', () => {
+    const onNavigate = vi.fn();
+    render(
+      <MobileTabBar
+        currentRoute={{ page: 'explore' }}
+        learnHash={defaultLearnHash}
+        onNavigate={onNavigate}
+      />
+    );
+
+    fireEvent.click(screen.getByRole('link', { name: 'Progress' }));
+    expect(onNavigate).toHaveBeenCalledWith({ page: 'progress' });
+
+    fireEvent.click(screen.getByRole('link', { name: 'Learn' }));
+    expect(onNavigate).toHaveBeenCalledWith({ page: 'course', courseId: 'foundations' });
   });
 
   it('marks Explore tab as active when route is explore', () => {

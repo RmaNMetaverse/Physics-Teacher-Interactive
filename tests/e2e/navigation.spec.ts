@@ -21,8 +21,14 @@ test('opens Explore first with one continue action and every open course', async
   await page.getByRole('button', { name: 'Appearance settings' }).click();
   await expect(page.getByRole('dialog', { name: 'Appearance settings' })).toBeVisible();
   await page.getByRole('button', { name: 'Close appearance settings' }).click();
+  await page.evaluate(() => {
+    (window as Window & { __spaNavigationSentinel?: string }).__spaNavigationSentinel = 'mounted';
+  });
   await page.getByRole('navigation', { name: 'Main navigation' }).getByRole('link', { name: 'Progress' }).click();
   await expect(page).toHaveURL(/#\/progress$/);
+  await expect.poll(() => page.evaluate(() => (
+    window as Window & { __spaNavigationSentinel?: string }
+  ).__spaNavigationSentinel)).toBe('mounted');
   await expect(page.getByRole('heading', { level: 1, name: 'Progress' })).toBeVisible();
 });
 

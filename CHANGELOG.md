@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-09-17 — Stable refraction and instant tab routing
+
+- Patched the LiquidGlass fragment shader so chromatic dispersion is confined to the curved dock bevel. Narrow colored card and mission-node edges no longer recombine with adjacent light surfaces into broad white bands inside the flat glass area.
+- Routed Explore, Learn, Progress, the home mark and the XP summary through React state plus the History API, preserving accessible hash URLs while switching views immediately without browser hash-navigation repainting.
+
 ## 2026-09-17 — Mobile glass color preservation
 
 - Retuned the mobile LiquidGlass shader to preserve narrow saturated course accents instead of spreading them into oversized white bands, while increasing chromatic aberration at the refracted edge.

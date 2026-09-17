@@ -1,0 +1,32 @@
+diff --git a/node_modules/@ybouane/liquidglass/dist/shaders.js b/node_modules/@ybouane/liquidglass/dist/shaders.js
+index 3f559f1..dda77c7 100644
+--- a/node_modules/@ybouane/liquidglass/dist/shaders.js
++++ b/node_modules/@ybouane/liquidglass/dist/shaders.js
+@@ -206,7 +206,10 @@ void main() {
+ 	vec2 micro = (vec2(hash(ns), hash(ns + vec2(37.0))) - 0.5) * u_distort * 4.0 * absPxToUV;
+ 
+ 	// ── Chromatic aberration ──
+-	float caS = u_chroma * 18.0 * (edge * 0.7 + 0.3) * 2.0;
++	// Dispersion belongs to the curved bevel. Applying a baseline split across
++	// the flat interior recombines narrow saturated UI edges with adjacent
++	// light surfaces and produces broad white bands while scrolling.
++	float caS = u_chroma * 18.0 * edge * edge * 2.0;
+ 	vec2 caD = N.xy * caS * pxToUV;
+ 	vec2 base = v_screenUV + refr + micro;
+ 
+diff --git a/node_modules/@ybouane/liquidglass/src/shaders.ts b/node_modules/@ybouane/liquidglass/src/shaders.ts
+index daa399a..275da29 100644
+--- a/node_modules/@ybouane/liquidglass/src/shaders.ts
++++ b/node_modules/@ybouane/liquidglass/src/shaders.ts
+@@ -211,7 +211,10 @@ void main() {
+ 	vec2 micro = (vec2(hash(ns), hash(ns + vec2(37.0))) - 0.5) * u_distort * 4.0 * absPxToUV;
+ 
+ 	// ── Chromatic aberration ──
+-	float caS = u_chroma * 18.0 * (edge * 0.7 + 0.3) * 2.0;
++	// Dispersion belongs to the curved bevel. Applying a baseline split across
++	// the flat interior recombines narrow saturated UI edges with adjacent
++	// light surfaces and produces broad white bands while scrolling.
++	float caS = u_chroma * 18.0 * edge * edge * 2.0;
+ 	vec2 caD = N.xy * caS * pxToUV;
+ 	vec2 base = v_screenUV + refr + micro;
+ 

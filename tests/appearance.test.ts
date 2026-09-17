@@ -184,5 +184,10 @@ describe('liquid glass layer discipline', () => {
     expect(appearanceCss).toMatch(/\[data-theme="high-contrast"\]/);
     expect(appearanceCss).toMatch(/backdrop-filter:\s*none/);
   });
-});
 
+  it('limits shader chromatic separation to the curved glass bevel', () => {
+    const patch = readFileSync(resolve(__dirname, '../patches/@ybouane+liquidglass+1.0.3.patch'), 'utf-8');
+    expect(patch).toContain('u_chroma * 18.0 * edge * edge * 2.0');
+    expect(patch).toContain('(edge * 0.7 + 0.3)');
+  });
+});
