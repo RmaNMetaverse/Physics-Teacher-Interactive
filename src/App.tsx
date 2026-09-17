@@ -8,7 +8,7 @@ import { CoursePathPage } from './pages/CoursePathPage';
 import { ExplorePage } from './pages/ExplorePage';
 import { MissionPage } from './pages/MissionPage';
 import { ProgressPage } from './pages/ProgressPage';
-import { accentContrast, normalizeAppearanceSettings } from './appearance';
+import { applyAppearanceSettings } from './appearance';
 import { useCloudAccount } from './cloud/useCloudAccount';
 
 function learnHash(progress: LearnerProgressV2): string {
@@ -66,21 +66,7 @@ export function App() {
   }, []);
 
   useEffect(() => {
-    const appearance = normalizeAppearanceSettings(progress.settings);
-    document.documentElement.dataset.theme = appearance.theme;
-    document.documentElement.dataset.liquidGlass = appearance.liquidGlass ? 'true' : 'false';
-    document.documentElement.dataset.font = appearance.font;
-    document.documentElement.dataset.reducedMotion = progress.settings.reducedMotion ? 'true' : 'false';
-    document.documentElement.style.setProperty('--accent', appearance.primaryColor);
-    document.documentElement.style.setProperty('--journey-violet', appearance.primaryColor);
-    document.documentElement.style.setProperty('--accent-hover', `color-mix(in srgb, ${appearance.primaryColor} 82%, white)`);
-    document.documentElement.style.setProperty('--accent-soft', `${appearance.primaryColor}24`);
-    document.documentElement.style.setProperty('--accent-contrast', accentContrast(appearance.primaryColor));
-    document.documentElement.style.setProperty('--teal', appearance.secondaryColor);
-    document.documentElement.style.setProperty('--mastery-mint', appearance.secondaryColor);
-    document.documentElement.style.setProperty('--mastery-soft', `${appearance.secondaryColor}24`);
-    const darkSurface = appearance.theme === 'dark' || appearance.theme === 'ocean' || appearance.theme === 'high-contrast';
-    document.querySelector('meta[name=theme-color]')?.setAttribute('content', darkSurface ? '#08101f' : appearance.theme === 'eye-comfort' ? '#f4ecd8' : '#fbfbfe');
+    applyAppearanceSettings(progress.settings, progress.settings.reducedMotion);
     saveProgressV2(progress, courseCatalog);
   }, [progress]);
 

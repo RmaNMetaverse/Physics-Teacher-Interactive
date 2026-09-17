@@ -14,7 +14,6 @@
 - Linked the renderer to the existing Liquid Glass preference: it initializes only on compact screens, tears down immediately when disabled, and falls back to a solid navigation material for high-contrast, reduced-transparency, or unsupported browsers.
 - Made the Appearance & Display panel fully opaque in every visual-effects mode so settings remain legible and visually separate from the lesson beneath.
 - Added lifecycle, preference-propagation, and opaque-surface regression coverage. Included `patch-package`, which the published LiquidGlass package requires for clean installs.
-# Changelog
 
 ## 2026-09-15 — README badge polish
 

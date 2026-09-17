@@ -41,6 +41,27 @@ export function accentContrast(hex: string): '#0b1020' | '#ffffff' {
   return .2126 * r + .7152 * g + .0722 * b > .42 ? '#0b1020' : '#ffffff';
 }
 
+export function applyAppearanceSettings(value: unknown, reducedMotion = false): AppearanceSettings {
+  const appearance = normalizeAppearanceSettings(value);
+  if (typeof document === 'undefined') return appearance;
+  const root = document.documentElement;
+  root.dataset.theme = appearance.theme;
+  root.dataset.liquidGlass = appearance.liquidGlass ? 'true' : 'false';
+  root.dataset.font = appearance.font;
+  root.dataset.reducedMotion = reducedMotion ? 'true' : 'false';
+  root.style.setProperty('--accent', appearance.primaryColor);
+  root.style.setProperty('--journey-violet', appearance.primaryColor);
+  root.style.setProperty('--accent-hover', `color-mix(in srgb, ${appearance.primaryColor} 82%, white)`);
+  root.style.setProperty('--accent-soft', `${appearance.primaryColor}24`);
+  root.style.setProperty('--accent-contrast', accentContrast(appearance.primaryColor));
+  root.style.setProperty('--teal', appearance.secondaryColor);
+  root.style.setProperty('--mastery-mint', appearance.secondaryColor);
+  root.style.setProperty('--mastery-soft', `${appearance.secondaryColor}24`);
+  const darkSurface = appearance.theme === 'dark' || appearance.theme === 'ocean' || appearance.theme === 'high-contrast';
+  document.querySelector('meta[name=theme-color]')?.setAttribute('content', darkSurface ? '#08101f' : appearance.theme === 'eye-comfort' ? '#f4ecd8' : '#fbfbfe');
+  return appearance;
+}
+
 export function presetFor(theme: ThemeName) {
   return themePresets.find(preset => preset.theme === theme)!;
 }
