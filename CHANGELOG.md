@@ -4,6 +4,7 @@
 
 - Retuned the mobile LiquidGlass shader to preserve narrow saturated course accents instead of spreading them into oversized white bands, while increasing chromatic aberration at the refracted edge.
 - Made the pre-render fallback fully opaque so the mobile dock does not briefly sample scrolling content before the WebGL canvas is ready.
+- Kept the dock fixed after the renderer initializes by removing a stale positioning rule left behind by the retired CSS overlay treatment.
 
 ## 2026-09-17 — Mobile interaction and bite-sized lesson polish
 
