@@ -2,6 +2,7 @@ import { mathTutorials } from '../../content/math';
 import { modelDefaults } from '../../physics';
 import type { Assessment, Parameters } from '../../types';
 import type { CourseDefinition, CourseGroup, ModelId, NormalMissionDefinition, ScienceStatus, SourceReference } from '../types';
+import { biteSizedExplanation } from '../concise';
 export const reviewedAt = '2026-09-09';
 export const source = (label: string, url: string): SourceReference => ({
     label, url
@@ -78,7 +79,7 @@ export function starterCourse(course: StarterCourse): CourseDefinition {
         return {
             id, kind: 'mission', title: draft.title, summary: draft.summary, objectives: [draft.takeaway, `Use the worked example to explain ${draft.title.toLowerCase()}.`],
             minutes: 7, xp: 60, requiredMath, modelId, scienceStatus: draft.status ?? 'established',
-            equation: draft.equation, symbols: draft.symbols.map(([symbol, meaning]) => `${symbol}: ${meaning}`).join('; '), workedExample: draft.example, reviewedAt: course.reviewedAt ?? reviewedAt,
+            equation: draft.equation, symbols: draft.symbols.map(([symbol, meaning]) => `${symbol}: ${meaning}`).join('; '), workedExample: draft.example, reviewedAt: course.reviewedAt ?? reviewedAt, detailedExplanation: draft.body,
             steps: [
                 {
                     id: `${id}-observe`, kind: 'observe', title: draft.title, body: [draft.summary]
@@ -92,7 +93,7 @@ export function starterCourse(course: StarterCourse): CourseDefinition {
                     }
                 },
                 {
-                    id: `${id}-explain`, kind: 'explain', title: 'Connect the evidence', body: draft.body
+                    id: `${id}-explain`, kind: 'explain', title: 'Connect the evidence', body: biteSizedExplanation(draft.body, draft.summary)
                 },
                 {
                     id: stepId, kind: 'math', title: `Calculate: ${draft.title.toLowerCase()}`, layer: {

@@ -113,19 +113,18 @@ export function DeepDive({ mission }: DeepDiveProps) {
             </>
           )}
 
-          {explainSteps.length > 0 && (
+          {(isNormal && mission.detailedExplanation?.length) || explainSteps.length > 0 ? (
             <>
               <h4>Theoretical mechanism</h4>
-              {explainSteps.map(step => (
-                <div key={step.id} className="deep-dive-subtext">
-                  <h5>{step.title}</h5>
-                  {step.body.map((p, idx) => (
-                    <p key={idx}>{p}</p>
-                  ))}
-                </div>
-              ))}
+              <div className="deep-dive-subtext">
+                {isNormal && mission.detailedExplanation?.length ? (
+                  mission.detailedExplanation.map((paragraph, index) => <p key={index}>{paragraph}</p>)
+                ) : (
+                  explainSteps.flatMap(step => step.body).map((paragraph, index) => <p key={index}>{paragraph}</p>)
+                )}
+              </div>
             </>
-          )}
+          ) : null}
         </div>
       </section>
 

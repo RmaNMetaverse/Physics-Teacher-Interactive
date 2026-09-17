@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { cleanup, render, screen, waitFor } from '@testing-library/react';
+import { act, cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/vitest';
 import { MobileTabBar } from '../src/components/navigation/MobileTabBar';
 import type { AppRoute } from '../src/app/router';
@@ -54,6 +54,36 @@ describe('MobileTabBar', () => {
       defaults: expect.objectContaining({ blurAmount: expect.any(Number), refraction: expect.any(Number) }),
     })));
     expect(nav).toHaveAttribute('data-liquid-glass-renderer', 'ready');
+  });
+
+  it('keeps refreshing through rapid scrolling and performs a settled final redraw', async () => {
+    const markChanged = vi.fn();
+    liquidGlassInit.mockResolvedValue({ destroy: vi.fn(), markChanged });
+    vi.stubGlobal('matchMedia', vi.fn().mockImplementation((query: string) => ({
+      matches: query === '(max-width: 768px)',
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+    })));
+    vi.stubGlobal('requestAnimationFrame', (callback: FrameRequestCallback) => (
+      window.setTimeout(() => callback(performance.now()), 16)
+    ));
+    vi.stubGlobal('cancelAnimationFrame', (id: number) => window.clearTimeout(id));
+
+    render(
+      <div className="adventure-shell">
+        <MobileTabBar currentRoute={{ page: 'explore' }} learnHash={defaultLearnHash} />
+      </div>
+    );
+    await waitFor(() => expect(liquidGlassInit).toHaveBeenCalledOnce());
+
+    fireEvent.scroll(window);
+    fireEvent.scroll(window);
+    fireEvent.scroll(window);
+    await act(async () => {
+      await new Promise(resolve => window.setTimeout(resolve, 180));
+    });
+
+    expect(markChanged.mock.calls.length).toBeGreaterThanOrEqual(2);
   });
   it('renders the 3 primary tabs with correct links and accessible labels', () => {
     const route: AppRoute = { page: 'explore' };

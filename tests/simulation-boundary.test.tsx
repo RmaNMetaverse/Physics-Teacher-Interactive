@@ -239,6 +239,17 @@ describe('Precision Lab & Floating Playback HUD', () => {
     expect(badges.length).toBeGreaterThan(0);
   });
 
+  it('locks page scrolling for the full duration of a touch slider gesture', () => {
+    render(<Lab modelId="motion" />);
+    const slider = screen.getByLabelText('Launch speed');
+
+    fireEvent.pointerDown(slider, { pointerId: 7, pointerType: 'touch' });
+    expect(document.documentElement).toHaveClass('is-adjusting-simulation-parameter');
+
+    fireEvent.pointerUp(slider, { pointerId: 7, pointerType: 'touch' });
+    expect(document.documentElement).not.toHaveClass('is-adjusting-simulation-parameter');
+  });
+
   it('formats telemetry measurement values with tabular figures', () => {
     render(<Lab modelId="motion" />);
     const values = document.querySelectorAll('.measurement-value');

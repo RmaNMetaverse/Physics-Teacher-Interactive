@@ -5,6 +5,7 @@ import { mathTutorials } from '../content/math';
 import type { Assessment, LessonDefinition } from '../types';
 import { createMathLayer } from './math-layers';
 import type { CourseDefinition, MathLayer, MissionDefinition, MissionStep } from './types';
+import { biteSizedExplanation } from './concise';
 
 const legacyLessons = [...firstLessons, ...laterLessons, ...finalLessons];
 const tutorialsById = new Map(mathTutorials.map(tutorial => [tutorial.id, tutorial]));
@@ -50,12 +51,13 @@ function adaptLesson(lesson: LessonDefinition): MissionDefinition {
     symbols: lesson.symbols,
     workedExample: lesson.workedExample,
     reviewedAt: lesson.reviewedAt,
+    detailedExplanation: lesson.explanation,
     steps: [
-      { id: `${lesson.id}-observe`, kind: 'observe', title: 'Observe the question', body: [lesson.summary, lesson.prediction] },
+      { id: `${lesson.id}-observe`, kind: 'observe', title: 'Observe the question', body: [lesson.summary] },
       { id: `${lesson.id}-predict`, kind: 'predict', assessment: requireAssessment(lesson, 0) },
       { id: `${lesson.id}-simulate`, kind: 'simulate', modelId: lesson.family, prompt: lesson.experiment.join(' '), preset: lesson.preset },
       ...mathSteps,
-      { id: `${lesson.id}-explain`, kind: 'explain', title: 'Explain the evidence', body: lesson.explanation },
+      { id: `${lesson.id}-explain`, kind: 'explain', title: 'Explain the evidence', body: biteSizedExplanation(lesson.explanation, lesson.summary) },
       { id: `${lesson.id}-calculation-check`, kind: 'check', assessment: requireAssessment(lesson, 1) },
       { id: `${lesson.id}-experiment-check`, kind: 'check', assessment: requireAssessment(lesson, 2) },
       { id: `${lesson.id}-recap`, kind: 'recap', takeaways: lesson.objectives },

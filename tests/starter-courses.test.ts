@@ -74,7 +74,8 @@ describe('released starter course content', () => {
       expect(scored).toHaveLength(3);
       scored.forEach(a => { expect(a.hints.length).toBeGreaterThan(0); expect(a.explanation.length).toBeGreaterThan(20); expect(Number.isFinite(a.answer)).toBe(true); });
       const explanation = mission.steps.flatMap(s => s.kind === 'explain' ? s.body : []).join(' ');
-      expect(explanation.length).toBeGreaterThan(150);
+      expect(explanation.split(/\s+/).length, `${mission.id} quick explanation`).toBeLessThanOrEqual(32);
+      expect((mission.detailedExplanation ?? []).join(' ').length, `${mission.id} detailed explanation`).toBeGreaterThan(150);
       expect(explanations.has(explanation), mission.id).toBe(false); explanations.add(explanation);
       const simulation = mission.steps.find(s => s.kind === 'simulate');
       expect(simulation).toBeDefined();
@@ -91,7 +92,7 @@ describe('released starter course content', () => {
     expect(course.access).toBe('open');
     expect(catalog().getMission('quantum', 'quantum-light-quanta')).toBe(course.missions[0]);
     expect(course.missions.filter(m => m.kind === 'mission').every(m => m.scienceStatus === 'established')).toBe(true);
-    const text = course.missions.flatMap(m => m.steps.flatMap(s => s.kind === 'explain' ? s.body : [])).join(' ');
+    const text = course.missions.flatMap(m => m.kind === 'mission' ? m.detailedExplanation ?? [] : []).join(' ');
     expect(text).toMatch(/interpretation/i);
   });
   it('labels unconfirmed frontier frameworks as speculative without downgrading expansion evidence', () => {
@@ -99,7 +100,7 @@ describe('released starter course content', () => {
     expect(course.missions[0].scienceStatus).toBe('established');
     const frontier = course.missions[4];
     expect(frontier.scienceStatus).toBe('speculative');
-    const text = frontier.steps.flatMap(s => s.kind === 'explain' ? s.body : []).join(' ');
+    const text = frontier.kind === 'mission' ? (frontier.detailedExplanation ?? []).join(' ') : '';
     for (const framework of ['string theory', 'loop quantum gravity', 'multiverse']) expect(text.toLowerCase()).toContain(framework);
     expect(text).toMatch(/speculative/i);
   });

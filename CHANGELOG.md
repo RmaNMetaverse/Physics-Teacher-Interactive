@@ -1,3 +1,13 @@
+# Changelog
+
+## 2026-09-17 — Mobile interaction and bite-sized lesson polish
+
+- Kept the mobile LiquidGlass navigation synchronized through rapid and inertial scrolling with frame-coalesced updates, visual-viewport tracking, and a guaranteed settled redraw.
+- Enlarged simulation slider touch targets to 44 px, captured active pointers, and suppressed page panning until the gesture ends so parameter changes feel immediate on phones.
+- Made every display equation a keyboard-accessible horizontal viewport so long KaTeX formulas remain complete without widening or clipping the mobile page.
+- Replaced long main-path explanation cards with concise sentence-level bites capped at 32 words while preserving every original paragraph for Deep Dive, including scientific caveats and frontier-status wording.
+- Added focused component, catalog, and Chromium mobile regressions for rapid glass refresh, slider gesture locking, equation containment, and concise-versus-detailed content.
+
 ## 2026-09-17 — Mobile liquid-glass navigation
 
 - Replaced the CSS-only mobile navigation material with the requested `@ybouane/liquidglass` WebGL renderer, with high-refraction blur, chromatic edge detail, specular highlights, and an idle-friendly single-instance lifecycle.

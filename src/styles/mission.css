@@ -872,3 +872,39 @@
   margin-bottom: 16px;
   border: 1px solid var(--line);
 }
+
+/* Long KaTeX expressions remain reachable on narrow screens without widening the page. */
+.equation-container,
+.equation-card,
+.deep-dive-equation-card,
+.math-quick-mode,
+.foundation-content {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.equation-scroll-region {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-block: 8px 12px;
+  overscroll-behavior-inline: contain;
+  scrollbar-width: thin;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-x;
+}
+
+.equation-scroll-region > .katex-display {
+  width: max-content;
+  min-width: 100%;
+  margin: 0;
+  padding-inline: 4px;
+}
+
+.equation-scroll-region:focus-visible {
+  border-radius: var(--radius-sm);
+  outline: 2px solid var(--focus-ring-color, var(--accent));
+  outline-offset: 2px;
+}

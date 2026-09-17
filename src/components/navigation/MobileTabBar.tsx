@@ -104,15 +104,30 @@ export function MobileTabBar({
     let cancelled = false;
     let instance: LiquidGlass | null = null;
     let animationFrame = 0;
+    let settleTimer = 0;
     const previousUserSelect = root.style.userSelect;
     const previousWebkitUserSelect = root.style.getPropertyValue('-webkit-user-select');
 
+    const renderLatestBackground = () => {
+      animationFrame = 0;
+      instance?.markChanged();
+    };
+
     const markBackgroundChanged = () => {
-      if (animationFrame) return;
-      animationFrame = window.requestAnimationFrame(() => {
-        animationFrame = 0;
-        instance?.markChanged();
-      });
+      if (!animationFrame) {
+        animationFrame = window.requestAnimationFrame(renderLatestBackground);
+      }
+      window.clearTimeout(settleTimer);
+      settleTimer = window.setTimeout(() => {
+        if (animationFrame) window.cancelAnimationFrame(animationFrame);
+        animationFrame = window.requestAnimationFrame(renderLatestBackground);
+      }, 96);
+    };
+
+    const markSettledBackground = () => {
+      window.clearTimeout(settleTimer);
+      if (animationFrame) window.cancelAnimationFrame(animationFrame);
+      animationFrame = window.requestAnimationFrame(renderLatestBackground);
     };
 
     const initialize = async () => {
@@ -137,6 +152,8 @@ export function MobileTabBar({
         }
         nav.dataset.liquidGlassRenderer = 'ready';
         window.addEventListener('scroll', markBackgroundChanged, { passive: true });
+        window.addEventListener('scrollend', markSettledBackground, { passive: true });
+        window.visualViewport?.addEventListener('scroll', markBackgroundChanged, { passive: true });
       } catch {
         // Browsers without the required canvas APIs retain the CSS material fallback.
         nav.dataset.liquidGlassRenderer = 'fallback';
@@ -148,7 +165,10 @@ export function MobileTabBar({
     return () => {
       cancelled = true;
       if (animationFrame) window.cancelAnimationFrame(animationFrame);
+      window.clearTimeout(settleTimer);
       window.removeEventListener('scroll', markBackgroundChanged);
+      window.removeEventListener('scrollend', markSettledBackground);
+      window.visualViewport?.removeEventListener('scroll', markBackgroundChanged);
       instance?.destroy();
       nav.removeAttribute('data-liquid-glass-renderer');
       root.style.userSelect = previousUserSelect;

@@ -784,3 +784,34 @@ input[type="range"].hardware-slider,
     flex: 1 1 auto;
   }
 }
+/* Mobile range gestures stay attached to the simulation instead of panning the page. */
+.hardware-slider,
+input[type="range"].hardware-slider,
+.parameters input[type="range"] {
+  height: 44px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  touch-action: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.hardware-slider::-webkit-slider-runnable-track,
+.parameters input[type="range"]::-webkit-slider-runnable-track {
+  height: 6px;
+  border: 1px solid var(--line-subtle, rgba(255, 255, 255, 0.08));
+  border-radius: 9999px;
+  background: var(--sunken, #060910);
+}
+
+.hardware-slider::-webkit-slider-thumb,
+.parameters input[type="range"]::-webkit-slider-thumb {
+  margin-top: -8px;
+}
+
+html.is-adjusting-simulation-parameter,
+html.is-adjusting-simulation-parameter body {
+  overscroll-behavior: none;
+  touch-action: none;
+}

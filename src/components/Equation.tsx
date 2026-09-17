@@ -9,9 +9,10 @@ export function Equation({ value = '', inline = false, label }: { value: string;
   });
   return (
     <div
-      className={inline ? 'equation-inline' : 'equation-display'}
+      className={inline ? 'equation-inline' : 'equation-display equation-scroll-region'}
       role="math"
       aria-label={label ?? value}
+      tabIndex={inline ? undefined : 0}
       dangerouslySetInnerHTML={{ __html: html }}
     />
   );

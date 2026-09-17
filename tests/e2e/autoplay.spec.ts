@@ -25,8 +25,7 @@ test('simulation starts itself and parameter changes keep it running', async ({ 
   await slider.focus();
   await page.keyboard.press('ArrowRight');
   await expect(page.getByRole('button', { name: 'Pause' })).toBeVisible();
-  await expect.poll(async () => Number(await time.textContent())).toBeGreaterThan(0);
-  expect(Number(await time.textContent())).not.toBe(before);
+  await expect.poll(async () => Number(await time.textContent())).not.toBe(before);
 
   await page.getByRole('button', { name: 'Pause' }).click();
   const paused = await time.textContent();

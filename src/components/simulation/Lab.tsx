@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
+import { lazy, Suspense, useEffect, useMemo, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react';
 import {
   Box,
   ChartNoAxesCombined,
@@ -79,6 +79,8 @@ const oscillationModes = ['Spring oscillator', 'Pendulum'];
 const electronicsModes = ['Resistor loop', 'Series pair', 'Parallel branches', 'LED loop'];
 const microcontrollerModes = ['Blink', 'Button input', 'PWM dimming', 'Analog sensor'];
 
+const preventTouchScroll = (event: TouchEvent) => event.preventDefault();
+
 export function Lab({
   modelId,
   lesson,
@@ -127,6 +129,7 @@ export function Lab({
   const [reducedModeActive, setReducedModeActive] = useState(false);
 
   const container = useRef<HTMLDivElement>(null);
+  const activeSliderPointer = useRef<number | null>(null);
   const trajectory = useMemo(() => sampleTrajectory(id, parameters), [id, parameters]);
   const state = useMemo(() => definition.evaluate(parameters, time), [definition, parameters, time]);
   const duration = trajectory.duration || definition.duration;
@@ -169,6 +172,29 @@ export function Lab({
     setParameters(p => sanitizeModelParameters(id, { ...p, [key]: value }));
     setTime(0);
   }
+
+  function beginParameterGesture(event: ReactPointerEvent<HTMLInputElement>) {
+    activeSliderPointer.current = event.pointerId;
+    document.documentElement.classList.add('is-adjusting-simulation-parameter');
+    document.addEventListener('touchmove', preventTouchScroll, { passive: false });
+    event.currentTarget.setPointerCapture?.(event.pointerId);
+  }
+
+  function endParameterGesture(event?: ReactPointerEvent<HTMLInputElement>) {
+    const target = event?.currentTarget;
+    const pointerId = event?.pointerId ?? activeSliderPointer.current;
+    if (target && pointerId !== null && target.hasPointerCapture?.(pointerId)) {
+      target.releasePointerCapture(pointerId);
+    }
+    activeSliderPointer.current = null;
+    document.documentElement.classList.remove('is-adjusting-simulation-parameter');
+    document.removeEventListener('touchmove', preventTouchScroll);
+  }
+
+  useEffect(() => () => {
+    document.documentElement.classList.remove('is-adjusting-simulation-parameter');
+    document.removeEventListener('touchmove', preventTouchScroll);
+  }, []);
 
   function play() {
     if (playing) {
@@ -259,6 +285,10 @@ export function Lab({
               step={p.step}
               value={value}
               onChange={e => update(p.key, Number(e.target.value))}
+              onPointerDown={beginParameterGesture}
+              onPointerUp={endParameterGesture}
+              onPointerCancel={endParameterGesture}
+              onLostPointerCapture={endParameterGesture}
               onKeyDown={e => {
                 if (e.key === 'ArrowRight' || e.key === 'ArrowUp') {
                   e.preventDefault();

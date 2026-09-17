@@ -27,7 +27,7 @@ interface MissionBase {
   requiredMath: string[]; modelId?: ModelId; scienceStatus: ScienceStatus; steps: MissionStep[]; sources: SourceReference[]; limitations: string[];
 }
 export interface NormalMissionDefinition extends MissionBase {
-  kind: 'mission'; equation: string; symbols: string; workedExample: { question: string; steps: string[]; answer: string }; reviewedAt: string; checkpoint?: never;
+  kind: 'mission'; equation: string; symbols: string; workedExample: { question: string; steps: string[]; answer: string }; reviewedAt: string; detailedExplanation?: string[]; checkpoint?: never;
 }
 export interface CheckpointMissionDefinition extends MissionBase {
   kind: 'checkpoint'; checkpoint: CheckpointRules;

@@ -48,7 +48,7 @@ describe('Foundations mission content', () => {
     }
   });
 
-  it('adapts every legacy lesson into an instructional 60-XP mission without losing authored content', () => {
+  it('adapts every legacy lesson into a bite-sized 60-XP mission without losing deep-dive content', () => {
     expect(() => createCourseCatalog([foundationCourse])).not.toThrow();
     expect(foundationCourse.id).toBe('foundations');
     expect(foundationCourse.missions).toHaveLength(24);
@@ -64,7 +64,9 @@ describe('Foundations mission content', () => {
       expect(mission.sources, legacy.id).toEqual(legacy.references);
       expect(mission.limitations, legacy.id).toEqual(legacy.assumptions);
       expect(mission.steps.some(step => step.kind === 'simulate' && step.modelId === legacy.family && step.preset === legacy.preset), legacy.id).toBe(true);
-      expect(mission.steps.find(step => step.kind === 'explain' && step.body === legacy.explanation), legacy.id).toBeDefined();
+      const quickExplanation = mission.steps.find(step => step.kind === 'explain')?.body.join(' ') ?? '';
+      expect(quickExplanation.split(/\s+/).length, legacy.id).toBeLessThanOrEqual(32);
+      expect(mission.detailedExplanation, legacy.id).toEqual(legacy.explanation);
       expect(mission.steps.flatMap(step => step.kind === 'predict' || step.kind === 'check' ? [step.assessment] : []), legacy.id).toEqual(legacy.assessments);
       const mathSteps = mission.steps.filter(step => step.kind === 'math');
       expect(mathSteps.map(step => step.id.replace(`${legacy.id}-required-`, '')), legacy.id).toEqual(legacy.math);
