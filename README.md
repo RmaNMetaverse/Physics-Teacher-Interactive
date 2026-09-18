@@ -9,6 +9,8 @@
 ![Supabase](https://img.shields.io/badge/Supabase-cloud%20sync-3FCF8E?logo=supabase&logoColor=white)
 ![Playwright](https://img.shields.io/badge/Playwright-E2E-2EAD33?logo=playwright&logoColor=white)
 
+try it: https://rmanmetaverse.github.io/Physics-Teacher-Interactive/
+
 Physics Teacher Interactive is an interactive physics teacher inspired by **Brilliant** and **Duolingo**—but built for physics.
 
 It teaches through short, guided lessons instead of long textbook chapters. You make predictions, run simulations, work through examples, and explain what happened. When a lesson needs algebra, vectors, trigonometry, or another prerequisite, the app teaches that background math as part of the lesson.
