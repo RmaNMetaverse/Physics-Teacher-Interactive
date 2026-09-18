@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-09-18 — Interactive 2D physics overhaul and definitive mobile fixes
+
+- Made polished, continuously animated 2D simulations the default throughout the physics catalog, with specialized visual systems for trajectories, waves, gases, fields, probability distributions, optics, matter, and space.
+- Kept optional 3D views only where spatial depth materially supports learning: orbital gravity, spatial electromagnetic fields, atomic structure, condensed-matter structure, and astrophysics.
+- Reused the existing pure SI models for every view, so live readouts, graphs, assessments, parameter controls, and 2D/3D visuals remain synchronized without duplicating scientific calculations.
+- Restored smooth continuous mobile range dragging by removing the document-wide touch cancellation and manual pointer capture that interfered with native range controls; the slider itself still prevents page panning during an active gesture.
+- Removed the LiquidGlass compositor's hard-coded white scene fill. Refracted gaps now use the computed app, body, or page theme background, and the dependency correction is automatically reapplied after installs with `patch-package`.
+- Added full model-family renderer tests, spatial-render policy tests, a genuine Chrome touch-drag regression, a dark-theme LiquidGlass pixel regression after rapid scrolling, and updated cross-course browser coverage for the 2D-first interface.
+
 ## 2026-09-17 — Bubbly Liquid Glass tab switch
 
 - Replaced the separate active-tab fills with one persistent Liquid Glass selection lens shared by Explore, Learn and Progress on desktop and mobile.
@@ -16,6 +25,7 @@
 - Retuned the mobile LiquidGlass shader to preserve narrow saturated course accents instead of spreading them into oversized white bands, while increasing chromatic aberration at the refracted edge.
 - Made the pre-render fallback fully opaque so the mobile dock does not briefly sample scrolling content before the WebGL canvas is ready.
 - Kept the dock fixed after the renderer initializes by removing a stale positioning rule left behind by the retired CSS overlay treatment.
+
 
 ## 2026-09-17 — Mobile interaction and bite-sized lesson polish
 

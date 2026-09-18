@@ -1,7 +1,8 @@
-import { lazy, Suspense, useEffect, useMemo, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react';
+import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import {
   Box,
   ChartNoAxesCombined,
+  Sparkles,
   Pause,
   Play,
   RotateCcw,
@@ -20,6 +21,8 @@ import { formatNumber as fmt } from '../../lib/format';
 import { GraphView } from './GraphView';
 import { SimulationBoundary } from './SimulationBoundary';
 import { ElectronicsWorkbench } from './ElectronicsWorkbench';
+import { Physics2D } from './Physics2D';
+import { supportsSpatial3D } from './render-policy';
 
 const Scene = lazy(() => import('./Scene'));
 
@@ -79,7 +82,6 @@ const oscillationModes = ['Spring oscillator', 'Pendulum'];
 const electronicsModes = ['Resistor loop', 'Series pair', 'Parallel branches', 'LED loop'];
 const microcontrollerModes = ['Blink', 'Button input', 'PWM dimming', 'Analog sensor'];
 
-const preventTouchScroll = (event: TouchEvent) => event.preventDefault();
 
 export function Lab({
   modelId,
@@ -124,12 +126,11 @@ export function Lab({
     };
   }, []);
   const [speed, setSpeed] = useState(1);
-  const [view, setView] = useState<'3d' | 'graph'>('3d');
+  const [view, setView] = useState<'2d' | '3d' | 'graph'>('2d');
   const [camera, setCamera] = useState(0);
   const [reducedModeActive, setReducedModeActive] = useState(false);
 
   const container = useRef<HTMLDivElement>(null);
-  const activeSliderPointer = useRef<number | null>(null);
   const trajectory = useMemo(() => sampleTrajectory(id, parameters), [id, parameters]);
   const state = useMemo(() => definition.evaluate(parameters, time), [definition, parameters, time]);
   const duration = trajectory.duration || definition.duration;
@@ -173,27 +174,16 @@ export function Lab({
     setTime(0);
   }
 
-  function beginParameterGesture(event: ReactPointerEvent<HTMLInputElement>) {
-    activeSliderPointer.current = event.pointerId;
+  function beginParameterGesture() {
     document.documentElement.classList.add('is-adjusting-simulation-parameter');
-    document.addEventListener('touchmove', preventTouchScroll, { passive: false });
-    event.currentTarget.setPointerCapture?.(event.pointerId);
   }
 
-  function endParameterGesture(event?: ReactPointerEvent<HTMLInputElement>) {
-    const target = event?.currentTarget;
-    const pointerId = event?.pointerId ?? activeSliderPointer.current;
-    if (target && pointerId !== null && target.hasPointerCapture?.(pointerId)) {
-      target.releasePointerCapture(pointerId);
-    }
-    activeSliderPointer.current = null;
+  function endParameterGesture() {
     document.documentElement.classList.remove('is-adjusting-simulation-parameter');
-    document.removeEventListener('touchmove', preventTouchScroll);
   }
 
   useEffect(() => () => {
     document.documentElement.classList.remove('is-adjusting-simulation-parameter');
-    document.removeEventListener('touchmove', preventTouchScroll);
   }, []);
 
   function play() {
@@ -288,7 +278,6 @@ export function Lab({
               onPointerDown={beginParameterGesture}
               onPointerUp={endParameterGesture}
               onPointerCancel={endParameterGesture}
-              onLostPointerCapture={endParameterGesture}
               onKeyDown={e => {
                 if (e.key === 'ArrowRight' || e.key === 'ArrowUp') {
                   e.preventDefault();
@@ -318,24 +307,17 @@ export function Lab({
           Interactive laboratory
         </div>
         <div className="segmented">
-          <button
-            type="button"
-            className={view === '3d' && !reducedModeActive ? 'active' : ''}
-            aria-pressed={view === '3d' && !reducedModeActive}
-            onClick={() => {
-              setReducedModeActive(false);
-              setView('3d');
-            }}
-          >
-            <Box size={12} />
-            {id === 'circuits' || id === 'microcontroller' ? 'Workbench' : '3D scene'}
+          <button type="button" className={view === '2d' ? 'active' : ''} aria-pressed={view === '2d'} onClick={() => setView('2d')}>
+            <Sparkles size={12} />
+            {id === 'circuits' || id === 'microcontroller' ? 'Workbench' : 'Live 2D'}
           </button>
-          <button
-            type="button"
-            className={view === 'graph' ? 'active' : ''}
-            aria-pressed={view === 'graph'}
-            onClick={() => setView('graph')}
-          >
+          {supportsSpatial3D(id) && (
+            <button type="button" className={view === '3d' && !reducedModeActive ? 'active' : ''} aria-pressed={view === '3d' && !reducedModeActive} onClick={() => { setReducedModeActive(false); setView('3d'); }}>
+              <Box size={12} />
+              Spatial 3D
+            </button>
+          )}
+          <button type="button" className={view === 'graph' ? 'active' : ''} aria-pressed={view === 'graph'} onClick={() => setView('graph')}>
             <ChartNoAxesCombined size={12} />
             Graph & data
           </button>
@@ -344,9 +326,11 @@ export function Lab({
 
       <div className="lab-content">
         <div className="experiment-viewport lab-canvas-frame">
-          {(id === 'circuits' || id === 'microcontroller') && view === '3d' ? (
-            <ElectronicsWorkbench modelId={id} parameters={parameters} state={state} onChange={update}/>
-          ) : view === '3d' && !reducedModeActive ? (
+          {view === '2d' ? (
+            id === 'circuits' || id === 'microcontroller'
+              ? <ElectronicsWorkbench modelId={id} parameters={parameters} state={state} onChange={update}/>
+              : <Physics2D modelId={id} parameters={parameters} state={state} trajectory={trajectory}/>
+          ) : view === '3d' && supportsSpatial3D(id) && !reducedModeActive ? (
             <>
               <SimulationBoundary
                 key={id + ':' + camera}

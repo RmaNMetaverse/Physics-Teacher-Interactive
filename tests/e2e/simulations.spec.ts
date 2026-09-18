@@ -54,13 +54,13 @@ test.describe('Mission simulations across the original physics course set', () =
       // Verify simulate step header and prompt
       await expect(page.getByText('Interactive simulation')).toBeVisible();
       await expect(page.getByText('Interactive laboratory')).toBeVisible();
-      const canvas = page.locator('.scene-canvas canvas');
-      await expect(canvas).toBeVisible();
-      await expect.poll(async () => Number(await canvas.getAttribute('data-draw-calls'))).toBeGreaterThan(5);
-      expect(Number(await canvas.getAttribute('data-draw-calls'))).toBeLessThan(100);
-      expect(Number(await canvas.getAttribute('data-triangles'))).toBeLessThan(100000);
+      const live2d = page.getByTestId('physics-2d');
+      await expect(live2d).toBeVisible();
+      await expect(page.getByRole('button', { name: /Live 2D/i })).toHaveAttribute('aria-pressed', 'true');
       await page.setViewportSize({ width: 390, height: 844 });
-      await expect(canvas).toBeVisible();
+      await expect(live2d).toBeVisible();
+      const markup = await live2d.innerHTML();
+      expect(markup).not.toMatch(/NaN|Infinity/);
       await expect(page.locator('.hud-play-btn')).toHaveAttribute('aria-label', 'Pause');
       if (!['vectors', 'measurement'].includes(modelId)) await expect(page.getByTestId('simulation-time')).not.toHaveText('0');
       await page.locator('.experiment-viewport').screenshot({ path: 'test-results/scene-' + modelId + '-mobile.png' });
@@ -98,7 +98,7 @@ test.describe('Mission simulations across the original physics course set', () =
     await page.addInitScript(() => {
       (window as unknown as { __FORCE_SIMULATION_ERROR__?: boolean }).__FORCE_SIMULATION_ERROR__ = true;
       localStorage.setItem(
-        'physics-mission-session-foundations-measurement-basics',
+        'physics-mission-session-foundations-orbits',
         JSON.stringify({
           currentStepIndex: 2,
           answers: {},
@@ -110,7 +110,8 @@ test.describe('Mission simulations across the original physics course set', () =
       );
     });
 
-    await page.goto('/#/mission/foundations/measurement-basics');
+    await page.goto('/#/mission/foundations/orbits');
+    await page.getByRole('button', { name: /Spatial 3D/i }).click();
 
     // 1. Recovery copy is visible
     await expect(page.getByText(/3D rendering is unavailable/i)).toBeVisible();
@@ -120,8 +121,8 @@ test.describe('Mission simulations across the original physics course set', () =
 
     // 3. Controls are visible
     await expect(page.getByText('Experiment controls')).toBeVisible();
-    const lengthSlider = page.getByLabel('Length', { exact: true });
-    await expect(lengthSlider).toBeVisible();
+    const radiusSlider = page.getByLabel('Orbital radius', { exact: true });
+    await expect(radiusSlider).toBeVisible();
 
     // 4. Numerical observations (telemetry) are visible
     await expect(page.locator('.telemetry')).toBeVisible();
@@ -131,7 +132,7 @@ test.describe('Mission simulations across the original physics course set', () =
     await expect(page.locator('.graph-view svg')).toBeVisible();
 
     // 6. Keyboard interaction with slider
-    await lengthSlider.focus();
+    await radiusSlider.focus();
     await page.keyboard.press('ArrowRight');
 
     // 7. Complete observation
@@ -152,9 +153,10 @@ test('caps high-DPI phone rendering and keeps the scene inside a 320px viewport'
     }));
   });
   await page.goto('/#/mission/quantum/quantum-light-quanta');
-  const canvas = page.locator('.scene-canvas canvas');
-  await expect.poll(async () => Number(await canvas.getAttribute('data-draw-calls'))).toBeGreaterThan(5);
-  expect(Number(await canvas.getAttribute('data-pixel-ratio'))).toBeLessThanOrEqual(1);
+  const live2d = page.getByTestId('physics-2d');
+  await expect(live2d).toBeVisible();
+  const box = await live2d.boundingBox();
+  expect(box?.width).toBeLessThanOrEqual(320);
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(320);
   await context.close();
 });

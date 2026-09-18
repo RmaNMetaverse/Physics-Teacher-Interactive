@@ -141,7 +141,7 @@ test('forces 3D rendering failure to activate reduced visual mode with active co
   await page.addInitScript(() => {
     (window as unknown as { __FORCE_SIMULATION_ERROR__?: boolean }).__FORCE_SIMULATION_ERROR__ = true;
     localStorage.setItem(
-      'physics-mission-session-foundations-measurement-basics',
+      'physics-mission-session-foundations-orbits',
       JSON.stringify({
         currentStepIndex: 2,
         answers: {},
@@ -153,7 +153,8 @@ test('forces 3D rendering failure to activate reduced visual mode with active co
     );
   });
 
-  await page.goto('/#/mission/foundations/measurement-basics');
+  await page.goto('/#/mission/foundations/orbits');
+  await page.getByRole('button', { name: /Spatial 3D/i }).click();
 
   // Recovery banner is displayed
   await expect(page.getByText(/3D rendering is unavailable/i)).toBeVisible();

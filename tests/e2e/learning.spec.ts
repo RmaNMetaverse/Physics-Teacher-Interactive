@@ -42,9 +42,9 @@ test('mission simulation offers interactive controls, graph data, and accessible
   await page.getByRole('button', { name: 'Graph & data' }).click();
   await expect(page.getByRole('table', { name: 'Live measurements' })).toBeVisible();
 
-  // Switch back to 3D scene
-  await page.getByRole('button', { name: '3D scene' }).click();
-  await expect(page.locator('.scene-canvas, canvas').first()).toBeVisible();
+  // Switch back to the default live 2D model
+  await page.getByRole('button', { name: 'Live 2D' }).click();
+  await expect(page.getByTestId('physics-2d')).toBeVisible();
 });
 
 test('foundation math mode and deep dive reference treatment', async ({ page }) => {

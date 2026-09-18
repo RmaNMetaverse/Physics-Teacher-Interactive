@@ -19,6 +19,7 @@ test('mobile simulation sliders capture touch gestures without shrinking their h
   await openQuantumStep(page, 2);
   const slider = page.locator('.hardware-slider').first();
   await expect(slider).toBeVisible();
+  await slider.scrollIntoViewIfNeeded();
 
   const metrics = await slider.evaluate((element) => {
     const style = getComputedStyle(element);
@@ -27,10 +28,32 @@ test('mobile simulation sliders capture touch gestures without shrinking their h
   expect(metrics.height).toBeGreaterThanOrEqual(44);
   expect(metrics.touchAction).toBe('none');
 
-  await slider.dispatchEvent('pointerdown', { pointerId: 11, pointerType: 'touch', isPrimary: true });
+  const before = Number(await slider.inputValue());
+  const box = await slider.boundingBox();
+  if (!box) throw new Error('Slider has no layout box');
+  await slider.evaluate(element => {
+    (window as Window & { __sliderInputCount?: number }).__sliderInputCount = 0;
+    element.addEventListener('input', () => {
+      const target = window as Window & { __sliderInputCount?: number };
+      target.__sliderInputCount = (target.__sliderInputCount ?? 0) + 1;
+    });
+  });
+  const client = await page.context().newCDPSession(page);
+  await client.send('Emulation.setTouchEmulationEnabled', { enabled: true, maxTouchPoints: 1 });
+  const y = box.y + box.height / 2;
+  const startX = box.x + 12;
+  await client.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x: startX, y, id: 1 }] });
   await expect(page.locator('html')).toHaveClass(/is-adjusting-simulation-parameter/);
-  await slider.dispatchEvent('pointerup', { pointerId: 11, pointerType: 'touch', isPrimary: true });
+  for (let step = 1; step <= 12; step += 1) {
+    await client.send('Input.dispatchTouchEvent', {
+      type: 'touchMove',
+      touchPoints: [{ x: startX + (box.width - 24) * step / 12, y, id: 1 }],
+    });
+  }
+  await client.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
   await expect(page.locator('html')).not.toHaveClass(/is-adjusting-simulation-parameter/);
+  expect(Number(await slider.inputValue())).not.toBe(before);
+  expect(await page.evaluate(() => (window as Window & { __sliderInputCount?: number }).__sliderInputCount ?? 0)).toBeGreaterThan(1);
 });
 
 test('display equations stay inside the mobile page and provide their own horizontal viewport', async ({ page }) => {

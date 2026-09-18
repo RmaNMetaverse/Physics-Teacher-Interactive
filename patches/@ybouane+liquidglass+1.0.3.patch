@@ -1,5 +1,22 @@
+diff --git a/node_modules/@ybouane/liquidglass/dist/index.js b/node_modules/@ybouane/liquidglass/dist/index.js
+index 10897f2..44bc90e 100644
+--- a/node_modules/@ybouane/liquidglass/dist/index.js
++++ b/node_modules/@ybouane/liquidglass/dist/index.js
+@@ -2596,7 +2596,11 @@ var LiquidGlass = class _LiquidGlass {
+     } else {
+       this._sceneCtx.clearRect(0, 0, width, height);
+     }
+-    this._sceneCtx.fillStyle = "#ffffff";
++    const rootColor = getComputedStyle(this.root).backgroundColor;
++    const bodyColor = document.body ? getComputedStyle(document.body).backgroundColor : "";
++    const pageColor = getComputedStyle(document.documentElement).backgroundColor;
++    const usable = (color) => Boolean(color) && color !== "transparent" && color !== "rgba(0, 0, 0, 0)";
++    this._sceneCtx.fillStyle = [rootColor, bodyColor, pageColor].find(usable) || "#07101d";
+     this._sceneCtx.fillRect(0, 0, width, height);
+   }
+   _glassHasDynamicContributors(currentGlass, sampleRect, rootRect, dpr) {
 diff --git a/node_modules/@ybouane/liquidglass/dist/shaders.js b/node_modules/@ybouane/liquidglass/dist/shaders.js
-index 3f559f1..dda77c7 100644
+index 3f559f1..65d76a4 100644
 --- a/node_modules/@ybouane/liquidglass/dist/shaders.js
 +++ b/node_modules/@ybouane/liquidglass/dist/shaders.js
 @@ -206,7 +206,10 @@ void main() {
@@ -13,6 +30,27 @@ index 3f559f1..dda77c7 100644
 +	float caS = u_chroma * 18.0 * edge * edge * 2.0;
  	vec2 caD = N.xy * caS * pxToUV;
  	vec2 base = v_screenUV + refr + micro;
+ 
+diff --git a/node_modules/@ybouane/liquidglass/src/LiquidGlass.ts b/node_modules/@ybouane/liquidglass/src/LiquidGlass.ts
+index eb224d2..36300cc 100644
+--- a/node_modules/@ybouane/liquidglass/src/LiquidGlass.ts
++++ b/node_modules/@ybouane/liquidglass/src/LiquidGlass.ts
+@@ -1147,7 +1147,15 @@ export class LiquidGlass {
+ 		} else {
+ 			this._sceneCtx.clearRect(0, 0, width, height);
+ 		}
+-		this._sceneCtx.fillStyle = '#ffffff';
++		// Transparent app surfaces must inherit the real page color. A hard-coded
++		// white backing leaks through refracted gaps as opaque white flashes.
++		const rootColor = getComputedStyle(this.root).backgroundColor;
++		const bodyColor = document.body ? getComputedStyle(document.body).backgroundColor : '';
++		const pageColor = getComputedStyle(document.documentElement).backgroundColor;
++		const usable = (color: string): boolean => Boolean(color)
++			&& color !== 'transparent'
++			&& color !== 'rgba(0, 0, 0, 0)';
++		this._sceneCtx.fillStyle = [rootColor, bodyColor, pageColor].find(usable) || '#07101d';
+ 		this._sceneCtx.fillRect(0, 0, width, height);
+ 	}
  
 diff --git a/node_modules/@ybouane/liquidglass/src/shaders.ts b/node_modules/@ybouane/liquidglass/src/shaders.ts
 index daa399a..275da29 100644

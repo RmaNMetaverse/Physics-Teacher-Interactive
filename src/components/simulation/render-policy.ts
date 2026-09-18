@@ -1,3 +1,14 @@
+import type { ModelId } from '../../types';
+
+const SPATIAL_3D_MODELS = new Set<ModelId>([
+  'gravity', 'electromagnetism', 'atomic', 'condensed', 'astrophysics',
+]);
+
+/** 2D is the teaching default; 3D is offered only when depth carries meaning. */
+export function supportsSpatial3D(modelId: ModelId): boolean {
+  return SPATIAL_3D_MODELS.has(modelId);
+}
+
 /** Conservative initial budget; no device identification or GPU fingerprinting. */
 export function initialPixelRatio(width: number, cores: number, deviceRatio: number): number {
   return Math.min(deviceRatio, width < 768 || cores <= 4 ? 1 : 1.5);

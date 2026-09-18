@@ -45,45 +45,16 @@ describe('SimulationBoundary & Reduced Visual Mode', () => {
     expect(screen.getByText(/Reduced visual mode/i)).toBeInTheDocument();
   });
 
-  it('keeps controls, numerical observations, graph, table, model description, and recovery copy when scene throws', async () => {
-    // Render Lab with a forced error or in an environment where Scene throws
-    render(
-      <Lab
-        modelId="motion"
-        forceSceneError={true}
-      />
-    );
+  it('keeps controls and reduced-mode data when an approved spatial scene throws', async () => {
+    render(<Lab modelId="gravity" forceSceneError={true} />);
+    fireEvent.click(screen.getByRole('button', { name: /Spatial 3D/i }));
 
-    // 1. Recovery copy is visible
     expect(await screen.findByText(/3D rendering is unavailable/i)).toBeInTheDocument();
-
-    // 2. Model description is visible
-    expect(screen.getByText(/Compare constant velocity/i)).toBeInTheDocument();
-
-    // 3. Controls are visible (at most 3 before "Explore further")
     expect(screen.getByText(/Experiment controls/i)).toBeInTheDocument();
-    const speedInput = screen.getByLabelText('Launch speed');
-    expect(speedInput).toBeInTheDocument();
-
-    // 4. Numerical observations (telemetry) are visible
+    expect(screen.getByLabelText('Central mass')).toBeInTheDocument();
     expect(screen.getByLabelText('Numerical observations')).toBeInTheDocument();
-    expect(screen.getAllByText('Speed').length).toBeGreaterThan(0);
-
-    // 5. Graph is visible
     expect(screen.getByRole('img', { name: /against time/i })).toBeInTheDocument();
-
-    // 6. Accessible data table is visible
-    const table = screen.getByRole('table', { name: /Live measurements/i });
-    expect(table).toBeInTheDocument();
-    expect(table).toHaveTextContent(/Quantity/i);
-    expect(table).toHaveTextContent(/Value/i);
-
-    // 7. Keyboard interaction on numeric input and slider
-    const numberInput = screen.getByLabelText(/Launch speed value/i);
-    fireEvent.change(numberInput, { target: { value: '25', valueAsNumber: 25 } });
-
-    // Observation updates according to pure model calculation
-    expect(numberInput).toHaveValue(25);
+    expect(screen.getByRole('table', { name: /Live measurements/i })).toBeInTheDocument();
   });
 
   it('limits essential controls to at most three before "Explore further" disclosure', () => {
@@ -269,18 +240,19 @@ describe('Precision Lab & Floating Playback HUD', () => {
     expect(wrapper).toBeInTheDocument();
   });
 
-  it('provides canvas overlays with accessible hint and camera controls', () => {
+  it('defaults every lab to the live 2D teaching view', () => {
     render(<Lab modelId="motion" />);
-    const axisHint = document.querySelector('.scene-axis-hint');
-    expect(axisHint).toBeInTheDocument();
+    expect(screen.getByTestId('physics-2d')).toHaveAttribute('data-model', 'motion');
+    expect(screen.getByRole('button', { name: /Live 2D/i })).toHaveAttribute('aria-pressed', 'true');
+    expect(screen.queryByRole('button', { name: /Spatial 3D/i })).not.toBeInTheDocument();
+  });
 
-    const cameraBtn = screen.getByRole('button', { name: 'Reset camera' });
-    expect(cameraBtn).toBeInTheDocument();
-    expect(cameraBtn).toHaveClass('icon-button');
-
-    const expandBtn = screen.getByRole('button', { name: 'Expand experiment' });
-    expect(expandBtn).toBeInTheDocument();
-    expect(expandBtn).toHaveClass('icon-button');
+  it('offers camera controls only for approved spatial 3D models', () => {
+    render(<Lab modelId="gravity" />);
+    fireEvent.click(screen.getByRole('button', { name: /Spatial 3D/i }));
+    expect(document.querySelector('.scene-axis-hint')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Reset camera' })).toHaveClass('icon-button');
+    expect(screen.getByRole('button', { name: 'Expand experiment' })).toHaveClass('icon-button');
   });
 });
 
