@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-09-18 — Retain only GitHub Pages deployment
+
+- Removed `vercel.json` and retired Vercel preview and production configuration.
+- Clarified documentation in `docs/DEPLOYMENT.md` and `README.md` to establish GitHub Pages as the single supported static deployment target.
+
 ## 2026-09-18 — Interactive 2D physics overhaul and definitive mobile fixes
 
 - Made polished, continuously animated 2D simulations the default throughout the physics catalog, with specialized visual systems for trajectories, waves, gases, fields, probability distributions, optics, matter, and space.

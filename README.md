@@ -61,7 +61,7 @@ Run the app locally with `npm run dev` to explore the live simulations and respo
 
 Every simulation is designed to remain useful on mobile devices. If a device cannot run WebGL, the app keeps the controls, explanations, graphs, and measurements available in a reduced visual mode.
 
-The app is free and open source. An account is optional: anonymous learners keep their progress in the browser and can export a backup, while signed-in learners sync the same progress through Supabase. The frontend remains a static Vite build suitable for GitHub Pages; Vercel can provide branch previews, and neither deployment requires Docker or a custom application server.
+The app is free and open source. An account is optional: anonymous learners keep their progress in the browser and can export a backup, while signed-in learners sync the same progress through Supabase. The frontend remains a static Vite build hosted on GitHub Pages; it requires no Docker container or custom application server.
 
 ## Run Locally
 
@@ -79,7 +79,7 @@ npm run check          # Typecheck, lint, unit tests, and Vite production build
 npm run test:e2e        # Playwright end-to-end browser journeys
 ```
 
-Cloud accounts require a Supabase project. Copy `.env.example` to `.env.local`, add the project URL and public publishable key, then run the SQL migration in `supabase/migrations`. The [deployment guide](docs/DEPLOYMENT.md) covers GitHub Pages and Vercel setup. Never expose a Supabase secret or service-role key in this frontend.
+Cloud accounts require a Supabase project. Copy `.env.example` to `.env.local`, add the project URL and public publishable key, then run the SQL migration in `supabase/migrations`. The [deployment guide](docs/DEPLOYMENT.md) covers GitHub Pages setup. Never expose a Supabase secret or service-role key in this frontend.
 
 ## Project Guides
 

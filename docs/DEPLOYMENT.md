@@ -1,6 +1,6 @@
 # Deployment
 
-The application builds to static files. GitHub Pages or Vercel can host the frontend, while the optional account system uses hosted Supabase Auth and PostgreSQL. It needs no application server or Docker container.
+The application builds to static files hosted on GitHub Pages via GitHub Actions, while the optional account system uses hosted Supabase Auth and PostgreSQL. It needs no application server, Docker container, or external cloud deployment platform.
 
 ## Supabase account and progress sync
 
@@ -53,7 +53,7 @@ In GitHub, open **Settings → Pages** and set **Source** to **GitHub Actions**.
 
 To enable accounts on GitHub Pages, open **Settings → Environments → github-pages → Environment variables** and add `VITE_SUPABASE_URL` and `VITE_SUPABASE_PUBLISHABLE_KEY`. The build job explicitly uses the `github-pages` environment so those values are available while Vite bundles the browser application. The workflow fails with a clear configuration error instead of silently deploying a local-only build when either value is missing.
 
-GitHub's `github-pages` environment is the only environment used by this workflow. Vercel's Production, Preview, and Development variable scopes are separate Vercel concepts and are only needed if the repository is also deployed through Vercel.
+GitHub's `github-pages` environment is the only environment used by this repository.
 
 The workflow uses one `pages` concurrency group and does not cancel an active deployment. A newer queued run replaces an older queued run while preserving the deployment already in progress.
 
@@ -62,14 +62,6 @@ The workflow uses one `pages` concurrency group and does not cancel an active de
 Vite's asset base is relative (`./`), so built scripts, styles, and assets resolve from either a root such as `https://example.org/` or a repository path such as `https://rmanmetaverse.github.io/Physics-Teacher-Interactive/`. Navigation uses hash routes (`#/curriculum`, for example), so GitHub Pages always serves `index.html`; no rewrite or `404.html` fallback is required.
 
 Do not replace hash routing with history routing unless the hosting plan also provides a tested fallback for direct URL requests. Do not hard-code `/src`, `/assets`, or the repository name into runtime asset URLs.
-
-## Vercel deployment and branch previews
-
-Import the GitHub repository in Vercel and keep the detected Vite settings. The committed `vercel.json` selects `npm run build` and the `dist` output folder. Add the two public Supabase environment variables in **Project Settings → Environment Variables** for Production, Preview, and Development.
-
-Vercel deploys the selected production branch to the production domain. Every pushed feature branch and pull request receives a separate preview URL, so this account branch can be tested before it replaces the static release. No Vercel Function is required because Supabase handles authentication and data access.
-
-Vercel is optional. GitHub Pages plus Supabase supports the same account and sync behavior and is the smallest production setup for this application.
 
 ## Local release verification
 
