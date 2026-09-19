@@ -6,6 +6,7 @@
 - Created `FormattedText` component with inline and block KaTeX parsing (`$...$`, `\(...\)`, `$$...$$`, `\[...\]`) so prompts, options, hints, step explanations, and feedback render LaTeX math formulas cleanly throughout the application.
 - Made missions and courses auto-complete automatically upon reaching the final recap step, awarding XP/stars and triggering celebration rewards without requiring a manual "Finish Mission" button.
 - Removed the manual "Finish mission" footer button from the mission player and updated mission completion tests.
+- Automatically cleared quiz input form fields when transitioning between questions or after completing steps by keying step view components on `step.id` and adding synchronization effects.
 
 ## 2026-09-18 — Retain only GitHub Pages deployment
 

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { HelpCircle, CheckCircle2, Lightbulb, ArrowRight } from 'lucide-react';
 import type { MissionAction, MissionSession } from '../../learning/mission-engine';
 import type { MissionStep } from '../../learning/types';
@@ -27,6 +27,17 @@ export function AssessmentStep({ step, state, dispatch, onAnswered }: Assessment
   const label = isPredict ? 'Prediction' : 'Concept check';
 
   const checkResult = currentAnswer ? checkAnswer(assessment, currentAnswer.value) : null;
+
+  // Clear/sync form fields whenever step ID or current answer changes
+  useEffect(() => {
+    setSelectedOption(
+      typeof currentAnswer?.value === 'number' && assessment.kind === 'concept' ? currentAnswer.value : null
+    );
+    setTextInput(
+      assessment.kind !== 'concept' && currentAnswer?.value !== undefined ? String(currentAnswer.value) : ''
+    );
+    setHintIndex(state.hintedStepIds.includes(step.id) ? 1 : 0);
+  }, [step.id, currentAnswer, assessment.kind, state.hintedStepIds]);
 
   const handleSubmit = (valueToSubmit?: number | string) => {
     let val: number | string;

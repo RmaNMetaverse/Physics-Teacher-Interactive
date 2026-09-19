@@ -250,10 +250,11 @@ export function MissionPlayer({ course, mission, progress, onProgressChange }: M
 
       {/* Step View Area */}
       <main className="mission-step-view">
-        {currentStep.kind === 'observe' && <ObserveStep step={currentStep} />}
+        {currentStep.kind === 'observe' && <ObserveStep key={currentStep.id} step={currentStep} />}
 
         {(currentStep.kind === 'predict' || currentStep.kind === 'check') && (
           <AssessmentStep
+            key={currentStep.id}
             step={currentStep}
             state={state}
             dispatch={dispatch}
@@ -263,6 +264,7 @@ export function MissionPlayer({ course, mission, progress, onProgressChange }: M
 
         {currentStep.kind === 'simulate' && (
           <SimulationStep
+            key={currentStep.id}
             step={currentStep}
             isCompleted={state.completedSimulationStepIds.includes(currentStep.id)}
             onComplete={() =>
@@ -273,6 +275,7 @@ export function MissionPlayer({ course, mission, progress, onProgressChange }: M
 
         {currentStep.kind === 'math' && (
           <MathStep
+            key={currentStep.id}
             step={currentStep}
             state={state}
             dispatch={dispatch}
@@ -280,10 +283,11 @@ export function MissionPlayer({ course, mission, progress, onProgressChange }: M
           />
         )}
 
-        {currentStep.kind === 'explain' && <ExplainStep step={currentStep} mission={mission} />}
+        {currentStep.kind === 'explain' && <ExplainStep key={currentStep.id} step={currentStep} mission={mission} />}
 
         {currentStep.kind === 'recap' && (
           <RecapStep
+            key={currentStep.id}
             step={currentStep}
             state={state}
             mission={mission}

@@ -77,6 +77,15 @@ export function MathStep({ step, state, dispatch, onAnswered }: MathStepProps) {
 
   const checkResult = currentAnswer ? checkAnswer(checkAssessment, currentAnswer.value) : null;
 
+  // Clear/sync form fields whenever step ID or current answer changes
+  useEffect(() => {
+    setCheckInput(currentAnswer?.value !== undefined ? String(currentAnswer.value) : '');
+    setCheckSelectedOption(
+      typeof currentAnswer?.value === 'number' && checkAssessment.kind === 'concept' ? currentAnswer.value : null
+    );
+    setCheckHints(state.hintedStepIds.includes(step.id) ? 1 : 0);
+  }, [step.id, currentAnswer, checkAssessment.kind, state.hintedStepIds]);
+
   const handleCheckSubmit = () => {
     let val: number | string;
     if (checkAssessment.kind === 'concept') {
