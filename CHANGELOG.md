@@ -7,6 +7,7 @@
 - Made missions and courses auto-complete automatically upon reaching the final recap step, awarding XP/stars and triggering celebration rewards without requiring a manual "Finish Mission" button.
 - Removed the manual "Finish mission" footer button from the mission player and updated mission completion tests.
 - Automatically cleared quiz input form fields when transitioning between questions or after completing steps by keying step view components on `step.id` and adding synchronization effects.
+- Updated Playwright E2E tests (`learning.spec.ts`, `mission.spec.ts`, `release.spec.ts`) to match the primary step navigation button with exact role criteria and verify automatic mission completion at the recap step.
 
 ## 2026-09-18 — Retain only GitHub Pages deployment
 

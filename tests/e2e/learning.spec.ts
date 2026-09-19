@@ -81,7 +81,6 @@ test('foundation math mode and deep dive reference treatment', async ({ page }) 
   await page.getByRole('button', { name: 'Next step', exact: true }).click();
 
   // Step 7: Recap & finish
-  await page.getByRole('button', { name: 'Finish mission' }).click();
   await expect(page.getByText(/3 \/ 3 Stars/i)).toBeVisible();
 
   // Open deep dive

@@ -52,7 +52,6 @@ test('release journey: first visit Explore, open Quantum, complete mission with 
   await page.getByRole('button', { name: 'Next step', exact: true }).click();
 
   // Step 7: Recap & finish
-  await page.getByRole('button', { name: 'Finish mission' }).click();
   await expect(page.getByText(/3 \/ 3 Stars/i)).toBeVisible();
   await expect(page.getByText('+60 XP')).toBeVisible();
 
@@ -75,7 +74,6 @@ test('release journey: first visit Explore, open Quantum, complete mission with 
   await page.getByRole('button', { name: /Increasing frequency/i }).click();
   await page.getByRole('button', { name: 'Check answer' }).click();
   await page.getByRole('button', { name: 'Next step', exact: true }).click(); // check
-  await page.getByRole('button', { name: 'Finish mission' }).click(); // recap
 
   // Replay should show completion without awarding duplicate XP
   await expect(page.getByText(/3 \/ 3 Stars/i)).toBeVisible();

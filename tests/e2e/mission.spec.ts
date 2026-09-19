@@ -63,7 +63,7 @@ test.describe('Mission player and layered math', () => {
     await expect(teachMathBtn).toBeFocused();
 
     // Advance to next step
-    await page.getByRole('button', { name: 'Next step' }).click();
+    await page.getByRole('button', { name: 'Next step', exact: true }).click();
 
     // Step 5: Math Step 2 (math-decimals)
     await page.getByRole('button', { name: /Teach me the math/i }).click();
@@ -71,30 +71,27 @@ test.describe('Mission player and layered math', () => {
     const decimalInput = page.locator('.foundation-check input');
     await decimalInput.fill('0.12');
     await page.locator('.foundation-check button', { hasText: 'Check answer' }).click();
-    await page.getByRole('button', { name: 'Next step' }).click();
+    await page.getByRole('button', { name: 'Next step', exact: true }).click();
 
     // Step 6: Explain
     await expect(page.getByText('Explanation')).toBeVisible();
-    await page.getByRole('button', { name: 'Next step' }).click();
+    await page.getByRole('button', { name: 'Next step', exact: true }).click();
 
     // Step 7: Calculation Check ("Four adjacent 0.75 m sections...") -> answer 3
     const calcInput = page.locator('.numeric-answer input');
     await calcInput.fill('3');
     await page.getByRole('button', { name: 'Check answer' }).click();
-    await page.getByRole('button', { name: 'Next step' }).click();
+    await page.getByRole('button', { name: 'Next step', exact: true }).click();
 
     // Step 8: Experiment Check ("Set length to 4 m...") -> answer 4
     const expInput = page.locator('.numeric-answer input');
     await expInput.fill('4');
     await page.getByRole('button', { name: 'Check answer' }).click();
-    await page.getByRole('button', { name: 'Next step' }).click();
+    await page.getByRole('button', { name: 'Next step', exact: true }).click();
 
     // Step 9: Recap
     await expect(page.getByRole('heading', { name: /Mission complete/i })).toBeVisible();
     await expect(page.getByText('Key takeaways')).toBeVisible();
-
-    // Complete mission
-    await page.getByRole('button', { name: 'Finish mission' }).click();
 
     // Verify rewards
     await expect(page.getByText(/3 \/ 3 Stars/i)).toBeVisible();
@@ -147,7 +144,6 @@ test.describe('Mission player and layered math', () => {
     await page.getByRole('button', { name: 'Next step', exact: true }).click();
 
     // Step 7: Recap
-    await page.getByRole('button', { name: 'Finish mission' }).click();
     await expect(page.getByText(/3 \/ 3 Stars/i)).toBeVisible();
 
     // Reload page to verify persistence without data loss
