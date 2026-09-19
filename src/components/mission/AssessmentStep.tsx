@@ -3,6 +3,7 @@ import { HelpCircle, CheckCircle2, Lightbulb, ArrowRight } from 'lucide-react';
 import type { MissionAction, MissionSession } from '../../learning/mission-engine';
 import type { MissionStep } from '../../learning/types';
 import { checkAnswer } from '../../lib/assessment';
+import { FormattedText } from '../FormattedText';
 
 interface AssessmentStepProps {
   step: Extract<MissionStep, { kind: 'predict' | 'check' }>;
@@ -57,7 +58,9 @@ export function AssessmentStep({ step, state, dispatch, onAnswered }: Assessment
           {isPredict ? <HelpCircle size={14} aria-hidden="true" /> : <CheckCircle2 size={14} aria-hidden="true" />}
           {label}
         </span>
-        <h2>{assessment.prompt}</h2>
+        <h2>
+          <FormattedText text={assessment.prompt} />
+        </h2>
       </header>
 
       <div className="assessment-body">
@@ -74,7 +77,9 @@ export function AssessmentStep({ step, state, dispatch, onAnswered }: Assessment
                   onClick={() => setSelectedOption(index)}
                 >
                   <span className="option-letter">{String.fromCharCode(65 + index)}</span>
-                  <span className="option-text">{option}</span>
+                  <span className="option-text">
+                    <FormattedText text={option} />
+                  </span>
                 </button>
               );
             })}
@@ -129,7 +134,7 @@ export function AssessmentStep({ step, state, dispatch, onAnswered }: Assessment
           <div className="assessment-hints">
             {assessment.hints.slice(0, hintIndex).map((hint, idx) => (
               <p key={idx} className="hint-message">
-                <strong>Hint {idx + 1}:</strong> {hint}
+                <strong>Hint {idx + 1}:</strong> <FormattedText text={hint} />
               </p>
             ))}
           </div>
@@ -142,7 +147,9 @@ export function AssessmentStep({ step, state, dispatch, onAnswered }: Assessment
             aria-live="polite"
           >
             <strong>{checkResult.correct ? "That's right! " : 'Keep exploring. '}</strong>
-            <span>{checkResult.message}</span>
+            <span>
+              <FormattedText text={checkResult.message} />
+            </span>
           </div>
         )}
       </div>

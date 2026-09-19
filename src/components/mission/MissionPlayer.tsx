@@ -1,5 +1,5 @@
 import { useReducer, useEffect, useCallback, useMemo, useRef } from 'react';
-import { ArrowLeft, ArrowRight, Check, X } from 'lucide-react';
+import { ArrowLeft, ArrowRight, X } from 'lucide-react';
 import type { CourseDefinition, MissionDefinition } from '../../learning/types';
 import type { LearnerProgressV2 } from '../../progress/types';
 import { courseCatalog } from '../../learning/catalog';
@@ -77,6 +77,9 @@ export function MissionPlayer({ course, mission, progress, onProgressChange }: M
   const [state, dispatch] = useReducer(missionReducer, initialSession);
   const completedSessionRef = useRef<string | null>(null);
 
+  const currentStep = mission.steps[state.currentStepIndex];
+  const stepCount = mission.steps.length;
+
   // Persist session state outside the reducer
   useEffect(() => {
     const saved: MissionSessionSaved = {
@@ -89,6 +92,13 @@ export function MissionPlayer({ course, mission, progress, onProgressChange }: M
     };
     saveSession(course.id, mission.id, saved);
   }, [course.id, mission.id, state]);
+
+  // Auto-complete mission when arriving at recap step if all requirements are met
+  useEffect(() => {
+    if (currentStep.kind === 'recap' && !state.recapCompleted && state.canAdvance) {
+      dispatch({ type: 'next' });
+    }
+  }, [currentStep.kind, state.recapCompleted, state.canAdvance]);
 
   // Handle mission completion and award XP / stars
   useEffect(() => {
@@ -127,9 +137,6 @@ export function MissionPlayer({ course, mission, progress, onProgressChange }: M
     },
     [progress, course.id, mission.id, onProgressChange]
   );
-
-  const currentStep = mission.steps[state.currentStepIndex];
-  const stepCount = mission.steps.length;
 
   const getStageStatus = (stageKind: string, stageIdx: number): 'completed' | 'active' | 'upcoming' => {
     if (state.isComplete) {
@@ -273,7 +280,7 @@ export function MissionPlayer({ course, mission, progress, onProgressChange }: M
           />
         )}
 
-        {currentStep.kind === 'explain' && <ExplainStep step={currentStep} />}
+        {currentStep.kind === 'explain' && <ExplainStep step={currentStep} mission={mission} />}
 
         {currentStep.kind === 'recap' && (
           <RecapStep
@@ -324,18 +331,6 @@ export function MissionPlayer({ course, mission, progress, onProgressChange }: M
               <ArrowRight size={16} aria-hidden="true" />
             </button>
           </div>
-        )}
-
-        {currentStep.kind === 'recap' && !state.isComplete && (
-          <button
-            type="button"
-            className="primary-button mission-complete-btn"
-            disabled={!state.canAdvance}
-            onClick={() => dispatch({ type: 'next' })}
-          >
-            Finish mission
-            <Check size={16} aria-hidden="true" />
-          </button>
         )}
       </footer>
     </section>

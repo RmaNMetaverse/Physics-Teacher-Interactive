@@ -345,7 +345,6 @@ describe('MathStep component', () => {
   });
 
   it('gating ref prevents multiple onProgressChange calls upon mission completion', async () => {
-    const user = userEvent.setup();
     const course = courseCatalog.getCourse('foundations');
     const mission = courseCatalog.getMission('foundations', 'measurement-basics');
     const progress = createProgressV2(new Date('2026-09-10T12:00:00Z'));
@@ -379,10 +378,8 @@ describe('MathStep component', () => {
       />
     );
 
-    // Finish mission
-    const finishBtn = screen.getByRole('button', { name: /finish mission/i });
-    await user.click(finishBtn);
-
+    // Mission finishes automatically at the recap step
+    expect(screen.queryByRole('button', { name: /finish mission/i })).toBeNull();
     expect(onProgressChange).toHaveBeenCalledTimes(1);
 
     // Simulate parent re-render with updated progress

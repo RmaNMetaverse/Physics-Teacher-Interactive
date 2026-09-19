@@ -6,6 +6,7 @@ import { mathTutorials } from '../../content/math';
 import { checkAnswer } from '../../lib/assessment';
 import { Equation } from '../Equation';
 import { MathWidget } from '../MathWidget';
+import { FormattedText } from '../FormattedText';
 
 interface MathStepProps {
   step: Extract<MissionStep, { kind: 'math' }>;
@@ -123,7 +124,9 @@ export function MathStep({ step, state, dispatch, onAnswered }: MathStepProps) {
           <span className="math-check-badge">Required to advance</span>
         )}
       </div>
-      <p>{checkAssessment.prompt}</p>
+      <p>
+        <FormattedText text={checkAssessment.prompt} />
+      </p>
 
       {checkAssessment.kind === 'concept' && checkAssessment.options && (
         <div className="answer-options" role="group" aria-label={checkAssessment.prompt}>
@@ -138,7 +141,9 @@ export function MathStep({ step, state, dispatch, onAnswered }: MathStepProps) {
                 onClick={() => setCheckSelectedOption(idx)}
               >
                 <span className="option-letter">{String.fromCharCode(65 + idx)}</span>
-                <span className="option-text">{option}</span>
+                <span className="option-text">
+                  <FormattedText text={option} />
+                </span>
               </button>
             );
           })}
@@ -199,7 +204,7 @@ export function MathStep({ step, state, dispatch, onAnswered }: MathStepProps) {
         <div className="assessment-hints">
           {checkAssessment.hints.slice(0, checkHints).map((hint, idx) => (
             <p key={idx} className="hint-message">
-              <strong>Hint {idx + 1}:</strong> {hint}
+              <strong>Hint {idx + 1}:</strong> <FormattedText text={hint} />
             </p>
           ))}
         </div>
@@ -212,7 +217,9 @@ export function MathStep({ step, state, dispatch, onAnswered }: MathStepProps) {
           aria-live="polite"
         >
           <strong>{checkResult.correct ? "That's right! " : 'Keep exploring. '}</strong>
-          <span>{checkResult.message}</span>
+          <span>
+            <FormattedText text={checkResult.message} />
+          </span>
         </div>
       )}
     </div>
@@ -233,7 +240,9 @@ export function MathStep({ step, state, dispatch, onAnswered }: MathStepProps) {
         <div className="equation-container">
           <Equation value={layer.quick.equation} />
         </div>
-        <p className="math-quick-summary">{layer.quick.summary}</p>
+        <p className="math-quick-summary">
+          <FormattedText text={layer.quick.summary} />
+        </p>
 
         <div className="math-symbols">
           <h3>Symbol definitions</h3>
@@ -243,7 +252,9 @@ export function MathStep({ step, state, dispatch, onAnswered }: MathStepProps) {
                 <span className="symbol-char">
                   <code>{sym.symbol}</code>
                 </span>
-                <span className="symbol-meaning">{sym.meaning}</span>
+                <span className="symbol-meaning">
+                  <FormattedText text={sym.meaning} />
+                </span>
                 {sym.unit && <span className="symbol-unit">({sym.unit})</span>}
               </li>
             ))}
@@ -289,10 +300,12 @@ export function MathStep({ step, state, dispatch, onAnswered }: MathStepProps) {
                 </button>
                 <h3>{activePrereqTutorial.title}</h3>
               </div>
-              <p>{activePrereqTutorial.summary}</p>
+              <p>
+                <FormattedText text={activePrereqTutorial.summary} />
+              </p>
               <MathWidget tutorial={activePrereqTutorial} />
               {activePrereqTutorial.explanation.map((paragraph, idx) => (
-                <p key={idx}>{paragraph}</p>
+                <FormattedText key={idx} text={paragraph} as="p" />
               ))}
               <div className="equation-container">
                 <Equation value={activePrereqTutorial.equation} />
@@ -318,7 +331,9 @@ export function MathStep({ step, state, dispatch, onAnswered }: MathStepProps) {
                 <h4>Core concepts</h4>
                 <ul>
                   {layer.foundation.concepts.map((concept, idx) => (
-                    <li key={idx}>{concept}</li>
+                    <li key={idx}>
+                      <FormattedText text={concept} />
+                    </li>
                   ))}
                 </ul>
               </div>
@@ -326,7 +341,7 @@ export function MathStep({ step, state, dispatch, onAnswered }: MathStepProps) {
               {/* Explanation */}
               <div className="foundation-explanation">
                 {layer.foundation.explanation.map((paragraph, idx) => (
-                  <p key={idx}>{paragraph}</p>
+                  <FormattedText key={idx} text={paragraph} as="p" />
                 ))}
               </div>
 
@@ -389,11 +404,13 @@ export function MathStep({ step, state, dispatch, onAnswered }: MathStepProps) {
               {/* Worked Example */}
               <div className="foundation-worked-example">
                 <h4>Worked example</h4>
-                <p className="example-question">{layer.foundation.workedExample.question}</p>
+                <p className="example-question">
+                  <FormattedText text={layer.foundation.workedExample.question} />
+                </p>
                 <ol className="worked-steps-list">
                   {layer.foundation.workedExample.steps.slice(0, revealedSteps).map((s, idx) => (
                     <li key={idx} className="worked-step-item">
-                      {s}
+                      <FormattedText text={s} />
                     </li>
                   ))}
                 </ol>
@@ -408,7 +425,7 @@ export function MathStep({ step, state, dispatch, onAnswered }: MathStepProps) {
                   </button>
                 ) : (
                   <p className="example-answer">
-                    <strong>Result:</strong> {layer.foundation.workedExample.answer}
+                    <strong>Result:</strong> <FormattedText text={layer.foundation.workedExample.answer} />
                   </p>
                 )}
               </div>

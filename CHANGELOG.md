@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-09-19 — Formatted math explanations and automatic mission completion
+
+- Prominently presented and taught all core physics formulas, KaTeX equations, symbol breakdowns, and worked examples in the `ExplainStep` and `MathStep` screens before asking learners to solve calculation questions.
+- Created `FormattedText` component with inline and block KaTeX parsing (`$...$`, `\(...\)`, `$$...$$`, `\[...\]`) so prompts, options, hints, step explanations, and feedback render LaTeX math formulas cleanly throughout the application.
+- Made missions and courses auto-complete automatically upon reaching the final recap step, awarding XP/stars and triggering celebration rewards without requiring a manual "Finish Mission" button.
+- Removed the manual "Finish mission" footer button from the mission player and updated mission completion tests.
+
 ## 2026-09-18 — Retain only GitHub Pages deployment
 
 - Removed `vercel.json` and retired Vercel preview and production configuration.
