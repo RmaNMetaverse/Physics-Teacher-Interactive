@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-09-20 — Formula derivations before results
+
+- Added an authored starting point and step-by-step mathematical deduction for every published mission equation and all 17 prerequisite math tutorial equations.
+- Reworked projectile motion to derive launch components, coordinate equations, equal-height flight time, and range before displaying its compact formula; added expandable explanations of trigonometry, constant acceleration, factoring, and the double-angle identity.
+- Put the derivations before equations in Explain, Math, prerequisite, and Deep Dive views. Distinguished empirical laws, definitions, and model assumptions from mathematical consequences.
+- Added published-curriculum coverage tests and desktop, tablet, mobile, and lesson-journey regressions for formula order, disclosure, and overflow.
+
 ## 2026-09-19 — Formatted math explanations and automatic mission completion
 
 - Prominently presented and taught all core physics formulas, KaTeX equations, symbol breakdowns, and worked examples in the `ExplainStep` and `MathStep` screens before asking learners to solve calculation questions.

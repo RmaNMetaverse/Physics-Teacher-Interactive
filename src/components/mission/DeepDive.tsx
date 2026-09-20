@@ -2,6 +2,8 @@ import { BookMarked, Compass, ExternalLink, FileText, FlaskConical, Layers, Shie
 import type { MissionDefinition } from '../../learning/types';
 import { mathTutorials } from '../../content/math';
 import { Equation } from '../Equation';
+import { FormulaReasoning } from './FormulaReasoning';
+import { formulaReasoning } from '../../learning/formula-reasoning';
 
 interface DeepDiveProps {
   mission: MissionDefinition;
@@ -26,7 +28,7 @@ export function DeepDive({ mission }: DeepDiveProps) {
         </span>
         <h2>Complete physical and mathematical treatment</h2>
         <p className="deep-dive-intro">
-          Rigorous mathematical derivations, foundational physical models, scientific assumptions,
+          Mathematical deductions from stated physical models, scientific assumptions,
           and authoritative references for {mission.title}.
         </p>
       </header>
@@ -39,6 +41,7 @@ export function DeepDive({ mission }: DeepDiveProps) {
         </h3>
         {isNormal && mission.equation && (
           <div className="deep-dive-equation-card">
+            <FormulaReasoning title={mission.title} reasoning={formulaReasoning[mission.id]} />
             <Equation value={mission.equation} />
             {mission.symbols && <p className="equation-symbols"><strong>Symbols:</strong> {mission.symbols}</p>}
           </div>

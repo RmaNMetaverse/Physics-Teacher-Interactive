@@ -7,6 +7,8 @@ import { checkAnswer } from '../../lib/assessment';
 import { Equation } from '../Equation';
 import { MathWidget } from '../MathWidget';
 import { FormattedText } from '../FormattedText';
+import { FormulaReasoning } from './FormulaReasoning';
+import { formulaReasoning } from '../../learning/formula-reasoning';
 
 interface MathStepProps {
   step: Extract<MissionStep, { kind: 'math' }>;
@@ -124,6 +126,8 @@ export function MathStep({ step, state, dispatch, onAnswered }: MathStepProps) {
   // Visual interactive tutorial
   const visualDef = layer.foundation.visual;
   const visualTutorial = mathTutorials.find(t => t.id === visualDef.tutorialId);
+  const isMissionEquation = state.mission.kind === 'mission' && layer.quick.equation === state.mission.equation;
+  const quickReasoning = formulaReasoning[isMissionEquation ? state.mission.id : visualDef.tutorialId];
 
   const renderCheckAssessment = (isQuickMode: boolean) => (
     <div className={`foundation-check ${isQuickMode ? 'math-quick-check' : ''}`}>
@@ -246,6 +250,7 @@ export function MathStep({ step, state, dispatch, onAnswered }: MathStepProps) {
 
       {/* Quick Mode */}
       <section className="math-quick-mode" aria-label="Concise math overview">
+        <FormulaReasoning title={isMissionEquation ? state.mission.title : layer.foundation.title} reasoning={quickReasoning} />
         <div className="equation-container">
           <Equation value={layer.quick.equation} />
         </div>
@@ -312,6 +317,7 @@ export function MathStep({ step, state, dispatch, onAnswered }: MathStepProps) {
               <p>
                 <FormattedText text={activePrereqTutorial.summary} />
               </p>
+              <FormulaReasoning title={activePrereqTutorial.title} reasoning={formulaReasoning[activePrereqTutorial.id]} />
               <MathWidget tutorial={activePrereqTutorial} />
               {activePrereqTutorial.explanation.map((paragraph, idx) => (
                 <FormattedText key={idx} text={paragraph} as="p" />

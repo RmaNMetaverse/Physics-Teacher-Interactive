@@ -145,6 +145,71 @@
   margin: 0;
 }
 
+.formula-reasoning {
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+  padding: 18px 20px;
+  border: 1px solid color-mix(in srgb, var(--accent) 25%, var(--line));
+  border-radius: 16px;
+  background: color-mix(in srgb, var(--accent-soft) 18%, var(--panel));
+}
+
+.formula-reasoning h3,
+.formula-reasoning p,
+.formula-reasoning ol {
+  margin: 0;
+}
+
+.formula-reasoning h3 {
+  color: var(--text);
+  font-size: 16px;
+  line-height: 1.35;
+}
+
+.formula-reasoning-basis,
+.formula-reasoning-steps {
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.65;
+}
+
+.formula-reasoning-steps {
+  display: grid;
+  gap: 10px;
+  padding-left: 22px;
+}
+
+.formula-reasoning-steps li::marker {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.formula-reasoning-help {
+  border-top: 1px solid var(--line);
+  padding-top: 10px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.formula-reasoning-help summary {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  width: fit-content;
+  cursor: pointer;
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.formula-reasoning-help p { padding: 0 0 8px; }
+.formula-reasoning-result { color: var(--muted); font-size: 13px; font-weight: 700; }
+
+@media (max-width: 768px) {
+  .formula-reasoning { padding: 16px; }
+}
+
 .mission-step-view,
 .assessment-body,
 .math-quick-mode,

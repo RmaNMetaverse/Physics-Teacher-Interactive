@@ -3,6 +3,8 @@ import { BookOpen, Calculator, Sparkles } from 'lucide-react';
 import type { MissionDefinition, MissionStep } from '../../learning/types';
 import { Equation } from '../Equation';
 import { FormattedText } from '../FormattedText';
+import { FormulaReasoning } from './FormulaReasoning';
+import { formulaReasoning } from '../../learning/formula-reasoning';
 
 interface ExplainStepProps {
   step: Extract<MissionStep, { kind: 'explain' }>;
@@ -35,6 +37,8 @@ export function ExplainStep({ step, mission }: ExplainStepProps) {
               Core Equation & Math Breakdown
             </span>
           </div>
+
+          <FormulaReasoning title={mission.title} reasoning={formulaReasoning[mission.id]} />
 
           <div className="equation-container">
             <Equation value={mission.equation} label={`Key formula for ${mission.title}`} />

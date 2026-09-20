@@ -1,6 +1,42 @@
 import { expect, test } from './fixtures';
 
 test.describe('Mission player and layered math', () => {
+  test('projectile derivation precedes the equation and explains the harder math on every viewport', async ({ page }) => {
+    await page.addInitScript(() => {
+      localStorage.setItem('physics-mission-session-foundations-projectile-motion', JSON.stringify({
+        currentStepIndex: 7,
+        answers: {},
+        hintedStepIds: [],
+        expandedMathStepIds: [],
+        completedSimulationStepIds: [],
+        recapCompleted: false,
+      }));
+    });
+
+    for (const viewport of [{ width: 320, height: 700 }, { width: 768, height: 1024 }, { width: 1440, height: 900 }]) {
+      await page.setViewportSize(viewport);
+      await page.goto('/#/mission/foundations/projectile-motion');
+      const proof = page.locator('.mission-step-explain .formula-reasoning');
+      await expect(proof).toContainText('flight time');
+      await expect(proof).toContainText('equal launch and landing height');
+      await expect(proof.locator('.formula-reasoning-steps li')).toHaveCount(4);
+      const equation = page.locator('.mission-step-explain .equation-container');
+      await expect(equation).toBeVisible();
+      expect(await proof.evaluate(element => Boolean(element.compareDocumentPosition(
+        document.querySelector('.mission-step-explain .equation-container')!
+      ) & Node.DOCUMENT_POSITION_FOLLOWING))).toBe(true);
+      const conceptHelp = proof.locator('details');
+      if (await conceptHelp.evaluate(element => (element as HTMLDetailsElement).open)) {
+        await proof.locator('summary').click();
+      }
+      await proof.locator('summary').click();
+      const expanded = await conceptHelp.evaluate(element => (element as HTMLDetailsElement).open);
+      expect(expanded, `Concept help should open at ${viewport.width}px`).toBe(true);
+      await expect(proof).toContainText('Sine and cosine are side ratios');
+      expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(viewport.width);
+    }
+  });
+
   test('plays through a Foundations mission with expanded math, deep dive, and completion', async ({ page }) => {
     await page.goto('/#/mission/foundations/measurement-basics');
 
@@ -129,9 +165,16 @@ test.describe('Mission player and layered math', () => {
 
     // Step 4: Explain
     await expect(page.locator('.step-kind-badge', { hasText: 'Explanation' })).toBeVisible();
+    const explanationProof = page.locator('.mission-step-explain .formula-reasoning');
+    await expect(explanationProof).toContainText('experimentally supported quantum postulate');
+    await expect(page.locator('.mission-step-explain .equation-container')).toBeVisible();
+    expect(await explanationProof.evaluate(element => Boolean(element.compareDocumentPosition(
+      document.querySelector('.mission-step-explain .equation-container')!
+    ) & Node.DOCUMENT_POSITION_FOLLOWING))).toBe(true);
     await page.getByRole('button', { name: 'Next step', exact: true }).click();
 
     // Step 5: Math Step: Answer check "6e-19 J" (or expand)
+    await expect(page.locator('.mission-step-math .formula-reasoning')).toContainText('Photon energy');
     await page.getByRole('button', { name: /Teach me the math/i }).click();
     const mathInput = page.locator('.foundation-check input');
     await mathInput.fill('6e-19');
