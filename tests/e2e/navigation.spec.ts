@@ -66,8 +66,9 @@ test('mobile glass bubble follows a drag in both directions and switches pages o
   })).toBe(true);
   await expect.poll(() => bubble.evaluate(element => element.style.scale)).not.toBe('');
   const dragScale = await bubble.evaluate(element => element.style.scale.split(' ').map(Number));
-  expect(dragScale[0]).toBeLessThanOrEqual(1.055);
-  expect(dragScale[1]).toBeGreaterThanOrEqual(0.967);
+  const [horizontalScale, verticalScale = horizontalScale] = dragScale;
+  expect(horizontalScale).toBeLessThanOrEqual(1.055);
+  expect(verticalScale).toBeGreaterThanOrEqual(0.967);
   const halfwayTransform = await bubble.evaluate(element => element.style.transform);
   await page.mouse.move(progressBox.x + progressBox.width / 2, progressBox.y + progressBox.height / 2, { steps: 12 });
   await expect(bubble).toHaveAttribute('data-dragging', 'true');
