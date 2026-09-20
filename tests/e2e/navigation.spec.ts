@@ -64,7 +64,8 @@ test('mobile glass bubble follows a drag in both directions and switches pages o
     const iconColor = getComputedStyle(element.querySelector('svg')!).fill;
     return iconColor === textColor;
   })).toBe(true);
-  const dragScale = await bubble.evaluate(element => getComputedStyle(element).scale.split(' ').map(Number));
+  await expect.poll(() => bubble.evaluate(element => element.style.scale)).not.toBe('');
+  const dragScale = await bubble.evaluate(element => element.style.scale.split(' ').map(Number));
   expect(dragScale[0]).toBeLessThanOrEqual(1.055);
   expect(dragScale[1]).toBeGreaterThanOrEqual(0.967);
   const halfwayTransform = await bubble.evaluate(element => element.style.transform);
