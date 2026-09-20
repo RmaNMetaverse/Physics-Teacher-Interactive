@@ -46,6 +46,23 @@ const MOBILE_GLASS_CONFIG = {
   bevelMode: 0,
 } as const;
 
+const MOBILE_BUBBLE_GLASS_CONFIG = {
+  blurAmount: 0.06,
+  refraction: 0.92,
+  chromAberration: 0.12,
+  edgeHighlight: 0.17,
+  specular: 0.12,
+  fresnel: 0.9,
+  cornerRadius: 30,
+  zRadius: 18,
+  saturation: 0.28,
+  tintStrength: 0.04,
+  shadowOpacity: 0.12,
+  shadowSpread: 4,
+  floating: false,
+  button: false,
+} as const;
+
 const TABS: readonly TabDefinition[] = [
   {
     id: 'explore',
@@ -98,6 +115,7 @@ export function MobileTabBar({
   onNavigate,
 }: MobileTabBarProps) {
   const navRef = useRef<HTMLElement>(null);
+  const bubbleGlassRef = useRef<LiquidGlass | null>(null);
   const itemsRef = useRef<HTMLDivElement>(null);
   const dragRef = useRef<{ pointerId: number; originX: number; startIndex: number; stepPx: number; dragging: boolean } | null>(null);
   const suppressClickRef = useRef(false);
@@ -161,6 +179,7 @@ export function MobileTabBar({
     const renderLatestBackground = () => {
       animationFrame = 0;
       instance?.markChanged();
+      bubbleGlassRef.current?.markChanged();
     };
 
     const markBackgroundChanged = () => {
@@ -201,6 +220,24 @@ export function MobileTabBar({
           root.style.removeProperty('-webkit-user-select');
         }
         nav.dataset.liquidGlassRenderer = 'ready';
+        const bubble = nav.querySelector<HTMLElement>('.liquid-tab-bubble');
+        if (bubble) {
+          try {
+            const nextBubbleInstance = await LiquidGlass.init({
+              root: nav,
+              glassElements: [bubble],
+              defaults: MOBILE_BUBBLE_GLASS_CONFIG,
+            });
+            if (cancelled) {
+              nextBubbleInstance.destroy();
+              return;
+            }
+            bubbleGlassRef.current = nextBubbleInstance;
+            nav.dataset.liquidGlassBubbleRenderer = 'ready';
+          } catch {
+            nav.dataset.liquidGlassBubbleRenderer = 'fallback';
+          }
+        }
         window.addEventListener('scroll', markBackgroundChanged, { passive: true });
         window.addEventListener('scrollend', markSettledBackground, { passive: true });
         window.visualViewport?.addEventListener('scroll', markBackgroundChanged, { passive: true });
@@ -219,8 +256,11 @@ export function MobileTabBar({
       window.removeEventListener('scroll', markBackgroundChanged);
       window.removeEventListener('scrollend', markSettledBackground);
       window.visualViewport?.removeEventListener('scroll', markBackgroundChanged);
+      bubbleGlassRef.current?.destroy();
+      bubbleGlassRef.current = null;
       instance?.destroy();
       nav.removeAttribute('data-liquid-glass-renderer');
+      nav.removeAttribute('data-liquid-glass-bubble-renderer');
       root.style.userSelect = previousUserSelect;
       if (previousWebkitUserSelect) {
         root.style.setProperty('-webkit-user-select', previousWebkitUserSelect);
@@ -244,8 +284,12 @@ export function MobileTabBar({
         transform: 'translateX(-50%)',
       }}
     >
+      <LiquidTabBubble
+        activeIndex={Math.max(0, activeTabIndex)}
+        dragPosition={dragPosition}
+        onMotionFrame={() => bubbleGlassRef.current?.markChanged()}
+      />
       <div ref={itemsRef} className="mobile-tab-bar-items">
-        <LiquidTabBubble activeIndex={Math.max(0, activeTabIndex)} dragPosition={dragPosition} />
         {TABS.map((tab, tabIndex) => {
           const active = tab.isActive(currentRoute);
           const Icon = tab.icon;

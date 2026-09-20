@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-09-20 — Softer inertial glass tab bubble
+
+- Reduced the mobile tab bubble's stretch, compression, and wobble during drag and tab changes.
+- Added spring-follow and release inertia while preserving direct manipulation and reduced-motion behavior.
+- Gave the moving bubble its own small WebGL glass surface, composed over the navbar's refracted scene, so refraction continues as the bubble moves.
+
 ## 2026-09-20 — Draggable mobile liquid-glass navigation
 
 - Removed the browser's blue tap highlight from the three mobile navigation links while retaining visible keyboard focus.

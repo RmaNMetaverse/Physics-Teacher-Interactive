@@ -41,6 +41,8 @@ test('mobile glass bubble follows a drag in both directions and switches pages o
   await page.goto('/#/explore');
   const nav = page.getByRole('navigation', { name: 'Mobile navigation' });
   const bubble = nav.locator('.liquid-tab-bubble');
+  await expect(nav).toHaveAttribute('data-liquid-glass-bubble-renderer', 'ready', { timeout: 10000 });
+  await expect(bubble.locator('canvas')).toHaveCount(1);
   const explore = nav.getByRole('link', { name: 'Explore' });
   const progress = nav.getByRole('link', { name: 'Progress' });
   const learn = nav.getByRole('link', { name: 'Learn' });
@@ -53,13 +55,18 @@ test('mobile glass bubble follows a drag in both directions and switches pages o
   await page.mouse.down();
   await page.mouse.move(firstLearnBox.x + firstLearnBox.width / 2, firstLearnBox.y + firstLearnBox.height / 2, { steps: 6 });
   await expect(bubble).toHaveAttribute('data-dragging', 'true');
+  const dragScale = await bubble.evaluate(element => getComputedStyle(element).scale.split(' ').map(Number));
+  expect(dragScale[0]).toBeLessThanOrEqual(1.055);
+  expect(dragScale[1]).toBeGreaterThanOrEqual(0.967);
   const halfwayTransform = await bubble.evaluate(element => element.style.transform);
   await page.mouse.move(progressBox.x + progressBox.width / 2, progressBox.y + progressBox.height / 2, { steps: 12 });
   await expect(bubble).toHaveAttribute('data-dragging', 'true');
   expect(await bubble.evaluate(element => element.style.transform)).not.toBe(halfwayTransform);
   await expect(page).toHaveURL(/#\/explore$/);
+  const beforeRelease = await bubble.evaluate(element => element.style.transform);
   await page.mouse.up();
   await expect(page).toHaveURL(/#\/progress$/);
+  await expect.poll(() => bubble.evaluate(element => element.style.transform)).not.toBe(beforeRelease);
   await expect(bubble).toHaveAttribute('data-active-index', '2');
 
   const currentProgressBox = (await progress.boundingBox())!;

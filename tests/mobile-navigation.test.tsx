@@ -59,6 +59,12 @@ describe('MobileTabBar', () => {
         specular: 0.1,
       }),
     })));
+    const bubble = nav.querySelector('.liquid-tab-bubble');
+    await waitFor(() => expect(liquidGlassInit).toHaveBeenCalledWith(expect.objectContaining({
+      root: nav,
+      glassElements: [bubble],
+    })));
+    expect(bubble?.parentElement).toBe(nav);
     expect(nav).toHaveAttribute('data-liquid-glass-renderer', 'ready');
   });
 
@@ -80,7 +86,7 @@ describe('MobileTabBar', () => {
         <MobileTabBar currentRoute={{ page: 'explore' }} learnHash={defaultLearnHash} />
       </div>
     );
-    await waitFor(() => expect(liquidGlassInit).toHaveBeenCalledOnce());
+    await waitFor(() => expect(liquidGlassInit).toHaveBeenCalledTimes(2));
 
     fireEvent.scroll(window);
     fireEvent.scroll(window);

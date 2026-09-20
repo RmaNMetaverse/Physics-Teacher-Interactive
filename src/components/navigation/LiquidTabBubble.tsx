@@ -1,18 +1,78 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 export interface LiquidTabBubbleProps {
   activeIndex: number;
   dragPosition?: { index: number; stepPx: number } | null;
+  onMotionFrame?: () => void;
 }
 
 /**
  * One persistent selection lens shared by all primary tabs. Keeping the same
  * element mounted lets CSS move it continuously instead of cross-fading pills.
  */
-export function LiquidTabBubble({ activeIndex, dragPosition }: LiquidTabBubbleProps) {
+export function LiquidTabBubble({ activeIndex, dragPosition, onMotionFrame }: LiquidTabBubbleProps) {
   const bubbleRef = useRef<HTMLSpanElement>(null);
   const dropletRef = useRef<HTMLSpanElement>(null);
   const previousIndex = useRef(activeIndex);
+  const motionRef = useRef<{ index: number; velocity: number; target: number; stepPx: number } | null>(null);
+  const frameRef = useRef(0);
+  const draggingRef = useRef(Boolean(dragPosition));
+  const onMotionFrameRef = useRef(onMotionFrame);
+  const [motionPosition, setMotionPosition] = useState<{ index: number; stepPx: number } | null>(null);
+  draggingRef.current = Boolean(dragPosition);
+  onMotionFrameRef.current = onMotionFrame;
+
+  useEffect(() => {
+    const reducedMotion = document.documentElement.dataset.reducedMotion === 'true'
+      || window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    if (reducedMotion) {
+      if (frameRef.current) cancelAnimationFrame(frameRef.current);
+      frameRef.current = 0;
+      if (motionRef.current) setMotionPosition(null);
+      motionRef.current = null;
+      return;
+    }
+
+    if (dragPosition) {
+      if (!motionRef.current) {
+        motionRef.current = { index: activeIndex, velocity: 0, target: dragPosition.index, stepPx: dragPosition.stepPx };
+      } else {
+        motionRef.current.target = dragPosition.index;
+        motionRef.current.stepPx = dragPosition.stepPx;
+      }
+    } else if (motionRef.current) {
+      motionRef.current.target = activeIndex;
+    }
+
+    if (!motionRef.current || frameRef.current) return;
+    const advance = () => {
+      frameRef.current = 0;
+      const motion = motionRef.current;
+      if (!motion) return;
+      motion.velocity = (motion.velocity + (motion.target - motion.index) * .15) * .78;
+      motion.index = Math.max(-.06, Math.min(2.06, motion.index + motion.velocity));
+      if (Math.abs(motion.target - motion.index) < .002 && Math.abs(motion.velocity) < .002) {
+        motion.index = motion.target;
+        motion.velocity = 0;
+        if (draggingRef.current) {
+          setMotionPosition({ index: motion.index, stepPx: motion.stepPx });
+        } else {
+          motionRef.current = null;
+          setMotionPosition(null);
+        }
+        onMotionFrameRef.current?.();
+        return;
+      }
+      setMotionPosition({ index: motion.index, stepPx: motion.stepPx });
+      onMotionFrameRef.current?.();
+      frameRef.current = requestAnimationFrame(advance);
+    };
+    frameRef.current = requestAnimationFrame(advance);
+  }, [activeIndex, dragPosition]);
+
+  useEffect(() => () => {
+    if (frameRef.current) cancelAnimationFrame(frameRef.current);
+  }, []);
 
   useEffect(() => {
     const from = previousIndex.current;
@@ -25,8 +85,8 @@ export function LiquidTabBubble({ activeIndex, dragPosition }: LiquidTabBubblePr
 
     bubbleRef.current?.animate?.([
       { scale: '1', borderRadius: '999px' },
-      { scale: '1.13 .86', borderRadius: '42% 58% 54% 46% / 54% 46% 54% 46%', offset: 0.36 },
-      { scale: '.97 1.06', borderRadius: '56% 44% 48% 52% / 46% 54% 46% 54%', offset: 0.72 },
+      { scale: '1.055 .96', borderRadius: '47% 53% 52% 48% / 52% 48% 52% 48%', offset: 0.36 },
+      { scale: '.985 1.025', borderRadius: '52% 48% 49% 51% / 48% 52% 49% 51%', offset: 0.72 },
       { scale: '1', borderRadius: '999px' },
     ], {
       duration: 560,
@@ -44,15 +104,21 @@ export function LiquidTabBubble({ activeIndex, dragPosition }: LiquidTabBubblePr
     });
   }, [activeIndex]);
 
+  const visiblePosition = motionPosition ?? dragPosition;
+  const deformation = visiblePosition
+    ? Math.min(Math.abs(visiblePosition.index - Math.round(visiblePosition.index)), .5)
+    : 0;
+
   return (
     <span
       ref={bubbleRef}
       className="liquid-tab-bubble"
       data-active-index={activeIndex}
       data-dragging={dragPosition ? 'true' : undefined}
-      style={dragPosition ? {
-        transform: `translate3d(${dragPosition.index * dragPosition.stepPx}px, 0, 0)`,
-        scale: `${1 + Math.min(Math.abs(dragPosition.index - Math.round(dragPosition.index)), .5) * .24} ${1 - Math.min(Math.abs(dragPosition.index - Math.round(dragPosition.index)), .5) * .18}`,
+      data-inertia={visiblePosition ? 'true' : undefined}
+      style={visiblePosition ? {
+        transform: `translate3d(${visiblePosition.index * visiblePosition.stepPx}px, 0, 0)`,
+        scale: `${1 + deformation * .10} ${1 - deformation * .065}`,
       } : undefined}
       aria-hidden="true"
     >
