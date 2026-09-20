@@ -46,6 +46,7 @@ test('mobile glass bubble follows a drag in both directions and switches pages o
   const explore = nav.getByRole('link', { name: 'Explore' });
   const progress = nav.getByRole('link', { name: 'Progress' });
   const learn = nav.getByRole('link', { name: 'Learn' });
+  const restingLearnColor = await learn.evaluate(element => getComputedStyle(element).color);
   expect(await explore.evaluate(element => getComputedStyle(element).getPropertyValue('-webkit-tap-highlight-color'))).toBe('rgba(0, 0, 0, 0)');
 
   const exploreBox = (await explore.boundingBox())!;
@@ -55,6 +56,14 @@ test('mobile glass bubble follows a drag in both directions and switches pages o
   await page.mouse.down();
   await page.mouse.move(firstLearnBox.x + firstLearnBox.width / 2, firstLearnBox.y + firstLearnBox.height / 2, { steps: 6 });
   await expect(bubble).toHaveAttribute('data-dragging', 'true');
+  await expect(learn).toHaveAttribute('data-bubble-over', 'true');
+  await expect(explore).not.toHaveAttribute('data-bubble-over', 'true');
+  expect(await learn.evaluate(element => getComputedStyle(element).color)).not.toBe(restingLearnColor);
+  expect(await learn.evaluate(element => {
+    const textColor = getComputedStyle(element).color;
+    const iconColor = getComputedStyle(element.querySelector('svg')!).fill;
+    return iconColor === textColor;
+  })).toBe(true);
   const dragScale = await bubble.evaluate(element => getComputedStyle(element).scale.split(' ').map(Number));
   expect(dragScale[0]).toBeLessThanOrEqual(1.055);
   expect(dragScale[1]).toBeGreaterThanOrEqual(0.967);
@@ -77,6 +86,28 @@ test('mobile glass bubble follows a drag in both directions and switches pages o
   await page.mouse.up();
   await expect(page).toHaveURL(/#\/course\/foundations$/);
   await expect(bubble).toHaveAttribute('data-active-index', '1');
+});
+
+test('tapping across mobile tabs colors the text and icon as the bubble passes', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/#/explore');
+  const nav = page.getByRole('navigation', { name: 'Mobile navigation' });
+  const learn = nav.getByRole('link', { name: 'Learn' });
+  await page.evaluate(() => {
+    const link = document.querySelector<HTMLElement>('.mobile-tab-item[aria-label="Learn"]')!;
+    (window as Window & { __learnCoverageMax?: number }).__learnCoverageMax = 0;
+    new MutationObserver(() => {
+      const coverage = Number.parseFloat(link.style.getPropertyValue('--bubble-coverage')) || 0;
+      const state = window as Window & { __learnCoverageMax?: number };
+      state.__learnCoverageMax = Math.max(state.__learnCoverageMax || 0, coverage);
+    }).observe(link, { attributes: true, attributeFilter: ['style'] });
+  });
+  await nav.getByRole('link', { name: 'Progress' }).click();
+  await expect(page).toHaveURL(/#\/progress$/);
+  await expect.poll(() => page.evaluate(() => (window as Window & { __learnCoverageMax?: number }).__learnCoverageMax || 0)).toBeGreaterThan(70);
+  await expect(nav).not.toHaveAttribute('data-bubble-moving');
+  await expect(learn).not.toHaveAttribute('data-bubble-over');
+  await expect(nav.getByRole('link', { name: 'Progress' })).toHaveAttribute('aria-current', 'page');
 });
 
 test('opens Quantum first and exposes every mission node to native tab order', async ({ page }) => {

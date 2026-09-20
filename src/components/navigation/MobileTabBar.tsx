@@ -125,6 +125,27 @@ export function MobileTabBar({
   const shouldRenderGlass = liquidGlass && isMobileViewport && !reducesTransparency && theme !== 'high-contrast';
   const activeTabIndex = TABS.findIndex(tab => tab.isActive(currentRoute));
 
+  const updateBubbleHighlight = (position: number | null) => {
+    const nav = navRef.current;
+    const links = itemsRef.current?.querySelectorAll<HTMLElement>('.mobile-tab-item');
+    if (!nav || !links) return;
+    if (position === null) {
+      delete nav.dataset.bubbleMoving;
+      links.forEach(link => {
+        link.style.removeProperty('--bubble-coverage');
+        link.removeAttribute('data-bubble-over');
+      });
+      return;
+    }
+    nav.dataset.bubbleMoving = 'true';
+    links.forEach((link, index) => {
+      const coverage = Math.max(0, 1 - Math.abs(position - index));
+      link.style.setProperty('--bubble-coverage', `${(coverage * 100).toFixed(1)}%`);
+      if (coverage >= .5) link.dataset.bubbleOver = 'true';
+      else link.removeAttribute('data-bubble-over');
+    });
+  };
+
   const dragIndexAt = (clientX: number, drag: NonNullable<typeof dragRef.current>) =>
     Math.max(0, Math.min(TABS.length - 1, drag.startIndex + (clientX - drag.originX) / drag.stepPx));
 
@@ -287,7 +308,10 @@ export function MobileTabBar({
       <LiquidTabBubble
         activeIndex={Math.max(0, activeTabIndex)}
         dragPosition={dragPosition}
-        onMotionFrame={() => bubbleGlassRef.current?.markChanged()}
+        onMotionFrame={position => {
+          updateBubbleHighlight(position);
+          bubbleGlassRef.current?.markChanged();
+        }}
       />
       <div ref={itemsRef} className="mobile-tab-bar-items">
         {TABS.map((tab, tabIndex) => {

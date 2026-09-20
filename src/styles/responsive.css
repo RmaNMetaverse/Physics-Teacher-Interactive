@@ -204,6 +204,14 @@ html, body {
     color: var(--accent);
   }
 
+  .mobile-tab-bar[data-bubble-moving="true"] .mobile-tab-item {
+    color: color-mix(in srgb, var(--accent) var(--bubble-coverage, 0%), var(--muted));
+    transition: none;
+  }
+
+  .mobile-tab-bar[data-bubble-moving="true"] .mobile-tab-icon { fill: none; }
+  .mobile-tab-bar[data-bubble-moving="true"] .mobile-tab-item[data-bubble-over="true"] .mobile-tab-icon { fill: currentColor; }
+
   .mobile-tab-bar > .liquid-tab-bubble {
     min-height: 48px;
     background:
