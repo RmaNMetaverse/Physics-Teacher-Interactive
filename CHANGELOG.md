@@ -2,7 +2,7 @@
 
 ## 2026-09-20 — Bubble-following mobile tab highlights
 
-- Made mobile navigation labels and icons blend toward the purple accent according to the moving glass bubble's overlap, including drag, release inertia, and tap transitions.
+- Made mobile navigation labels and icons blend toward the purple accent as the glass bubble overlaps them, including drag, release inertia, and tap transitions. Widened the blend so the passing label reaches full accent before the lens center arrives.
 - Kept `aria-current` tied to the actual page while the temporary visual highlight travels under other tabs.
 
 ## 2026-09-20 — Softer inertial glass tab bubble

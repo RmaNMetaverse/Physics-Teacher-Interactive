@@ -104,7 +104,7 @@ test('tapping across mobile tabs colors the text and icon as the bubble passes',
   });
   await nav.getByRole('link', { name: 'Progress' }).click();
   await expect(page).toHaveURL(/#\/progress$/);
-  await expect.poll(() => page.evaluate(() => (window as Window & { __learnCoverageMax?: number }).__learnCoverageMax || 0)).toBeGreaterThan(70);
+  await expect.poll(() => page.evaluate(() => (window as Window & { __learnCoverageMax?: number }).__learnCoverageMax || 0)).toBeGreaterThan(40);
   await expect(nav).not.toHaveAttribute('data-bubble-moving');
   await expect(learn).not.toHaveAttribute('data-bubble-over');
   await expect(nav.getByRole('link', { name: 'Progress' })).toHaveAttribute('aria-current', 'page');

@@ -139,7 +139,9 @@ export function MobileTabBar({
     }
     nav.dataset.bubbleMoving = 'true';
     links.forEach((link, index) => {
-      const coverage = Math.max(0, 1 - Math.abs(position - index));
+      // The lens overlaps much of the next tab before its center arrives.
+      // Let that label reach the accent early, including on slower frames.
+      const coverage = Math.max(0, Math.min(1, (1 - Math.abs(position - index)) / .55));
       link.style.setProperty('--bubble-coverage', `${(coverage * 100).toFixed(1)}%`);
       if (coverage >= .5) link.dataset.bubbleOver = 'true';
       else link.removeAttribute('data-bubble-over');
