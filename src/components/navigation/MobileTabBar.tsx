@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react';
 import { LiquidGlass } from '@ybouane/liquidglass';
 import { parseHash, type AppRoute } from '../../app/router';
 import type { LearnerProgressV2 } from '../../progress/types';
@@ -98,10 +98,53 @@ export function MobileTabBar({
   onNavigate,
 }: MobileTabBarProps) {
   const navRef = useRef<HTMLElement>(null);
+  const itemsRef = useRef<HTMLDivElement>(null);
+  const dragRef = useRef<{ pointerId: number; originX: number; startIndex: number; stepPx: number; dragging: boolean } | null>(null);
+  const suppressClickRef = useRef(false);
+  const [dragPosition, setDragPosition] = useState<{ index: number; stepPx: number } | null>(null);
   const isMobileViewport = useMediaQuery('(max-width: 768px)');
   const reducesTransparency = useMediaQuery('(prefers-reduced-transparency: reduce)');
   const shouldRenderGlass = liquidGlass && isMobileViewport && !reducesTransparency && theme !== 'high-contrast';
   const activeTabIndex = TABS.findIndex(tab => tab.isActive(currentRoute));
+
+  const dragIndexAt = (clientX: number, drag: NonNullable<typeof dragRef.current>) =>
+    Math.max(0, Math.min(TABS.length - 1, drag.startIndex + (clientX - drag.originX) / drag.stepPx));
+
+  const beginDrag = (event: ReactPointerEvent<HTMLAnchorElement>, tabIndex: number) => {
+    if (tabIndex !== activeTabIndex || event.button !== 0) return;
+    const items = itemsRef.current;
+    if (!items) return;
+    const gap = Number.parseFloat(window.getComputedStyle(items).columnGap) || 0;
+    const stepPx = (items.getBoundingClientRect().width + gap) / TABS.length;
+    if (stepPx <= 0) return;
+    dragRef.current = { pointerId: event.pointerId, originX: event.clientX, startIndex: tabIndex, stepPx, dragging: false };
+    event.currentTarget.setPointerCapture?.(event.pointerId);
+  };
+
+  const moveDrag = (event: ReactPointerEvent<HTMLAnchorElement>) => {
+    const drag = dragRef.current;
+    if (!drag || event.pointerId !== drag.pointerId) return;
+    if (!drag.dragging && Math.abs(event.clientX - drag.originX) < 7) return;
+    drag.dragging = true;
+    setDragPosition({ index: dragIndexAt(event.clientX, drag), stepPx: drag.stepPx });
+  };
+
+  const endDrag = (event: ReactPointerEvent<HTMLAnchorElement>, cancelled = false) => {
+    const drag = dragRef.current;
+    if (!drag || event.pointerId !== drag.pointerId) return;
+    dragRef.current = null;
+    setDragPosition(null);
+    if (!drag.dragging) return;
+    if (cancelled) return;
+    suppressClickRef.current = true;
+    window.setTimeout(() => { suppressClickRef.current = false; }, 0);
+    const targetIndex = Math.round(dragIndexAt(event.clientX, drag));
+    if (targetIndex === drag.startIndex) return;
+    const targetTab = TABS[targetIndex];
+    const href = targetTab.getHref(learnHash);
+    if (onNavigate) onNavigate(targetTab.id === 'learn' ? parseHash(href) : { page: targetTab.id });
+    else window.location.hash = href;
+  };
 
   useEffect(() => {
     const nav = navRef.current;
@@ -201,9 +244,9 @@ export function MobileTabBar({
         transform: 'translateX(-50%)',
       }}
     >
-      <div className="mobile-tab-bar-items">
-        <LiquidTabBubble activeIndex={Math.max(0, activeTabIndex)} />
-        {TABS.map((tab) => {
+      <div ref={itemsRef} className="mobile-tab-bar-items">
+        <LiquidTabBubble activeIndex={Math.max(0, activeTabIndex)} dragPosition={dragPosition} />
+        {TABS.map((tab, tabIndex) => {
           const active = tab.isActive(currentRoute);
           const Icon = tab.icon;
           const href = tab.getHref(learnHash);
@@ -213,7 +256,18 @@ export function MobileTabBar({
             <a
               key={tab.id}
               href={href}
+              draggable={false}
+              onDragStart={event => event.preventDefault()}
+              onPointerDown={event => beginDrag(event, tabIndex)}
+              onPointerMove={moveDrag}
+              onPointerUp={event => endDrag(event)}
+              onPointerCancel={event => endDrag(event, true)}
               onClick={event => {
+                if (suppressClickRef.current) {
+                  event.preventDefault();
+                  suppressClickRef.current = false;
+                  return;
+                }
                 if (!onNavigate || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
                 event.preventDefault();
                 onNavigate(nextRoute);

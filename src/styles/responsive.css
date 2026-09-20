@@ -168,6 +168,17 @@ html, body {
     font-size: 11px;
     font-weight: 600;
     transition: transform var(--transition-fast), color var(--transition-fast);
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: none;
+  }
+
+  .mobile-tab-item:focus:not(:focus-visible) { outline: none; }
+
+  .mobile-tab-bar-items .liquid-tab-bubble[data-dragging="true"] {
+    transition: none;
+    border-radius: 44% 56% 53% 47% / 55% 47% 53% 45%;
   }
 
   .mobile-tab-item:hover {

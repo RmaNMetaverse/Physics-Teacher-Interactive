@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-09-20 — Draggable mobile liquid-glass navigation
+
+- Removed the browser's blue tap highlight from the three mobile navigation links while retaining visible keyboard focus.
+- Made the active glass bubble follow a horizontal press-and-drag between Explore, Learn, and Progress, deform smoothly during movement, and settle with the existing bubbly tab animation when released.
+- Prevented native link dragging from cancelling the gesture; kept ordinary taps, hash links, and keyboard navigation working.
+
 ## 2026-09-20 — Formula derivations before results
 
 - Added an authored starting point and step-by-step mathematical deduction for every published mission equation and all 17 prerequisite math tutorial equations.

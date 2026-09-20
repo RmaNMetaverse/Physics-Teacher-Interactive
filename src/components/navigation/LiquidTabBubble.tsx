@@ -2,13 +2,14 @@ import { useEffect, useRef } from 'react';
 
 export interface LiquidTabBubbleProps {
   activeIndex: number;
+  dragPosition?: { index: number; stepPx: number } | null;
 }
 
 /**
  * One persistent selection lens shared by all primary tabs. Keeping the same
  * element mounted lets CSS move it continuously instead of cross-fading pills.
  */
-export function LiquidTabBubble({ activeIndex }: LiquidTabBubbleProps) {
+export function LiquidTabBubble({ activeIndex, dragPosition }: LiquidTabBubbleProps) {
   const bubbleRef = useRef<HTMLSpanElement>(null);
   const dropletRef = useRef<HTMLSpanElement>(null);
   const previousIndex = useRef(activeIndex);
@@ -48,6 +49,11 @@ export function LiquidTabBubble({ activeIndex }: LiquidTabBubbleProps) {
       ref={bubbleRef}
       className="liquid-tab-bubble"
       data-active-index={activeIndex}
+      data-dragging={dragPosition ? 'true' : undefined}
+      style={dragPosition ? {
+        transform: `translate3d(${dragPosition.index * dragPosition.stepPx}px, 0, 0)`,
+        scale: `${1 + Math.min(Math.abs(dragPosition.index - Math.round(dragPosition.index)), .5) * .24} ${1 - Math.min(Math.abs(dragPosition.index - Math.round(dragPosition.index)), .5) * .18}`,
+      } : undefined}
       aria-hidden="true"
     >
       <span className="liquid-tab-bubble-lens" />

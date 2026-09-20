@@ -36,6 +36,42 @@ test('opens Explore first with one continue action and every open course', async
   await expect(page.getByRole('heading', { level: 1, name: 'Progress' })).toBeVisible();
 });
 
+test('mobile glass bubble follows a drag in both directions and switches pages on release', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/#/explore');
+  const nav = page.getByRole('navigation', { name: 'Mobile navigation' });
+  const bubble = nav.locator('.liquid-tab-bubble');
+  const explore = nav.getByRole('link', { name: 'Explore' });
+  const progress = nav.getByRole('link', { name: 'Progress' });
+  const learn = nav.getByRole('link', { name: 'Learn' });
+  expect(await explore.evaluate(element => getComputedStyle(element).getPropertyValue('-webkit-tap-highlight-color'))).toBe('rgba(0, 0, 0, 0)');
+
+  const exploreBox = (await explore.boundingBox())!;
+  const progressBox = (await progress.boundingBox())!;
+  const firstLearnBox = (await learn.boundingBox())!;
+  await page.mouse.move(exploreBox.x + exploreBox.width / 2, exploreBox.y + exploreBox.height / 2);
+  await page.mouse.down();
+  await page.mouse.move(firstLearnBox.x + firstLearnBox.width / 2, firstLearnBox.y + firstLearnBox.height / 2, { steps: 6 });
+  await expect(bubble).toHaveAttribute('data-dragging', 'true');
+  const halfwayTransform = await bubble.evaluate(element => element.style.transform);
+  await page.mouse.move(progressBox.x + progressBox.width / 2, progressBox.y + progressBox.height / 2, { steps: 12 });
+  await expect(bubble).toHaveAttribute('data-dragging', 'true');
+  expect(await bubble.evaluate(element => element.style.transform)).not.toBe(halfwayTransform);
+  await expect(page).toHaveURL(/#\/explore$/);
+  await page.mouse.up();
+  await expect(page).toHaveURL(/#\/progress$/);
+  await expect(bubble).toHaveAttribute('data-active-index', '2');
+
+  const currentProgressBox = (await progress.boundingBox())!;
+  const learnBox = (await learn.boundingBox())!;
+  await page.mouse.move(currentProgressBox.x + currentProgressBox.width / 2, currentProgressBox.y + currentProgressBox.height / 2);
+  await page.mouse.down();
+  await page.mouse.move(learnBox.x + learnBox.width / 2, learnBox.y + learnBox.height / 2, { steps: 8 });
+  await page.mouse.up();
+  await expect(page).toHaveURL(/#\/course\/foundations$/);
+  await expect(bubble).toHaveAttribute('data-active-index', '1');
+});
+
 test('opens Quantum first and exposes every mission node to native tab order', async ({ page }) => {
   await page.goto('/#/explore');
   await page.getByRole('link', { name: 'Open course: Quantum Physics' }).click();

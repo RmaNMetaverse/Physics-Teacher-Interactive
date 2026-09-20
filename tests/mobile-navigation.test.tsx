@@ -126,6 +126,39 @@ describe('MobileTabBar', () => {
     expect(onNavigate).toHaveBeenCalledWith({ page: 'course', courseId: 'foundations' });
   });
 
+  it('drags the active bubble across tabs and navigates only on release', () => {
+    const onNavigate = vi.fn();
+    render(<MobileTabBar currentRoute={{ page: 'explore' }} learnHash={defaultLearnHash} onNavigate={onNavigate} />);
+    const explore = screen.getByRole('link', { name: 'Explore' });
+    const bubble = document.querySelector('.mobile-tab-bar .liquid-tab-bubble');
+    const items = document.querySelector('.mobile-tab-bar-items') as HTMLElement;
+    vi.spyOn(items, 'getBoundingClientRect').mockReturnValue({ left: 0, width: 300 } as DOMRect);
+
+    fireEvent.pointerDown(explore, { pointerId: 1, pointerType: 'touch', button: 0, clientX: 50 });
+    fireEvent.pointerMove(explore, { pointerId: 1, pointerType: 'touch', clientX: 125 });
+    expect(bubble).toHaveAttribute('data-dragging', 'true');
+    expect(onNavigate).not.toHaveBeenCalled();
+    fireEvent.pointerMove(explore, { pointerId: 1, pointerType: 'touch', clientX: 250 });
+    fireEvent.pointerUp(explore, { pointerId: 1, pointerType: 'touch', clientX: 250 });
+    expect(onNavigate).toHaveBeenCalledOnce();
+    expect(onNavigate).toHaveBeenCalledWith({ page: 'progress' });
+  });
+
+  it('cancels a drag without navigating and preserves normal tap navigation', () => {
+    const onNavigate = vi.fn();
+    render(<MobileTabBar currentRoute={{ page: 'explore' }} learnHash={defaultLearnHash} onNavigate={onNavigate} />);
+    const explore = screen.getByRole('link', { name: 'Explore' });
+    const items = document.querySelector('.mobile-tab-bar-items') as HTMLElement;
+    vi.spyOn(items, 'getBoundingClientRect').mockReturnValue({ left: 0, width: 300 } as DOMRect);
+
+    fireEvent.pointerDown(explore, { pointerId: 2, pointerType: 'touch', button: 0, clientX: 50 });
+    fireEvent.pointerMove(explore, { pointerId: 2, pointerType: 'touch', clientX: 180 });
+    fireEvent.pointerCancel(explore, { pointerId: 2, pointerType: 'touch' });
+    expect(onNavigate).not.toHaveBeenCalled();
+    fireEvent.click(screen.getByRole('link', { name: 'Learn' }));
+    expect(onNavigate).toHaveBeenCalledWith({ page: 'course', courseId: 'foundations' });
+  });
+
   it('marks Explore tab as active when route is explore', () => {
     const route: AppRoute = { page: 'explore' };
     render(<MobileTabBar currentRoute={route} learnHash={defaultLearnHash} />);
