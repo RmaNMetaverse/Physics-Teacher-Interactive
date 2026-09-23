@@ -92,10 +92,10 @@ export function LiquidTabBubble({ activeIndex, dragPosition, onMotionFrame }: Li
     }
 
     bubbleRef.current?.animate?.([
-      { scale: '1', borderRadius: '999px' },
-      { scale: '1.055 .96', borderRadius: '47% 53% 52% 48% / 52% 48% 52% 48%', offset: 0.36 },
-      { scale: '.985 1.025', borderRadius: '52% 48% 49% 51% / 48% 52% 49% 51%', offset: 0.72 },
-      { scale: '1', borderRadius: '999px' },
+      { borderRadius: '999px' },
+      { borderRadius: '47% 53% 52% 48% / 51% 49% 51% 49%', offset: 0.36 },
+      { borderRadius: '52% 48% 49% 51% / 49% 51% 49% 51%', offset: 0.72 },
+      { borderRadius: '999px' },
     ], {
       duration: 560,
       easing: 'cubic-bezier(.22, .9, .24, 1)',
@@ -141,9 +141,6 @@ export function LiquidTabBubble({ activeIndex, dragPosition, onMotionFrame }: Li
   }, [activeIndex]);
 
   const visiblePosition = motionPosition ?? dragPosition;
-  const deformation = visiblePosition
-    ? Math.min(Math.abs(visiblePosition.index - Math.round(visiblePosition.index)), .5)
-    : 0;
 
   return (
     <span
@@ -154,7 +151,6 @@ export function LiquidTabBubble({ activeIndex, dragPosition, onMotionFrame }: Li
       data-inertia={visiblePosition ? 'true' : undefined}
       style={visiblePosition ? {
         transform: `translate3d(${visiblePosition.index * visiblePosition.stepPx}px, 0, 0)`,
-        scale: `${1 + deformation * .10} ${1 - deformation * .065}`,
       } : undefined}
       aria-hidden="true"
     >

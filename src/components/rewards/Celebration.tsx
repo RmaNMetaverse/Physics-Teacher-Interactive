@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import type { LearnerProgressV2 } from '../../progress/types';
+import { playFeedbackSound } from '../../audio/feedback-sounds';
 
 export interface CelebrationProps {
   active?: boolean;
@@ -15,42 +16,6 @@ export interface CelebrationProps {
 function checkSystemReducedMotion(): boolean {
   if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') return false;
   return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-}
-
-function playSynthesizedSound(): (() => void) | void {
-  if (typeof window === 'undefined') return;
-  const AudioCtx = window.AudioContext || (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
-  if (!AudioCtx) return;
-
-  try {
-    const ctx = new AudioCtx();
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-
-    osc.type = 'sine';
-    osc.frequency.setValueAtTime(587.33, ctx.currentTime); // D5
-    osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.15); // A5
-
-    gain.gain.setValueAtTime(0.12, ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.3);
-
-    osc.connect(gain);
-    gain.connect(ctx.destination);
-
-    osc.start();
-    osc.stop(ctx.currentTime + 0.3);
-
-    const closeTimer = window.setTimeout(() => {
-      ctx.close().catch(() => {});
-    }, 350);
-
-    return () => {
-      window.clearTimeout(closeTimer);
-      ctx.close().catch(() => {});
-    };
-  } catch {
-    // Audio contexts may be blocked by autoplay policies
-  }
 }
 
 export function Celebration(props: CelebrationProps) {
@@ -73,6 +38,17 @@ export function Celebration(props: CelebrationProps) {
 
   useEffect(() => {
     if (!active) {
+      soundPlayedRef.current = false;
+      return;
+    }
+    if (soundEnabled && !soundPlayedRef.current) {
+      soundPlayedRef.current = true;
+      playFeedbackSound('complete');
+    }
+  }, [active, soundEnabled]);
+
+  useEffect(() => {
+    if (!active) {
       setIsVisible(false);
       return;
     }
@@ -85,12 +61,6 @@ export function Celebration(props: CelebrationProps) {
 
     setIsVisible(true);
 
-    let closeAudio: (() => void) | void;
-    if (soundEnabled && !soundPlayedRef.current) {
-      soundPlayedRef.current = true;
-      closeAudio = playSynthesizedSound();
-    }
-
     const timer = window.setTimeout(() => {
       setIsVisible(false);
       onComplete?.();
@@ -98,9 +68,8 @@ export function Celebration(props: CelebrationProps) {
 
     return () => {
       window.clearTimeout(timer);
-      closeAudio?.();
     };
-  }, [active, isAllowed, soundEnabled, durationMs, onComplete]);
+  }, [active, isAllowed, durationMs, onComplete]);
 
   if (!isAllowed || !isVisible) {
     return null;

@@ -52,6 +52,7 @@ test('mobile glass bubble follows a drag in both directions and switches pages o
   const exploreBox = (await explore.boundingBox())!;
   const progressBox = (await progress.boundingBox())!;
   const firstLearnBox = (await learn.boundingBox())!;
+  const restingBubbleHeight = (await bubble.boundingBox())!.height;
   await page.mouse.move(exploreBox.x + exploreBox.width / 2, exploreBox.y + exploreBox.height / 2);
   await page.mouse.down();
   await page.mouse.move(firstLearnBox.x + firstLearnBox.width / 2, firstLearnBox.y + firstLearnBox.height / 2, { steps: 6 });
@@ -64,11 +65,8 @@ test('mobile glass bubble follows a drag in both directions and switches pages o
     const iconColor = getComputedStyle(element.querySelector('svg')!).fill;
     return iconColor === textColor;
   })).toBe(true);
-  await expect.poll(() => bubble.evaluate(element => element.style.scale)).not.toBe('');
-  const dragScale = await bubble.evaluate(element => element.style.scale.split(' ').map(Number));
-  const [horizontalScale, verticalScale = horizontalScale] = dragScale;
-  expect(horizontalScale).toBeLessThanOrEqual(1.055);
-  expect(verticalScale).toBeGreaterThanOrEqual(0.967);
+  expect(await bubble.evaluate(element => element.style.scale)).toBe('');
+  expect((await bubble.boundingBox())!.height).toBeCloseTo(restingBubbleHeight, 1);
   const halfwayTransform = await bubble.evaluate(element => element.style.transform);
   await page.mouse.move(progressBox.x + progressBox.width / 2, progressBox.y + progressBox.height / 2, { steps: 12 });
   await expect(bubble).toHaveAttribute('data-dragging', 'true');

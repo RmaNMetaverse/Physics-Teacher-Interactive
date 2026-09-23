@@ -9,15 +9,17 @@ import { MathWidget } from '../MathWidget';
 import { FormattedText } from '../FormattedText';
 import { FormulaReasoning } from './FormulaReasoning';
 import { formulaReasoning } from '../../learning/formula-reasoning';
+import { playFeedbackSound } from '../../audio/feedback-sounds';
 
 interface MathStepProps {
   step: Extract<MissionStep, { kind: 'math' }>;
   state: MissionSession;
   dispatch: (action: MissionAction) => void;
   onAnswered?: (stepId: string, answer: number | string) => void;
+  soundEnabled?: boolean;
 }
 
-export function MathStep({ step, state, dispatch, onAnswered }: MathStepProps) {
+export function MathStep({ step, state, dispatch, onAnswered, soundEnabled = false }: MathStepProps) {
   const layer = step.layer;
   const isExpandedInSession = state.expandedMathStepIds.includes(step.id);
   const [isExpanded, setIsExpanded] = useState<boolean>(isExpandedInSession);
@@ -100,6 +102,7 @@ export function MathStep({ step, state, dispatch, onAnswered }: MathStepProps) {
       val = !Number.isNaN(parsed) ? parsed : trimmed;
     }
 
+    playFeedbackSound(checkAnswer(checkAssessment, val).correct ? 'correct' : 'try-again', soundEnabled);
     dispatch({ type: 'answer', stepId: step.id, value: val });
     onAnswered?.(step.id, val);
   };

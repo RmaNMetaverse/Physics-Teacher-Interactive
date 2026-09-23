@@ -11,6 +11,9 @@ import { courseCatalog } from '../src/learning/catalog';
 import { createProgressV2 } from '../src/progress/progress';
 import type { MissionDefinition, MissionStep } from '../src/learning/types';
 
+const playFeedbackSound = vi.hoisted(() => vi.fn());
+vi.mock('../src/audio/feedback-sounds', () => ({ playFeedbackSound }));
+
 const mathMission: MissionDefinition = {
   id: 'test-math-mission',
   kind: 'mission',
@@ -101,6 +104,7 @@ describe('MathStep component', () => {
     cleanup();
     localStorage.clear();
     sessionStorage.clear();
+    playFeedbackSound.mockReset();
   });
 
   const mathStep = mathMission.steps[0] as Extract<MissionStep, { kind: 'math' }>;
@@ -231,7 +235,7 @@ describe('MathStep component', () => {
     const dispatch = vi.fn();
     const onAnswered = vi.fn();
 
-    render(<MathStep step={mathStep} state={state} dispatch={dispatch} onAnswered={onAnswered} />);
+    render(<MathStep step={mathStep} state={state} dispatch={dispatch} onAnswered={onAnswered} soundEnabled />);
 
     // Foundation mode title should not be visible
     expect(screen.queryByText(mathStep.layer.foundation.title)).not.toBeInTheDocument();
@@ -242,13 +246,14 @@ describe('MathStep component', () => {
 
     // Enter answer and submit
     const input = screen.getByRole('textbox', { name: /your answer/i });
-    await user.type(input, '5');
+    await user.type(input, '10');
 
     const checkButton = screen.getByRole('button', { name: /check answer/i });
     await user.click(checkButton);
 
-    expect(dispatch).toHaveBeenCalledWith({ type: 'answer', stepId: 'step-math', value: 5 });
-    expect(onAnswered).toHaveBeenCalledWith('step-math', 5);
+    expect(dispatch).toHaveBeenCalledWith({ type: 'answer', stepId: 'step-math', value: 10 });
+    expect(onAnswered).toHaveBeenCalledWith('step-math', 10);
+    expect(playFeedbackSound).toHaveBeenCalledWith('correct', true);
   });
 
   it('resets player state cleanly when switching missions using key', async () => {

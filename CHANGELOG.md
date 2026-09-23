@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-09-23 — Stable glass bubble and procedural learning sounds
+
+- Removed the mobile navigation bubble's horizontal stretch and vertical squeeze during dragging, keeping its WebGL and decorative layers aligned while preserving spring movement and subtle shape motion.
+- Added tiny procedural Web Audio cues for correct answers, gentle retries, and mission completion; no audio files or network requests are used.
+- Connected the cues to both regular and mathematical assessments and kept them governed by the existing Sound setting.
+
 ## 2026-09-20 — Bubble-following mobile tab highlights
 
 - Made mobile navigation labels and icons blend toward the purple accent as the glass bubble overlaps them, including drag, release inertia, and tap transitions. Widened the blend so the passing label reaches full accent before the lens center arrives.

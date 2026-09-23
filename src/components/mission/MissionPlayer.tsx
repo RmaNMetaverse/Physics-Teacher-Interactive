@@ -259,6 +259,7 @@ export function MissionPlayer({ course, mission, progress, onProgressChange }: M
             state={state}
             dispatch={dispatch}
             onAnswered={handleAnswered}
+            soundEnabled={progress.settings.sound}
           />
         )}
 
@@ -280,6 +281,7 @@ export function MissionPlayer({ course, mission, progress, onProgressChange }: M
             state={state}
             dispatch={dispatch}
             onAnswered={handleAnswered}
+            soundEnabled={progress.settings.sound}
           />
         )}
 

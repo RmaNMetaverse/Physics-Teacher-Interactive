@@ -4,15 +4,17 @@ import type { MissionAction, MissionSession } from '../../learning/mission-engin
 import type { MissionStep } from '../../learning/types';
 import { checkAnswer } from '../../lib/assessment';
 import { FormattedText } from '../FormattedText';
+import { playFeedbackSound } from '../../audio/feedback-sounds';
 
 interface AssessmentStepProps {
   step: Extract<MissionStep, { kind: 'predict' | 'check' }>;
   state: MissionSession;
   dispatch: (action: MissionAction) => void;
   onAnswered?: (stepId: string, answer: number | string) => void;
+  soundEnabled?: boolean;
 }
 
-export function AssessmentStep({ step, state, dispatch, onAnswered }: AssessmentStepProps) {
+export function AssessmentStep({ step, state, dispatch, onAnswered, soundEnabled = false }: AssessmentStepProps) {
   const assessment = step.assessment;
   const currentAnswer = state.answers[step.id];
   const [selectedOption, setSelectedOption] = useState<number | null>(
@@ -53,6 +55,7 @@ export function AssessmentStep({ step, state, dispatch, onAnswered }: Assessment
       val = !Number.isNaN(parsed) && assessment.unit === undefined ? parsed : trimmed;
     }
 
+    playFeedbackSound(checkAnswer(assessment, val).correct ? 'correct' : 'try-again', soundEnabled);
     dispatch({ type: 'answer', stepId: step.id, value: val });
     onAnswered?.(step.id, val);
   };

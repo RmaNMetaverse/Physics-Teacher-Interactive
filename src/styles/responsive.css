@@ -189,10 +189,6 @@ html, body {
     transition: none;
   }
 
-  .mobile-tab-bar > .liquid-tab-bubble[data-dragging="true"] {
-    border-radius: 48% 52% 51% 49% / 52% 49% 51% 48%;
-  }
-
   .mobile-tab-item:hover {
     color: var(--text);
     text-decoration: none;
