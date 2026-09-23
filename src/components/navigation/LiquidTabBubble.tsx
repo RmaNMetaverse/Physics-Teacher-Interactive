@@ -17,6 +17,7 @@ export function LiquidTabBubble({ activeIndex, dragPosition, onMotionFrame }: Li
   const motionRef = useRef<{ index: number; velocity: number; target: number; stepPx: number } | null>(null);
   const frameRef = useRef(0);
   const transitionFrameRef = useRef(0);
+  const transitionMidpointTimerRef = useRef(0);
   const draggingRef = useRef(Boolean(dragPosition));
   const onMotionFrameRef = useRef(onMotionFrame);
   const [motionPosition, setMotionPosition] = useState<{ index: number; stepPx: number } | null>(null);
@@ -75,6 +76,7 @@ export function LiquidTabBubble({ activeIndex, dragPosition, onMotionFrame }: Li
   useEffect(() => () => {
     if (frameRef.current) cancelAnimationFrame(frameRef.current);
     if (transitionFrameRef.current) cancelAnimationFrame(transitionFrameRef.current);
+    window.clearTimeout(transitionMidpointTimerRef.current);
   }, []);
 
   useEffect(() => {
@@ -82,6 +84,7 @@ export function LiquidTabBubble({ activeIndex, dragPosition, onMotionFrame }: Li
     previousIndex.current = activeIndex;
     if (from === activeIndex) return;
     if (transitionFrameRef.current) cancelAnimationFrame(transitionFrameRef.current);
+    window.clearTimeout(transitionMidpointTimerRef.current);
     transitionFrameRef.current = 0;
 
     const reducedMotion = document.documentElement.dataset.reducedMotion === 'true'
@@ -114,6 +117,14 @@ export function LiquidTabBubble({ activeIndex, dragPosition, onMotionFrame }: Li
     // Tap navigation uses a CSS transform, so sample the lens position until
     // that transition ends. Drag navigation reports its spring position above.
     if (!onMotionFrameRef.current || motionRef.current) return;
+    // A busy WebGL frame can occasionally span an entire two-tab transition.
+    // Preserve the semantic overlap in that case so the skipped label still
+    // receives its passing highlight rather than jumping between endpoints.
+    if (Math.abs(activeIndex - from) > 1) {
+      transitionMidpointTimerRef.current = window.setTimeout(() => {
+        onMotionFrameRef.current?.((from + activeIndex) / 2);
+      }, 180);
+    }
     const startedAt = performance.now();
     const sampleTransition = (now: number) => {
       transitionFrameRef.current = 0;
@@ -134,6 +145,7 @@ export function LiquidTabBubble({ activeIndex, dragPosition, onMotionFrame }: Li
       if (now - startedAt < 650) {
         transitionFrameRef.current = requestAnimationFrame(sampleTransition);
       } else {
+        window.clearTimeout(transitionMidpointTimerRef.current);
         onMotionFrameRef.current?.(null);
       }
     };

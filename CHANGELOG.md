@@ -2,7 +2,7 @@
 
 ## 2026-09-23 — Stable glass bubble and procedural learning sounds
 
-- Removed the mobile navigation bubble's horizontal stretch and vertical squeeze during dragging, keeping its WebGL and decorative layers aligned while preserving spring movement and subtle shape motion.
+- Removed the mobile navigation bubble's horizontal stretch and vertical squeeze during dragging, keeping its WebGL and decorative layers aligned while preserving spring movement, subtle shape motion, and pass-over highlights during dropped frames.
 - Added tiny procedural Web Audio cues for correct answers, gentle retries, and mission completion; no audio files or network requests are used.
 - Connected the cues to both regular and mathematical assessments and kept them governed by the existing Sound setting.
 
