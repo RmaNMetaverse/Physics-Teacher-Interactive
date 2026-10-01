@@ -70,7 +70,11 @@ test.describe('Mission player and layered math', () => {
     await expect(nextBtn).toBeEnabled();
     await nextBtn.click();
 
-    // Step 4: Math Step 1 (math-arithmetic)
+    // Step 4: Explain the physics before the applied calculation.
+    await expect(page.locator('.mission-step-explain')).toBeVisible();
+    await page.getByRole('button', { name: 'Next step', exact: true }).click();
+
+    // Step 5: One contextual mathematics step.
     await expect(page.getByText('Layered mathematics')).toBeVisible();
     await expect(page.getByText('Symbol definitions')).toBeVisible();
 
@@ -89,9 +93,10 @@ test.describe('Mission player and layered math', () => {
       await revealStepBtn.click();
     }
 
-    // Answer the math check: prompt is "Evaluate 5 + 2 × 6." (answer 17)
+    // Calculate the track length using decimal section measurements.
     const mathCheckInput = page.locator('.foundation-check input');
-    await mathCheckInput.fill('17');
+    await expect(page.locator('.foundation-check')).toContainText('Four adjacent 0.75 m sections');
+    await mathCheckInput.fill('3');
     await page.locator('.foundation-check button', { hasText: 'Check answer' }).click();
 
     // Close foundation view
@@ -101,31 +106,13 @@ test.describe('Mission player and layered math', () => {
     // Advance to next step
     await page.getByRole('button', { name: 'Next step', exact: true }).click();
 
-    // Step 5: Math Step 2 (math-decimals)
-    await page.getByRole('button', { name: /Teach me the math/i }).click();
-    // Prompt: "Evaluate 0.4 × 0.3." -> answer 0.12
-    const decimalInput = page.locator('.foundation-check input');
-    await decimalInput.fill('0.12');
-    await page.locator('.foundation-check button', { hasText: 'Check answer' }).click();
-    await page.getByRole('button', { name: 'Next step', exact: true }).click();
-
-    // Step 6: Explain
-    await expect(page.getByText('Explanation')).toBeVisible();
-    await page.getByRole('button', { name: 'Next step', exact: true }).click();
-
-    // Step 7: Calculation Check ("Four adjacent 0.75 m sections...") -> answer 3
-    const calcInput = page.locator('.numeric-answer input');
-    await calcInput.fill('3');
-    await page.getByRole('button', { name: 'Check answer' }).click();
-    await page.getByRole('button', { name: 'Next step', exact: true }).click();
-
-    // Step 8: Experiment Check ("Set length to 4 m...") -> answer 4
+    // Step 6: Experiment Check ("Set length to 4 m...") -> answer 4
     const expInput = page.locator('.numeric-answer input');
     await expInput.fill('4');
     await page.getByRole('button', { name: 'Check answer' }).click();
     await page.getByRole('button', { name: 'Next step', exact: true }).click();
 
-    // Step 9: Recap
+    // Step 7: Recap
     await expect(page.getByRole('heading', { name: /Mission complete/i })).toBeVisible();
     await expect(page.getByText('Key takeaways')).toBeVisible();
 

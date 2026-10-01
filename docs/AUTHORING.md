@@ -36,6 +36,9 @@ Each normal instructional mission is defined in `src/learning/courses/<course-id
 ## Author Layered Math
 
 Every math step implements the `MathLayer` contract:
+- Use exactly one applied math step per normal mission. Its equation, derivation, worked example, and assessment must address the mission's physical scenario; do not copy a generic tutorial quiz into the required journey.
+- Link all required background skills through `foundation.prerequisites`. General tutorials are optional refreshers; set `visual.optionalRefresher: true` when their manipulative should stay in the refresher rather than the main lesson.
+- Keep three distinct assessments per mission: prediction, applied math, and a physics or experimental check. Label intentional repetition in checkpoints as review.
 - **Quick Mode**:
   - `equation`: Formatted KaTeX string.
   - `summary`: One-sentence operational summary.

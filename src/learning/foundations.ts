@@ -3,24 +3,34 @@ import { lessons as firstLessons } from '../content/foundations';
 import { laterLessons } from '../content/later';
 import { mathTutorials } from '../content/math';
 import type { Assessment, LessonDefinition } from '../types';
-import { createMathLayer } from './math-layers';
 import type { CourseDefinition, MathLayer, MissionDefinition, MissionStep } from './types';
 import { biteSizedExplanation } from './concise';
 
 const legacyLessons = [...firstLessons, ...laterLessons, ...finalLessons];
 const tutorialsById = new Map(mathTutorials.map(tutorial => [tutorial.id, tutorial]));
 
-function missionMathLayer(lessonId: string, mathId: string, stepId: string): MathLayer {
+function missionMathLayer(lesson: LessonDefinition, mathId: string, stepId: string): MathLayer {
   const tutorial = tutorialsById.get(mathId);
-  if (!tutorial) throw new Error(`Foundations lesson ${lessonId} references unavailable math tutorial ${mathId}`);
-  const layer = createMathLayer(tutorial);
+  if (!tutorial) throw new Error(`Foundations lesson ${lesson.id} references unavailable math tutorial ${mathId}`);
   return {
-    ...layer,
+    quick: {
+      equation: lesson.equation,
+      summary: lesson.summary,
+      symbols: lesson.symbols.split(';').map(definition => {
+        const colon = definition.indexOf(':');
+        return colon >= 0 ? { symbol: definition.slice(0, colon).trim(), meaning: definition.slice(colon + 1).trim() }
+          : { symbol: '=', meaning: definition.trim() };
+      }),
+    },
     foundation: {
-      ...layer.foundation,
-      prerequisites: layer.foundation.prerequisites.map(prerequisite => ({ ...prerequisite, returnTo: stepId })),
+      title: `Apply the math: ${lesson.title.toLowerCase()}`,
+      concepts: lesson.objectives,
+      explanation: lesson.explanation,
+      prerequisites: lesson.math.map(id => ({ id, returnTo: stepId })),
       returnTo: stepId,
-      check: { ...layer.foundation.check, id: `${lessonId}-${layer.foundation.check.id}` },
+      visual: { ...tutorial.interactive, tutorialId: tutorial.id, optionalRefresher: true },
+      workedExample: lesson.workedExample,
+      check: requireAssessment(lesson, 1),
     },
   };
 }
@@ -32,10 +42,10 @@ function requireAssessment(lesson: LessonDefinition, index: number): Assessment 
 }
 
 function adaptLesson(lesson: LessonDefinition): MissionDefinition {
-  const mathSteps: MissionStep[] = lesson.math.map(mathId => {
-    const id = `${lesson.id}-required-${mathId}`;
-    return { id, kind: 'math', title: `Math for ${lesson.title}: ${tutorialsById.get(mathId)?.title ?? mathId}`, layer: missionMathLayer(lesson.id, mathId, id) };
-  });
+  const mathId = lesson.math[0];
+  const mathStepId = `${lesson.id}-required-${mathId}`;
+  const oldMathIds = lesson.math.map(id => `${lesson.id}-required-${id}`);
+  const mathStep: MissionStep = { id: mathStepId, kind: 'math', title: `Math in context: ${lesson.title}`, layer: missionMathLayer(lesson, mathId, mathStepId) };
   return {
     id: lesson.id,
     kind: 'mission',
@@ -52,13 +62,20 @@ function adaptLesson(lesson: LessonDefinition): MissionDefinition {
     workedExample: lesson.workedExample,
     reviewedAt: lesson.reviewedAt,
     detailedExplanation: lesson.explanation,
+    historicalSteps: [
+      ...oldMathIds.map(id => ({ id, kind: 'math' as const })),
+      { id: `${lesson.id}-calculation-check`, kind: 'check' },
+    ],
+    previousStepOrder: [
+      `${lesson.id}-observe`, `${lesson.id}-predict`, `${lesson.id}-simulate`, ...oldMathIds,
+      `${lesson.id}-explain`, `${lesson.id}-calculation-check`, `${lesson.id}-experiment-check`, `${lesson.id}-recap`,
+    ],
     steps: [
       { id: `${lesson.id}-observe`, kind: 'observe', title: 'Observe the question', body: [lesson.summary] },
       { id: `${lesson.id}-predict`, kind: 'predict', assessment: requireAssessment(lesson, 0) },
       { id: `${lesson.id}-simulate`, kind: 'simulate', modelId: lesson.family, prompt: lesson.experiment.join(' '), preset: lesson.preset },
-      ...mathSteps,
       { id: `${lesson.id}-explain`, kind: 'explain', title: 'Explain the evidence', body: biteSizedExplanation(lesson.explanation, lesson.summary) },
-      { id: `${lesson.id}-calculation-check`, kind: 'check', assessment: requireAssessment(lesson, 1) },
+      mathStep,
       { id: `${lesson.id}-experiment-check`, kind: 'check', assessment: requireAssessment(lesson, 2) },
       { id: `${lesson.id}-recap`, kind: 'recap', takeaways: lesson.objectives },
     ],

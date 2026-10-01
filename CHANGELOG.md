@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-10-01 — Mathematics in the context of each lesson
+
+- Replaced repeated mandatory prerequisite quizzes in Foundations with one applied math step per lesson, using that lesson's physics equation, derivation, worked example, and calculation question.
+- Kept all required math tutorials available as optional refreshers across the 99 published lessons. Removed unrelated generic explanations and inline refresher exercises from the main lesson flow.
+- Clearly labeled checkpoint questions as review. Preserved three distinct assessments per lesson, prerequisite links, XP, completion history, settings, and existing quiz history.
+- Migrated in-progress Foundations sessions to the seven-stage journey without treating old generic quiz answers as passing the applied question.
+- Added curriculum-wide content checks, saved-session regressions, and mobile, tablet, and desktop browser coverage.
+
 ## 2026-09-23 — Stable glass bubble and procedural learning sounds
 
 - Removed the mobile navigation bubble's horizontal stretch and vertical squeeze during dragging, keeping its WebGL and decorative layers aligned while preserving spring movement, subtle shape motion, and pass-over highlights during dropped frames.

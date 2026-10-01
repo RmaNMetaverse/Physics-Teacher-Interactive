@@ -16,6 +16,7 @@ import { MathStep } from './MathStep';
 import { ExplainStep } from './ExplainStep';
 import { RecapStep } from './RecapStep';
 import { SimulationStep } from '../simulation/SimulationStep';
+import { MISSION_CURRICULUM_REVISION, upgradeMissionSession } from '../../learning/session-upgrade';
 
 interface JourneyStage {
   kind: 'observe' | 'predict' | 'simulate' | 'explain' | 'math' | 'check' | 'recap';
@@ -44,12 +45,13 @@ function storageKey(courseId: string, missionId: string): string {
   return `physics-mission-session-${courseId}-${missionId}`;
 }
 
-function loadSavedSession(courseId: string, missionId: string): MissionSessionSaved | undefined {
+function loadSavedSession(courseId: string, mission: MissionDefinition): MissionSessionSaved | undefined {
   if (typeof localStorage === 'undefined') return undefined;
   try {
-    const raw = localStorage.getItem(storageKey(courseId, missionId));
+    const raw = localStorage.getItem(storageKey(courseId, mission.id));
     if (!raw) return undefined;
-    return JSON.parse(raw);
+    const { curriculumRevision, ...saved } = JSON.parse(raw);
+    return upgradeMissionSession(mission, saved, curriculumRevision ?? 0);
   } catch {
     return undefined;
   }
@@ -58,7 +60,7 @@ function loadSavedSession(courseId: string, missionId: string): MissionSessionSa
 function saveSession(courseId: string, missionId: string, saved: MissionSessionSaved): void {
   if (typeof localStorage === 'undefined') return;
   try {
-    localStorage.setItem(storageKey(courseId, missionId), JSON.stringify(saved));
+    localStorage.setItem(storageKey(courseId, missionId), JSON.stringify({ ...saved, curriculumRevision: MISSION_CURRICULUM_REVISION }));
   } catch {
     // Ignore quota or private browsing errors gracefully
   }
@@ -66,7 +68,7 @@ function saveSession(courseId: string, missionId: string, saved: MissionSessionS
 
 export function MissionPlayer({ course, mission, progress, onProgressChange }: MissionPlayerProps) {
   const initialSession = useMemo(() => {
-    const saved = loadSavedSession(course.id, mission.id);
+    const saved = loadSavedSession(course.id, mission);
     try {
       return createMissionSession(mission, saved);
     } catch {

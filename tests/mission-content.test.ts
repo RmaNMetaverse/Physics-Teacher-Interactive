@@ -67,14 +67,15 @@ describe('Foundations mission content', () => {
       const quickExplanation = mission.steps.find(step => step.kind === 'explain')?.body.join(' ') ?? '';
       expect(quickExplanation.split(/\s+/).length, legacy.id).toBeLessThanOrEqual(32);
       expect(mission.detailedExplanation, legacy.id).toEqual(legacy.explanation);
-      expect(mission.steps.flatMap(step => step.kind === 'predict' || step.kind === 'check' ? [step.assessment] : []), legacy.id).toEqual(legacy.assessments);
+      expect(mission.steps.flatMap(step => step.kind === 'predict' || step.kind === 'check' ? [step.assessment] : step.kind === 'math' ? [step.layer.foundation.check] : []), legacy.id).toEqual(legacy.assessments);
       const mathSteps = mission.steps.filter(step => step.kind === 'math');
-      expect(mathSteps.map(step => step.id.replace(`${legacy.id}-required-`, '')), legacy.id).toEqual(legacy.math);
+      expect(mathSteps, legacy.id).toHaveLength(1);
+      expect(mathSteps[0].layer.foundation.prerequisites.map(item => item.id), legacy.id).toEqual(legacy.math);
       for (const step of mathSteps) {
         expect(step.layer.foundation.returnTo, step.id).toBe(step.id);
         expect(step.layer.foundation.prerequisites.every(prerequisite => prerequisite.returnTo === step.id), step.id).toBe(true);
       }
-      expect(mission!.steps.map(step => step.kind), legacy.id).toEqual(['observe', 'predict', 'simulate', ...legacy.math.map(() => 'math'), 'explain', 'check', 'check', 'recap']);
+      expect(mission!.steps.map(step => step.kind), legacy.id).toEqual(['observe', 'predict', 'simulate', 'explain', 'math', 'check', 'recap']);
     }
   });
 });

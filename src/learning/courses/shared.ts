@@ -109,12 +109,12 @@ export function starterCourse(course: StarterCourse): CourseDefinition {
                                 }]
                         },
                         foundation: {
-                            title: `Build the math for ${draft.title.toLowerCase()}`, concepts: tutorial.concepts, explanation: [...draft.mathNotes, ...tutorial.explanation],
+                            title: `Build the math for ${draft.title.toLowerCase()}`, concepts: draft.mathNotes, explanation: draft.mathNotes,
                             prerequisites: requiredMath.map(mathId => ({
                                 id: mathId, returnTo: stepId
                             })), returnTo: stepId,
                             visual: {
-                                ...tutorial.interactive, tutorialId: tutorial.id
+                                ...tutorial.interactive, tutorialId: tutorial.id, optionalRefresher: true
                             }, workedExample: draft.example, check: calculation,
                         },
                     }
@@ -139,7 +139,10 @@ export function starterCourse(course: StarterCourse): CourseDefinition {
                 },
                 steps: [
                     ...[0, 2, 4].map((index) => ({
-                        id: `${checkpointId}-check-${index}`, kind: 'check' as const, assessment: choice(`${checkpointId}-assessment-${index}`, course.missions[index].check)
+                        id: `${checkpointId}-check-${index}`, kind: 'check' as const, assessment: choice(`${checkpointId}-assessment-${index}`, [
+                            `Review ${course.missions[index].title.toLowerCase()}: ${course.missions[index].check[0]}`,
+                            ...course.missions[index].check.slice(1),
+                        ] as Choice)
                     })),
                     {
                         id: `${checkpointId}-recap`, kind: 'recap', takeaways: course.missions.map(mission => mission.takeaway)

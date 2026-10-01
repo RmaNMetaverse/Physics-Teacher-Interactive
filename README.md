@@ -13,7 +13,7 @@ try it: https://rmanmetaverse.github.io/Physics-Teacher-Interactive/
 
 Physics Teacher Interactive is an interactive physics teacher inspired by **Brilliant** and **Duolingo**—but built for physics.
 
-It teaches through short, guided lessons instead of long textbook chapters. You make predictions, run simulations, work through examples, and explain what happened. When a lesson needs algebra, vectors, trigonometry, or another prerequisite, the app teaches that background math as part of the lesson.
+It teaches through short, guided lessons instead of long textbook chapters. You make predictions, run simulations, work through examples, and explain what happened. Each lesson applies math to its own physics topic. Algebra, vectors, trigonometry, and other background math are available as optional refreshers when you need them.
 
 The goal is to make physics feel like a skill you practice every day: curious, visual, and hands-on.
 
@@ -52,7 +52,7 @@ Run the app locally with `npm run dev` to explore the live simulations and respo
 - Explore 16 released course paths with 99 normal missions and 15 checkpoints, including Electronics and a separate Arduino/ESP32 beginner lab after Electromagnetism.
 - Read circuit schematics and breadboard-style diagrams, compare series and parallel resistor networks, switch an LED loop, and try guided Blink, button, PWM, and analog-sensor board examples.
 - Learn with bite-sized missions built around **Observe → Predict → Simulate → Explain → Check**.
-- Open the math behind an equation in two ways: a quick explanation or a step-by-step foundation lesson.
+- Explore each equation through a derivation and a worked example, then answer a lesson-specific math question. Open optional background math refreshers without repeating them as mandatory quizzes.
 - Change values in interactive experiments and see the physics respond immediately.
 - See bounded, model-derived 3D scenes with responsive materials, lighting, particle systems, scientific readouts, graphs, accessible data tables, and autoplaying lesson simulations.
 - Track XP, streaks, daily goals, course mastery, activity, checkpoint badges, and backup/restore data in the Progress report dashboard.

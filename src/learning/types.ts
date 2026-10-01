@@ -10,7 +10,7 @@ export interface MathLayer {
     title: string; concepts: string[]; explanation: string[];
     prerequisites: Array<{ id: string; returnTo: string }>;
     returnTo: string;
-    visual: { tutorialId: string; label: string; kind: 'number' | 'ratio' | 'graph' | 'triangle' | 'vector' | 'wave' | 'area'; min: number; max: number; step: number; initial: number; instruction: string };
+    visual: { tutorialId: string; label: string; kind: 'number' | 'ratio' | 'graph' | 'triangle' | 'vector' | 'wave' | 'area'; min: number; max: number; step: number; initial: number; instruction: string; optionalRefresher?: boolean };
     workedExample: { question: string; steps: string[]; answer: string }; check: Assessment;
   };
 }
@@ -27,6 +27,9 @@ interface MissionBase {
   requiredMath: string[]; modelId?: ModelId; scienceStatus: ScienceStatus; steps: MissionStep[]; sources: SourceReference[]; limitations: string[];
 }
 export interface NormalMissionDefinition extends MissionBase {
+  /** Retired scored steps remain valid history in saved progress and backups. */
+  historicalSteps?: Array<{ id: string; kind: 'math' | 'check' }>;
+  previousStepOrder?: string[];
   kind: 'mission'; equation: string; symbols: string; workedExample: { question: string; steps: string[]; answer: string }; reviewedAt: string; detailedExplanation?: string[]; checkpoint?: never;
 }
 export interface CheckpointMissionDefinition extends MissionBase {

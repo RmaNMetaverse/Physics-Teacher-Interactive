@@ -3,6 +3,7 @@ import type { CourseCatalog, MissionDefinition, MissionStep } from '../learning/
 import type { LearnerProgress } from '../types';
 import type { LearnerProgressV2, MissionCompletionInput, ProgressStepInput, StarCount } from './types';
 import { normalizeAppearanceSettings, presetFor } from '../appearance';
+import { mathTutorials } from '../content/math';
 
 export const PROGRESS_V2_STORAGE_KEY = 'physics-teacher-interactive-progress-v2';
 
@@ -63,6 +64,14 @@ function indexCatalog(catalog: CourseCatalog): CatalogIndex {
         index.steps.add(current);
         if (step.kind === 'predict' || step.kind === 'check' || step.kind === 'math') index.answerSteps.add(current);
         if (step.kind === 'math') index.mathSteps.add(current);
+      }
+      // Accept catalog-known retired questions in existing backups without
+      // presenting them as part of the current learning journey.
+      if (mission.kind === 'mission') for (const step of mission.historicalSteps ?? []) {
+        const historical = stepKey(courseId, mission.id, step.id);
+        index.steps.add(historical);
+        index.answerSteps.add(historical);
+        if (step.kind === 'math') index.mathSteps.add(historical);
       }
       if (mission.kind === 'checkpoint') index.badges.set(mission.checkpoint.badgeId, { courseId, missionId: mission.id, requiredMissionIds: mission.checkpoint.requiredMissionIds });
     }
@@ -150,8 +159,13 @@ function migrateV1(value: unknown, catalog: CourseCatalog, now: Date): LearnerPr
       if (!key.startsWith('foundations/')) continue;
       const matched = [...entry.steps.values()].find(step =>
         ((step.kind === 'predict' || step.kind === 'check') && step.assessment.id === legacyAssessmentId)
-        || (step.kind === 'math' && step.layer.foundation.check.id === entry.mission.id + '-' + legacyAssessmentId));
+        || (step.kind === 'math' && (step.layer.foundation.check.id === legacyAssessmentId
+          || step.layer.foundation.check.id === entry.mission.id + '-' + legacyAssessmentId)));
       if (matched) progress.answers[`${key}/${matched.id}`] = answer;
+    }
+    const tutorial = mathTutorials.find(item => item.assessment.id === legacyAssessmentId);
+    if (tutorial) for (const key of index.mathSteps) {
+      if (key.startsWith('foundations/') && key.endsWith(`-required-${tutorial.id}`)) progress.answers[key] = answer;
     }
   }
   const completedMath = Array.isArray(legacy.mathCompleted) ? legacy.mathCompleted.filter((id): id is string => typeof id === 'string') : [];

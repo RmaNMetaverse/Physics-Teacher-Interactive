@@ -291,7 +291,7 @@ export function MathStep({ step, state, dispatch, onAnswered, soundEnabled = fal
                 Teach me the math
               </button>
               <span className="math-expand-guidance">
-                Need a deeper refresher? Open the foundation tutorial for concepts and worked examples, or verify your understanding directly below to advance.
+                See the worked example for this lesson, or answer its applied math check below. General math refreshers are optional.
               </span>
             </div>
 
@@ -366,7 +366,8 @@ export function MathStep({ step, state, dispatch, onAnswered, soundEnabled = fal
               {/* Prerequisites list */}
               {layer.foundation.prerequisites && layer.foundation.prerequisites.length > 0 && (
                 <div className="foundation-prerequisites">
-                  <h4>Helpful first</h4>
+                  <h4>Optional math refreshers</h4>
+                  <p>Review a background skill if you need it, then return to this lesson. These refreshers are not extra quizzes.</p>
                   <div className="prereq-chips">
                     {layer.foundation.prerequisites.map(prereq => {
                       const prereqTutorial = mathTutorials.find(t => t.id === prereq.id);
@@ -388,7 +389,7 @@ export function MathStep({ step, state, dispatch, onAnswered, soundEnabled = fal
               )}
 
               {/* Interactive Visual */}
-              <div className="foundation-visual">
+              {!visualDef.optionalRefresher && <div className="foundation-visual">
                 <h4>Interactive illustration</h4>
                 {visualTutorial ? (
                   <MathWidget
@@ -417,7 +418,7 @@ export function MathStep({ step, state, dispatch, onAnswered, soundEnabled = fal
                     <p>{visualDef.instruction}</p>
                   </div>
                 )}
-              </div>
+              </div>}
 
               {/* Worked Example */}
               <div className="foundation-worked-example">
