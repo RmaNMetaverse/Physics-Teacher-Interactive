@@ -1,5 +1,5 @@
-import katex from 'katex';
 import { useMemo } from 'react';
+import { Equation } from './Equation';
 
 interface FormattedTextProps {
   text: string;
@@ -53,24 +53,19 @@ export function FormattedText({ text, className, as: Component = 'span' }: Forma
   const segments = useMemo(() => parseMathSegments(text), [text]);
 
   return (
-    <Component className={className}>
+    <Component className={`formatted-text ${className ?? ''}`}>
       {segments.map((seg, idx) => {
         if (seg.kind === 'text') {
           return <span key={idx}>{seg.content}</span>;
         }
 
         const isDisplay = seg.kind === 'math-display';
-        const html = katex.renderToString(seg.content, {
-          displayMode: isDisplay,
-          throwOnError: false,
-          output: 'htmlAndMathml',
-        });
-
         return (
-          <span
+          <Equation
             key={idx}
-            className={isDisplay ? 'equation-display-inline' : 'equation-inline-span'}
-            dangerouslySetInnerHTML={{ __html: html }}
+            value={seg.content}
+            inline={!isDisplay}
+            className={isDisplay ? 'equation-display-inline' : undefined}
           />
         );
       })}

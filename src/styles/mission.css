@@ -118,6 +118,8 @@
 
 /* Focused Mission Step Card - Squircle geometry */
 .mission-step {
+  min-width: 0;
+  max-width: 100%;
   display: flex;
   flex-direction: column;
   gap: 22px;
@@ -230,6 +232,7 @@
 .foundation-visual > div,
 .math-widget-fallback {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--stack-md);
 }
 
@@ -603,7 +606,7 @@
 }
 
 .equation-display {
-  font-size: 1.25rem;
+  font-size: clamp(1rem, 3vw, 1.25rem);
   text-align: center;
   padding: 8px 0;
   color: var(--text);
@@ -613,7 +616,7 @@
   list-style: none;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
   gap: 10px;
   margin: 0;
 }
@@ -948,6 +951,29 @@
   max-width: 100%;
 }
 
+.math-expression,
+.formatted-text {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.math-expression-display {
+  display: block;
+  width: 100%;
+}
+
+.math-expression-inline {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.formula-reasoning > *,
+.formula-reasoning-steps > li,
+.foundation-worked-example > *,
+.worked-example-card > * {
+  min-width: 0;
+}
+
 .equation-scroll-region {
   display: block;
   width: 100%;
@@ -958,14 +984,33 @@
   overscroll-behavior-inline: contain;
   scrollbar-width: thin;
   -webkit-overflow-scrolling: touch;
-  touch-action: pan-x;
+  touch-action: pan-x pan-y;
 }
 
-.equation-scroll-region > .katex-display {
+.equation-scroll-region > .katex-display,
+.equation-inline > .katex {
+  display: block;
   width: max-content;
   min-width: 100%;
   margin: 0;
   padding-inline: 4px;
+}
+
+.equation-inline {
+  padding-block: 0.25em;
+  font-size: 1em;
+}
+
+.equation-scroll-hint {
+  display: block;
+  font-family: var(--font-body, system-ui, sans-serif);
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.5;
+  text-align: start;
+  color: var(--muted);
+  white-space: normal;
+  padding-block: 2px 4px;
 }
 
 .equation-scroll-region:focus-visible {

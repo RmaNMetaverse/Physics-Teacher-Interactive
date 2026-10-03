@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-10-03 — Readable formulas on narrow mobile screens
+
+- Unified formula rendering in explanations, derivations, quizzes, and worked examples with standalone equations, preserving KaTeX typesetting and accessible MathML.
+- Kept long formulas inside their available width with touch and keyboard horizontal scrolling and a hint shown only when the expression overflows. Short inline formulas remain in the normal reading flow.
+- Fixed minimum-width grid constraints that could widen lesson cards, and allowed symbol lists to fit very narrow screens. Kept vertical page scrolling available over equations.
+- Added regression checks at 280, 320, and 360 pixels for complete formula access, keyboard scrolling, and resizing back to desktop.
+
 ## 2026-10-01 — Mathematics in the context of each lesson
 
 - Replaced repeated mandatory prerequisite quizzes in Foundations with one applied math step per lesson, using that lesson's physics equation, derivation, worked example, and calculation question.
