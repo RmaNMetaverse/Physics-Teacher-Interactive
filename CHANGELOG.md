@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-10-06 — Optional detailed proofs and shared daily streaks
+
+- Added 116 authored, collapsible detailed derivations covering every published lesson equation and background math tutorial. Kept short explanations visible, detailed proofs optional, and extra formula rendering deferred until expansion.
+- Included starting assumptions, intermediate equations, model limits, and references for advanced derivations. Distinguished definitions and empirical premises from mathematical consequences.
+- Retained practice-date history and recomputed streaks from the union of activity on all devices. Counted practice once per shared UTC day, preserved personal bests, credited mission replays, and upgraded existing saves.
+- Replaced blind cloud overwrites with merge-before-save and conditional revision updates. Added retries for concurrent writes, refresh on return/reconnection, and a periodic visible-tab refresh without rewriting unchanged documents.
+- Preserved practice completed during network requests and explicit progress resets across devices. No Supabase schema migration or additional service is required.
+- Added curriculum-wide typesetting checks, narrow-screen and keyboard disclosure tests, independent-device and concurrent-write tests, and account refresh/reconnection regressions.
+
 ## 2026-10-03 — Readable formulas on narrow mobile screens
 
 - Unified formula rendering in explanations, derivations, quizzes, and worked examples with standalone equations, preserving KaTeX typesetting and accessible MathML.

@@ -19,7 +19,7 @@ export interface LearnerProgressV2 {
   completedMathSteps: string[];
   xpLedger: Record<string, number>;
   totalXp: number;
-  streak: { current: number; longest: number; lastActiveDate: string };
+  streak: { current: number; longest: number; lastActiveDate: string; days?: string[] };
   dailyGoal: 1 | 3 | 5;
   badges: string[];
   settings: {
@@ -33,6 +33,7 @@ export interface LearnerProgressV2 {
     font?: FontName;
   };
   savedAt: string;
+  resetAt?: string;
 }
 
 export interface ProgressStepInput {

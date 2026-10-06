@@ -56,6 +56,11 @@ describe('Rewards: XpBar', () => {
 });
 
 describe('Rewards: StreakCard', () => {
+  it('shows an expired streak as zero while preserving the personal best', () => {
+    render(<StreakCard streak={{ current: 3, longest: 12, lastActiveDate: '2026-10-02' }} today="2026-10-06" />);
+    expect(screen.getByText('0 days')).toBeInTheDocument();
+    expect(screen.getByText('Longest: 12 days')).toBeInTheDocument();
+  });
   it('formats streak of 0 days with inactive copy and flame visual', () => {
     render(
       <StreakCard
@@ -281,7 +286,7 @@ describe('ProgressPage: Dashboard, Settings, and Backup Controls', () => {
 
     return {
       ...p,
-      streak: { current: 3, longest: 7, lastActiveDate: '2026-09-11' },
+      streak: { current: 3, longest: 7, lastActiveDate: new Date().toISOString().slice(0, 10) },
       dailyGoal: 3,
       settings: { theme: 'dark', sound: true, reducedMotion: false, celebrations: true },
     };

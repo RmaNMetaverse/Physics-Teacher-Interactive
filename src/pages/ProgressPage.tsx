@@ -127,7 +127,7 @@ export function ProgressPage({ progress, onProgressChange }: ProgressPageProps) 
     const resetProgress: LearnerProgressV2 = {
       ...fresh,
       settings: { ...progress.settings },
-      savedAt: new Date().toISOString(),
+      resetAt: fresh.savedAt,
     };
 
     onProgressChange?.(resetProgress);

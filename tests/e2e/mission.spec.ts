@@ -25,11 +25,11 @@ test.describe('Mission player and layered math', () => {
       expect(await proof.evaluate(element => Boolean(element.compareDocumentPosition(
         document.querySelector('.mission-step-explain .equation-container')!
       ) & Node.DOCUMENT_POSITION_FOLLOWING))).toBe(true);
-      const conceptHelp = proof.locator('details');
+      const conceptHelp = proof.locator('.formula-reasoning-help');
       if (await conceptHelp.evaluate(element => (element as HTMLDetailsElement).open)) {
-        await proof.locator('summary').click();
+        await conceptHelp.locator('summary').click();
       }
-      await proof.locator('summary').click();
+      await conceptHelp.locator('summary').click();
       const expanded = await conceptHelp.evaluate(element => (element as HTMLDetailsElement).open);
       expect(expanded, `Concept help should open at ${viewport.width}px`).toBe(true);
       await expect(proof).toContainText('Sine and cosine are side ratios');

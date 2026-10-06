@@ -203,7 +203,7 @@ test.describe('Progress page and rewards dashboard (v2)', () => {
       completedMathSteps: [],
       xpLedger: { 'foundations/measurement-basics': 60 },
       totalXp: 60,
-      streak: { current: 2, longest: 4, lastActiveDate: '2026-09-11' },
+      streak: { current: 2, longest: 4, lastActiveDate: new Date().toISOString().slice(0, 10) },
       dailyGoal: 3,
       badges: [],
       settings: {

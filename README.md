@@ -53,6 +53,8 @@ Run the app locally with `npm run dev` to explore the live simulations and respo
 - Read circuit schematics and breadboard-style diagrams, compare series and parallel resistor networks, switch an LED loop, and try guided Blink, button, PWM, and analog-sensor board examples.
 - Learn with bite-sized missions built around **Observe → Predict → Simulate → Explain → Check**.
 - Explore each equation through a derivation and a worked example, then answer a lesson-specific math question. Open optional background math refreshers without repeating them as mandatory quizzes.
+- Expand optional detailed proofs for the intermediate math, starting assumptions, and limits behind every lesson formula and background math tutorial.
+- Keep a shared daily practice streak across devices when signed in. Offline practice merges on reconnection, with one common UTC day boundary.
 - Change values in interactive experiments and see the physics respond immediately.
 - See bounded, model-derived 3D scenes with responsive materials, lighting, particle systems, scientific readouts, graphs, accessible data tables, and autoplaying lesson simulations.
 - Track XP, streaks, daily goals, course mastery, activity, checkpoint badges, and backup/restore data in the Progress report dashboard.

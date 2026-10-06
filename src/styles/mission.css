@@ -206,6 +206,32 @@
 }
 
 .formula-reasoning-help p { padding: 0 0 8px; }
+.formula-detailed-proof {
+  min-width: 0;
+  border: 1px solid color-mix(in srgb, var(--accent) 35%, var(--line));
+  border-radius: 12px;
+  background: var(--panel);
+  padding: 0 14px;
+}
+.formula-detailed-proof > summary {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 48px;
+  padding-block: 10px;
+  cursor: pointer;
+  color: var(--accent);
+  font-size: 14px;
+  font-weight: 700;
+  list-style: none;
+}
+.formula-detailed-proof > summary::-webkit-details-marker { display: none; }
+.formula-detailed-proof > summary::before { content: '›'; font-size: 22px; }
+.formula-detailed-proof[open] > summary::before { transform: rotate(90deg); }
+.formula-detailed-proof > summary small { margin-left: auto; color: var(--muted); font-size: 11px; }
+.formula-proof-content { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; padding-block: 6px 18px; font-size: 14px; line-height: 1.75; }
+.formula-proof-content > * { min-width: 0; }
+.formula-proof-limits { padding-top: 14px; border-top: 1px solid var(--line); color: var(--muted); }
 .formula-reasoning-result { color: var(--muted); font-size: 13px; font-weight: 700; }
 
 @media (max-width: 768px) {

@@ -7,6 +7,15 @@ import { mergeProgress } from '../src/cloud/progress-sync';
 const catalog = createCourseCatalog([quantumCourse]);
 
 describe('cloud progress sync', () => {
+  it('honors an explicit reset across devices rather than resurrecting old achievements and days', () => {
+    const old = completeMission(createProgressV2(new Date('2026-10-04T12:00:00Z')), {
+      courseId: 'quantum', missionId: 'quantum-light-quanta', stars: 3,
+    }, catalog, new Date('2026-10-04T12:00:00Z'));
+    const reset = { ...createProgressV2(new Date('2026-10-05T12:00:00Z')), resetAt: '2026-10-05T12:00:00.000Z' };
+    old.savedAt = '2026-10-06T12:00:00.000Z'; // A stale device can save later than the reset.
+    expect(mergeProgress(old, reset, catalog)).toMatchObject({ completedMissions: [], totalXp: 0, streak: { current: 0 }, resetAt: reset.resetAt });
+    expect(mergeProgress(reset, old, catalog)).toEqual(mergeProgress(old, reset, catalog));
+  });
   it('combines independently completed missions without losing either device', () => {
     const first = completeMission(
       createProgressV2(new Date('2026-09-10T08:00:00.000Z')),

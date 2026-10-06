@@ -3,6 +3,7 @@ import type { CourseCatalog } from '../learning/types';
 import { parseProgressV2 } from '../progress/progress';
 import type { LearnerProgressV2, StarCount } from '../progress/types';
 import { supabase } from './supabase';
+import { mergeStreaks } from '../progress/streak';
 
 export type SyncState = 'local' | 'syncing' | 'synced' | 'error';
 
@@ -14,11 +15,22 @@ function unique(values: readonly string[]): string[] {
   return [...new Set(values)];
 }
 
+export function sameProgress(first: LearnerProgressV2, second: LearnerProgressV2): boolean {
+  const canonical = (value: LearnerProgressV2) => JSON.stringify(value, (_key, item) =>
+    item && typeof item === 'object' && !Array.isArray(item)
+      ? Object.fromEntries(Object.keys(item).sort().map(key => [key, item[key]])) : item);
+  return canonical(first) === canonical(second);
+}
+
 export function mergeProgress(
   local: LearnerProgressV2,
   remote: LearnerProgressV2,
   catalog: CourseCatalog,
 ): LearnerProgressV2 {
+  if ((local.resetAt ?? '') !== (remote.resetAt ?? '')) {
+    const resetWinner = (local.resetAt ?? '') > (remote.resetAt ?? '') ? local : remote;
+    return parseProgressV2(JSON.stringify(resetWinner), catalog, new Date());
+  }
   const recent = newest(local, remote);
   const completedMissions = unique([...local.completedMissions, ...remote.completedMissions]);
   const completedSet = new Set(completedMissions);
@@ -46,10 +58,7 @@ export function mergeProgress(
     completedMathSteps: unique([...local.completedMathSteps, ...remote.completedMathSteps]),
     xpLedger,
     totalXp: Object.values(xpLedger).reduce((sum, xp) => sum + xp, 0),
-    streak: {
-      ...recent.streak,
-      longest: Math.max(local.streak.longest, remote.streak.longest),
-    },
+    streak: mergeStreaks(local.streak, remote.streak),
     badges: unique([...local.badges, ...remote.badges]),
     settings: { ...recent.settings },
     savedAt: recent.savedAt,
@@ -68,27 +77,32 @@ export async function loadAndMergeProgress(
   local: LearnerProgressV2,
   catalog: CourseCatalog,
 ): Promise<LearnerProgressV2> {
-  const client = requireClient();
-  const { data, error } = await client
-    .from('user_progress')
-    .select('progress')
-    .eq('user_id', user.id)
-    .maybeSingle();
-  if (error) throw error;
-
-  const remote = data?.progress
-    ? parseProgressV2(JSON.stringify(data.progress), catalog, new Date())
-    : null;
-  const merged = remote ? mergeProgress(local, remote, catalog) : local;
-  await saveCloudProgress(user, merged);
-  return merged;
+  return saveCloudProgress(user, local, catalog);
 }
 
-export async function saveCloudProgress(user: User, progress: LearnerProgressV2): Promise<void> {
-  const { error } = await requireClient().from('user_progress').upsert({
-    user_id: user.id,
-    progress,
-    updated_at: progress.savedAt,
-  });
-  if (error) throw error;
+/** Compare-and-swap using the existing updated_at column; no schema migration. */
+export async function saveCloudProgress(user: User, progress: LearnerProgressV2, catalog: CourseCatalog): Promise<LearnerProgressV2> {
+  const client = requireClient();
+  const local = parseProgressV2(JSON.stringify(progress), catalog, new Date());
+  for (let attempt = 0; attempt < 5; attempt += 1) {
+    const { data, error } = await client.from('user_progress').select('progress, updated_at').eq('user_id', user.id).maybeSingle();
+    if (error) throw error;
+    const remote = data ? parseProgressV2(JSON.stringify(data.progress), catalog, new Date()) : null;
+    const merged = remote ? mergeProgress(local, remote, catalog) : local;
+    if (remote && sameProgress(remote, merged)) return merged;
+    // A strictly increasing token also handles multiple writes in one millisecond.
+    const updatedAt = new Date(Math.max(Date.now(), data ? Date.parse(data.updated_at) + 1 : 0)).toISOString();
+    const values = { user_id: user.id, progress: merged, updated_at: updatedAt };
+    const query = data
+      ? client.from('user_progress').update(values).eq('user_id', user.id).eq('updated_at', data.updated_at)
+      : client.from('user_progress').insert(values);
+    const written = await query.select('progress').maybeSingle();
+    if (written.error) {
+      if (!data && written.error.code === '23505') continue; // Another device inserted first.
+      throw written.error;
+    }
+    if (written.data) return parseProgressV2(JSON.stringify(written.data.progress), catalog, new Date());
+    // Zero updated rows means another device changed the revision. Read and merge again.
+  }
+  throw new Error('Another device is updating progress. Your local work is saved; please sync again.');
 }

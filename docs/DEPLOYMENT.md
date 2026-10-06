@@ -38,6 +38,10 @@ Then paste that Google Client ID and Client Secret into **Supabase → Authentic
 
 The app remains fully usable without these variables. Anonymous progress stays in localStorage. After sign-in, the app merges the browser and cloud documents, writes the result to both locations, and debounces later cloud updates.
 
+Daily streaks retain the set of practice dates and merge dates across all devices signed into the same account. A practice day runs from 00:00 to 24:00 UTC everywhere, so device time zones do not double-count activity. Merely signing in or changing settings does not earn a day; lesson activity and mission completion do. Old saves recover their known latest consecutive run and retain their personal best, although counters cannot recover unknown older activity dates.
+
+Every cloud save first reads and merges the latest document, then updates only if its `updated_at` revision is still unchanged. A competing insert or update causes a fresh read and retry, preventing simultaneous devices from overwriting practice history. This uses the existing table and RLS policies; **no additional SQL migration is needed**. A signed-in visible tab refreshes on focus, reconnection, and once per minute. Offline work remains local until a successful sync. Explicit resets carry a reset timestamp so old devices cannot restore cleared achievements after reconnecting.
+
 When Supabase is configured, the app waits for the initial authentication check
 and presents signed-out visitors with a centered account prompt. Visitors may
 close it and continue with local progress; a reminder points them to the avatar

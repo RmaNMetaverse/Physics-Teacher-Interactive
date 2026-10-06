@@ -4,6 +4,7 @@ import type { LearnerProgress } from '../types';
 import type { LearnerProgressV2, MissionCompletionInput, ProgressStepInput, StarCount } from './types';
 import { normalizeAppearanceSettings, presetFor } from '../appearance';
 import { mathTutorials } from '../content/math';
+import { creditPractice, deriveStreak, isPracticeDay, streakDays } from './streak';
 
 export const PROGRESS_V2_STORAGE_KEY = 'physics-teacher-interactive-progress-v2';
 
@@ -30,10 +31,6 @@ function exactKeys(value: Record<string, unknown>, expected: readonly string[]):
 }
 function assertNow(now: Date): void {
   if (!(now instanceof Date) || Number.isNaN(now.getTime())) throw new Error('A valid current time is required.');
-}
-function dateKey(now: Date): string {
-  assertNow(now);
-  return `${now.getFullYear().toString().padStart(4, '0')}-${(now.getMonth() + 1).toString().padStart(2, '0')}-${now.getDate().toString().padStart(2, '0')}`;
 }
 function validDateKey(value: unknown): value is string {
   if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
@@ -93,24 +90,14 @@ function requireRecord(value: unknown, allowed: ReadonlySet<string>, label: stri
   if (!isRecord(value) || !Object.entries(value).every(([key, item]) => allowed.has(key) && valid(item, key))) throw new Error(`${label} contains an unknown or invalid value.`);
   return { ...value };
 }
-function updateStreak(streak: LearnerProgressV2['streak'], now: Date): LearnerProgressV2['streak'] {
-  const today = dateKey(now);
-  if (streak.lastActiveDate === today) return { ...streak };
-  if (streak.lastActiveDate === '') return { current: 1, longest: Math.max(1, streak.longest), lastActiveDate: today };
-  const [year, month, day] = streak.lastActiveDate.split('-').map(Number);
-  const [todayYear, todayMonth, todayDay] = today.split('-').map(Number);
-  const elapsed = (Date.UTC(todayYear, todayMonth - 1, todayDay) - Date.UTC(year, month - 1, day)) / 86_400_000;
-  const current = elapsed === 1 ? streak.current + 1 : 1;
-  return { current, longest: Math.max(streak.longest, current), lastActiveDate: today };
-}
-
 export function createProgressV2(now: Date): LearnerProgressV2 {
   assertNow(now);
   return { version: 2, selectedCourseId: '', nextMissionByCourse: {}, completedMissions: [], missionStars: {}, stepAttempts: {}, answers: {}, completedMathSteps: [], xpLedger: {}, totalXp: 0, streak: { current: 0, longest: 0, lastActiveDate: '' }, dailyGoal: 3, badges: [], settings: { theme: 'dark', primaryColor: '#a78bfa', secondaryColor: '#34d399', liquidGlass: true, font: 'modern-sans', sound: true, reducedMotion: false, celebrations: true }, savedAt: now.toISOString() };
 }
 
 function parseV2(value: unknown, catalog: CourseCatalog): LearnerProgressV2 {
-  if (!isRecord(value) || !exactKeys(value, V2_KEYS) || value.version !== 2) throw new Error('Progress import does not have the complete version-2 shape.');
+  if (!isRecord(value) || !(exactKeys(value, V2_KEYS) || exactKeys(value, [...V2_KEYS, 'resetAt'])) || value.version !== 2) throw new Error('Progress import does not have the complete version-2 shape.');
+  if (value.resetAt !== undefined && !canonicalIso(value.resetAt)) throw new Error('Progress reset time is invalid.');
   const index = indexCatalog(catalog), missionIds = new Set(index.missions.keys());
   if (typeof value.selectedCourseId !== 'string' || (value.selectedCourseId !== '' && !index.courses.has(value.selectedCourseId))) throw new Error('Selected course is invalid or unknown.');
   const nextMissionByCourse = requireRecord(value.nextMissionByCourse, index.courses, 'Next missions', (missionId, courseId) => typeof missionId === 'string' && (missionId === '' || index.missions.has(missionKey(courseId, missionId)))) as Record<string, string>;
@@ -124,7 +111,9 @@ function parseV2(value: unknown, catalog: CourseCatalog): LearnerProgressV2 {
   const completedXpMissions = completedMissions.filter(key => index.missions.get(key)?.mission.kind === 'mission');
   if (Object.keys(xpLedger).length !== completedXpMissions.length) throw new Error('XP ledger must contain one catalog-validated entry for every completed mission.');
   const streak = value.streak;
-  if (!isRecord(streak) || !exactKeys(streak, STREAK_KEYS) || typeof streak.current !== 'number' || !Number.isSafeInteger(streak.current) || typeof streak.longest !== 'number' || !Number.isSafeInteger(streak.longest) || streak.current < 0 || streak.longest < streak.current || !(streak.lastActiveDate === '' || validDateKey(streak.lastActiveDate))) throw new Error('Streak is invalid.');
+  if (!isRecord(streak) || !(exactKeys(streak, STREAK_KEYS) || exactKeys(streak, [...STREAK_KEYS, 'days'])) || typeof streak.current !== 'number' || !Number.isSafeInteger(streak.current) || typeof streak.longest !== 'number' || !Number.isSafeInteger(streak.longest) || streak.current < 0 || streak.current > 365250 || streak.longest < streak.current || !(streak.lastActiveDate === '' || validDateKey(streak.lastActiveDate))) throw new Error('Streak is invalid.');
+  if (streak.days !== undefined && (!Array.isArray(streak.days) || streak.days.length > 365250 || !streak.days.every(isPracticeDay) || new Set(streak.days).size !== streak.days.length)) throw new Error('Practice dates are invalid.');
+  const sharedStreak = deriveStreak(streakDays(streak as LearnerProgressV2['streak']), streak.longest);
   if (value.dailyGoal !== 1 && value.dailyGoal !== 3 && value.dailyGoal !== 5) throw new Error('Daily goal must be 1, 3, or 5.');
   const earnedBadgeIds = new Set<string>();
   for (const [badgeId, rule] of index.badges) {
@@ -137,7 +126,7 @@ function parseV2(value: unknown, catalog: CourseCatalog): LearnerProgressV2 {
   if (!isRecord(value.settings) || !Object.keys(value.settings).every(key => SETTINGS_KEYS.has(key)) || typeof value.settings.sound !== 'boolean' || typeof value.settings.reducedMotion !== 'boolean' || typeof value.settings.celebrations !== 'boolean') throw new Error('Settings are invalid.');
   const appearance = normalizeAppearanceSettings(value.settings);
   if (!canonicalIso(value.savedAt)) throw new Error('Saved time must be a canonical ISO timestamp.');
-  return { version: 2, selectedCourseId: value.selectedCourseId, nextMissionByCourse, completedMissions, missionStars, stepAttempts, answers, completedMathSteps, xpLedger, totalXp: sum(xpLedger), streak: { current: streak.current, longest: streak.longest, lastActiveDate: streak.lastActiveDate }, dailyGoal: value.dailyGoal, badges, settings: { ...appearance, sound: value.settings.sound, reducedMotion: value.settings.reducedMotion, celebrations: value.settings.celebrations }, savedAt: value.savedAt };
+  return { version: 2, selectedCourseId: value.selectedCourseId, nextMissionByCourse, completedMissions, missionStars, stepAttempts, answers, completedMathSteps, xpLedger, totalXp: sum(xpLedger), streak: sharedStreak, dailyGoal: value.dailyGoal, badges, settings: { ...appearance, sound: value.settings.sound, reducedMotion: value.settings.reducedMotion, celebrations: value.settings.celebrations }, savedAt: value.savedAt, ...(value.resetAt === undefined ? {} : { resetAt: value.resetAt }) };
 }
 
 function migrateV1(value: unknown, catalog: CourseCatalog, now: Date): LearnerProgressV2 {
@@ -193,7 +182,7 @@ export function recordStep(progress: LearnerProgressV2, event: ProgressStepInput
   next.stepAttempts[key] = (next.stepAttempts[key] ?? 0) + 1;
   if (event.answer !== undefined) next.answers[key] = event.answer;
   if (index.mathSteps.has(key) && !next.completedMathSteps.includes(key)) next.completedMathSteps.push(key);
-  next.streak = updateStreak(next.streak, now);
+  next.streak = creditPractice(next.streak, now);
   return saveAt(next, now);
 }
 
@@ -212,6 +201,7 @@ export function completeMission(progress: LearnerProgressV2, result: MissionComp
   const missions = catalog.getCourse(result.courseId).missions, at = missions.findIndex(mission => mission.id === result.missionId);
   next.nextMissionByCourse[result.courseId] = missions[at + 1]?.id ?? '';
   if (entry.mission.kind === 'checkpoint' && entry.mission.checkpoint.requiredMissionIds.every(id => next.completedMissions.includes(missionKey(result.courseId, id))) && !next.badges.includes(entry.mission.checkpoint.badgeId)) next.badges.push(entry.mission.checkpoint.badgeId);
+  next.streak = creditPractice(next.streak, now);
   return saveAt(next, now);
 }
 

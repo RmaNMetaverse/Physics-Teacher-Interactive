@@ -3,7 +3,7 @@ import type { User } from '@supabase/supabase-js';
 import { courseCatalog } from '../learning/catalog';
 import { saveProgressV2 } from '../progress/progress';
 import type { LearnerProgressV2 } from '../progress/types';
-import { loadAndMergeProgress, saveCloudProgress, type SyncState } from './progress-sync';
+import { loadAndMergeProgress, mergeProgress, sameProgress, type SyncState } from './progress-sync';
 import { isCloudConfigured, supabase } from './supabase';
 import { authRedirectUrl } from './redirect';
 
@@ -32,9 +32,32 @@ export function useCloudAccount(
   const [error, setError] = useState('');
   const currentProgress = useRef(progress);
   const hydratedUser = useRef<string | null>(null);
+  const activeUser = useRef<string | null>(null);
+  const syncQueue = useRef<Promise<unknown>>(Promise.resolve());
   currentProgress.current = progress;
 
+  const synchronize = useCallback((nextUser: User) => {
+    const task = syncQueue.current.catch(() => undefined).then(async () => {
+      if (activeUser.current !== nextUser.id) return;
+      setSyncState('syncing');
+      const merged = await loadAndMergeProgress(nextUser, currentProgress.current, courseCatalog);
+      if (activeUser.current !== nextUser.id) return;
+      // Retain any practice completed while the network request was in flight.
+      const combined = mergeProgress(currentProgress.current, merged, courseCatalog);
+      saveProgressV2(combined, courseCatalog);
+      if (!sameProgress(combined, currentProgress.current)) {
+        currentProgress.current = combined;
+        setProgress(combined);
+      }
+      setError('');
+      setSyncState('synced');
+    });
+    syncQueue.current = task;
+    return task;
+  }, [setProgress]);
+
   const hydrate = useCallback(async (nextUser: User | null) => {
+    activeUser.current = nextUser?.id ?? null;
     setUser(nextUser);
     setError('');
     if (!nextUser) {
@@ -45,20 +68,20 @@ export function useCloudAccount(
     }
     setReady(false);
     setSyncState('syncing');
+    hydratedUser.current = nextUser.id;
     try {
-      const merged = await loadAndMergeProgress(nextUser, currentProgress.current, courseCatalog);
-      saveProgressV2(merged, courseCatalog);
-      currentProgress.current = merged;
-      setProgress(merged);
+      await synchronize(nextUser);
+      if (activeUser.current !== nextUser.id) return;
       hydratedUser.current = nextUser.id;
       setSyncState('synced');
     } catch (caught) {
+      if (activeUser.current !== nextUser.id) return;
       setError(caught instanceof Error ? caught.message : 'Progress could not be synchronized.');
       setSyncState('error');
     } finally {
-      setReady(true);
+      if (activeUser.current === nextUser.id) setReady(true);
     }
-  }, [setProgress]);
+  }, [synchronize]);
 
   useEffect(() => {
     if (!supabase) return;
@@ -71,15 +94,15 @@ export function useCloudAccount(
     });
     return () => {
       active = false;
+      activeUser.current = null;
       data.subscription.unsubscribe();
     };
   }, [hydrate]);
 
   useEffect(() => {
     if (!user || !ready || hydratedUser.current !== user.id) return;
-    setSyncState('syncing');
     const timer = window.setTimeout(() => {
-      void saveCloudProgress(user, progress)
+      void synchronize(user)
         .then(() => { setError(''); setSyncState('synced'); })
         .catch(caught => {
           setError(caught instanceof Error ? caught.message : 'Progress could not be synchronized.');
@@ -87,7 +110,28 @@ export function useCloudAccount(
         });
     }, 700);
     return () => window.clearTimeout(timer);
-  }, [progress, ready, user]);
+  }, [progress, ready, user, synchronize]);
+
+  useEffect(() => {
+    if (!user || !ready || hydratedUser.current !== user.id) return;
+    const refresh = () => {
+      if (document.visibilityState !== 'visible') return;
+      void synchronize(user).catch(caught => {
+        setError(caught instanceof Error ? caught.message : 'Progress could not be synchronized.');
+        setSyncState('error');
+      });
+    };
+    const timer = window.setInterval(refresh, 60_000);
+    window.addEventListener('online', refresh);
+    window.addEventListener('focus', refresh);
+    document.addEventListener('visibilitychange', refresh);
+    return () => {
+      window.clearInterval(timer);
+      window.removeEventListener('online', refresh);
+      window.removeEventListener('focus', refresh);
+      document.removeEventListener('visibilitychange', refresh);
+    };
+  }, [user, ready, synchronize]);
 
   return {
     configured: isCloudConfigured,
@@ -129,7 +173,7 @@ export function useCloudAccount(
       if (!user) return;
       setSyncState('syncing');
       try {
-        await saveCloudProgress(user, currentProgress.current);
+        await synchronize(user);
         setError('');
         setSyncState('synced');
       } catch (caught) {

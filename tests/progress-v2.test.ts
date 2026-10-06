@@ -81,7 +81,7 @@ describe('version-2 learner progress', () => {
     expect(checkpoint.totalXp).toBe(120);
   });
 
-  it('records valid steps, accepts each supported daily goal, and advances local-day streaks without punishing missed days', () => {
+  it('records valid steps, accepts each supported daily goal, and advances shared-day streaks without losing a personal best', () => {
     const courseCatalog = catalog();
     const initial = { ...createProgressV2(now), dailyGoal: 5 as const };
     const first = recordStep(initial, { courseId: 'quantum', missionId: 'quantum-light-quanta', stepId: 'quantum-light-quanta-predict', answer: 0 }, courseCatalog, now);
@@ -90,9 +90,9 @@ describe('version-2 learner progress', () => {
 
     expect(first.stepAttempts['quantum/quantum-light-quanta/quantum-light-quanta-predict']).toBe(1);
     expect(first.answers['quantum/quantum-light-quanta/quantum-light-quanta-predict']).toBe(0);
-    expect(first.streak).toEqual({ current: 1, longest: 1, lastActiveDate: '2026-09-10' });
-    expect(second.streak).toEqual({ current: 2, longest: 2, lastActiveDate: '2026-09-11' });
-    expect(missed.streak).toEqual({ current: 1, longest: 2, lastActiveDate: '2026-09-13' });
+    expect(first.streak).toMatchObject({ current: 1, longest: 1, lastActiveDate: '2026-09-10' });
+    expect(second.streak).toMatchObject({ current: 2, longest: 2, lastActiveDate: '2026-09-11' });
+    expect(missed.streak).toMatchObject({ current: 1, longest: 2, lastActiveDate: '2026-09-13' });
     expect([1, 3, 5]).toContain(initial.dailyGoal);
   });
 
@@ -184,16 +184,16 @@ describe('version-2 learner progress', () => {
     expect(parseProgressV2(JSON.stringify(progress), catalog(), now).dailyGoal).toBe(dailyGoal);
   });
 
-  it('uses local calendar-day boundaries for streaks', () => {
+  it('uses the same UTC calendar-day boundaries for streaks on all devices', () => {
     const courseCatalog = catalog();
-    const beforeLocalMidnight = new Date(2026, 8, 10, 23, 59);
-    const afterLocalMidnight = new Date(2026, 8, 11, 0, 1);
+    const beforeLocalMidnight = new Date('2026-09-10T23:59:00Z');
+    const afterLocalMidnight = new Date('2026-09-11T00:01:00Z');
     const event = { courseId: 'quantum', missionId: 'quantum-light-quanta', stepId: 'quantum-light-quanta-predict', answer: 0 };
     const first = recordStep(createProgressV2(beforeLocalMidnight), event, courseCatalog, beforeLocalMidnight);
     const second = recordStep(first, event, courseCatalog, afterLocalMidnight);
 
-    expect(first.streak).toEqual({ current: 1, longest: 1, lastActiveDate: '2026-09-10' });
-    expect(second.streak).toEqual({ current: 2, longest: 2, lastActiveDate: '2026-09-11' });
+    expect(first.streak).toMatchObject({ current: 1, longest: 1, lastActiveDate: '2026-09-10' });
+    expect(second.streak).toMatchObject({ current: 2, longest: 2, lastActiveDate: '2026-09-11' });
   });
 
   it('rejects unknown IDs in a version-2 import', () => {

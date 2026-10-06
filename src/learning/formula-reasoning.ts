@@ -2,16 +2,18 @@
  * Each entry names that premise and then shows the mathematical deduction used by
  * the displayed classroom formula. Definitions are identified as definitions. */
 import { starterFormulaReasoning } from './starter-formula-reasoning';
+import { detailedFormulaProofs, type DetailedFormulaProof } from './detailed-formula-proofs';
 
 export interface FormulaReasoning {
   basis: string;
   steps: readonly string[];
   help?: string;
+  detailed?: DetailedFormulaProof;
 }
 
 const r = (basis: string, first: string, second: string, help?: string): FormulaReasoning => ({ basis, steps: [first, second], help });
 
-export const formulaReasoning: Record<string, FormulaReasoning> = {
+const briefFormulaReasoning: Record<string, FormulaReasoning> = {
   'measurement-basics': r('A measurement is a number together with a unit; a unit equation states the dimensions assigned to a quantity.', 'The example length is two copies of the meter, so its measured value is 2 m.', 'Speed is length divided by time, so its SI unit is m divided by s. This is a dimensional definition.'),
   'unit-conversion': r('One meter and 100 centimeters name the same length, so their ratio is exactly one.', 'Multiply 2 m by (100 cm)/(1 m); multiplying by one preserves the physical length.', 'Cancel the meter units and multiply 2 by 100 to obtain 200 cm.'),
   'measurement-uncertainty': r('Here u is a stated absolute bound around a nonzero central measurement L₀; it is not automatically a statistical standard deviation.', 'Subtract and add u to L₀ to form the lower and upper bounds of the interval.', 'Divide u by L₀ to compare the bound with the measured scale, then multiply by 100 to express a percent.', 'If the central value is zero, a relative percentage is undefined; use the absolute uncertainty.'),
@@ -65,3 +67,7 @@ export const formulaReasoning: Record<string, FormulaReasoning> = {
   'math-uncertainty': r('Interpret x ± u as a stated bounded interval with u ≥ 0, and x ≠ 0 for relative percent uncertainty.', 'Subtract and add u to get the lower and upper interval endpoints.', 'Divide u by |x| and multiply by 100 to express the bound as a percentage of the central magnitude.'),
   ...starterFormulaReasoning,
 };
+
+export const formulaReasoning: Record<string, FormulaReasoning> = Object.fromEntries(
+  Object.entries(briefFormulaReasoning).map(([id, reasoning]) => [id, { ...reasoning, detailed: detailedFormulaProofs[id] }]),
+);
