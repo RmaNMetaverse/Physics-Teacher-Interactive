@@ -2,6 +2,7 @@
 
 ## 2026-10-06 — Optional detailed proofs and shared daily streaks
 
+- Fixed the navbar browser check to inspect recorded intermediate style values when the browser batches animation mutations, so a busy frame cannot hide the passing highlight from the assertion.
 - Added 116 authored, collapsible detailed derivations covering every published lesson equation and background math tutorial. Kept short explanations visible, detailed proofs optional, and extra formula rendering deferred until expansion.
 - Included starting assumptions, intermediate equations, model limits, and references for advanced derivations. Distinguished definitions and empirical premises from mathematical consequences.
 - Retained practice-date history and recomputed streaks from the union of activity on all devices. Counted practice once per shared UTC day, preserved personal bests, credited mission replays, and upgraded existing saves.

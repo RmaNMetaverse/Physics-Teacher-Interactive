@@ -96,11 +96,17 @@ test('tapping across mobile tabs colors the text and icon as the bubble passes',
   await page.evaluate(() => {
     const link = document.querySelector<HTMLElement>('.mobile-tab-item[aria-label="Learn"]')!;
     (window as Window & { __learnCoverageMax?: number }).__learnCoverageMax = 0;
-    new MutationObserver(() => {
+    new MutationObserver(records => {
       const coverage = Number.parseFloat(link.style.getPropertyValue('--bubble-coverage')) || 0;
+      // Under a busy WebGL frame, several styles can change before the observer
+      // runs. Retain their recorded old values instead of reading only the final
+      // endpoint and missing a highlight that occurred in the same browser turn.
+      const intermediateCoverage = records.map(record => Number.parseFloat(
+        record.oldValue?.match(/--bubble-coverage:\s*([\d.]+)%/)?.[1] ?? '0',
+      ));
       const state = window as Window & { __learnCoverageMax?: number };
-      state.__learnCoverageMax = Math.max(state.__learnCoverageMax || 0, coverage);
-    }).observe(link, { attributes: true, attributeFilter: ['style'] });
+      state.__learnCoverageMax = Math.max(state.__learnCoverageMax || 0, coverage, ...intermediateCoverage);
+    }).observe(link, { attributes: true, attributeFilter: ['style'], attributeOldValue: true });
   });
   await nav.getByRole('link', { name: 'Progress' }).click();
   await expect(page).toHaveURL(/#\/progress$/);
