@@ -93,6 +93,11 @@ test('tapping across mobile tabs colors the text and icon as the bubble passes',
   await page.goto('/#/explore');
   const nav = page.getByRole('navigation', { name: 'Mobile navigation' });
   const learn = nav.getByRole('link', { name: 'Learn' });
+  // Shader initialization can occupy an entire animation window on CI's
+  // software GPU. Check the passing highlight after the dock finishes setup.
+  await expect(nav).toHaveAttribute('data-liquid-glass-bubble-renderer', /ready|fallback/);
+  await expect(nav).not.toHaveAttribute('data-bubble-moving');
+  await page.evaluate(() => new Promise<void>(resolve => requestAnimationFrame(() => requestAnimationFrame(() => resolve()))));
   await page.evaluate(() => {
     const link = document.querySelector<HTMLElement>('.mobile-tab-item[aria-label="Learn"]')!;
     (window as Window & { __learnCoverageMax?: number }).__learnCoverageMax = 0;
