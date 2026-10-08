@@ -240,11 +240,22 @@ describe('Precision Lab & Floating Playback HUD', () => {
     expect(wrapper).toBeInTheDocument();
   });
 
-  it('defaults every lab to the live 2D teaching view', () => {
+  it('defaults the motion lab to the live 2D teaching view', () => {
     render(<Lab modelId="motion" />);
     expect(screen.getByTestId('physics-2d')).toHaveAttribute('data-model', 'motion');
     expect(screen.getByRole('button', { name: /Live 2D/i })).toHaveAttribute('aria-pressed', 'true');
     expect(screen.queryByRole('button', { name: /Spatial 3D/i })).not.toBeInTheDocument();
+  });
+
+  it('starts data-first labs on measurements without a decorative 2D option', () => {
+    render(<Lab modelId="thermal" />);
+    expect(screen.queryByTestId('physics-2d')).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /Live 2D/i })).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Graph & data' })).toHaveAttribute('aria-pressed', 'true');
+    const table = screen.getByRole('table', { name: 'Live measurements' });
+    const before = table.textContent;
+    fireEvent.change(screen.getByLabelText('Temperature', { exact: true }), { target: { value: 450 } });
+    expect(table.textContent).not.toBe(before);
   });
 
   it('offers camera controls only for approved spatial 3D models', () => {

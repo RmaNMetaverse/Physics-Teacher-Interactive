@@ -77,7 +77,7 @@ export function GraphView({
         <text x="235" y="175" className="chart-label" textAnchor="middle">Time (s)</text>
         <text x="425" y="164" className="chart-label" textAnchor="end">{fmt(duration)} s</text>
       </svg>
-      <p className="graph-caption">Full predicted trial. The amber marker shows the current time. All measurements use the same physics as the 3D scene.</p>
+      <p className="graph-caption">Full predicted trial. The amber marker shows the current time. Change a parameter and compare the graph and measurements.</p>
       <table className="data-table" aria-label="Live measurements">
         <thead>
           <tr>

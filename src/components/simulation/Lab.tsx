@@ -22,7 +22,7 @@ import { GraphView } from './GraphView';
 import { SimulationBoundary } from './SimulationBoundary';
 import { ElectronicsWorkbench } from './ElectronicsWorkbench';
 import { Physics2D } from './Physics2D';
-import { supportsSpatial3D } from './render-policy';
+import { defaultSimulationView, supportsTeaching2D, supportsSpatial3D } from './render-policy';
 
 const Scene = lazy(() => import('./Scene'));
 
@@ -126,7 +126,9 @@ export function Lab({
     };
   }, []);
   const [speed, setSpeed] = useState(1);
-  const [view, setView] = useState<'2d' | '3d' | 'graph'>('2d');
+  const [view, setView] = useState<{ modelId: ModelId; mode: '2d' | '3d' | 'graph' }>(() => ({ modelId: id, mode: defaultSimulationView(id) }));
+  const activeView = view.modelId === id ? view.mode : defaultSimulationView(id);
+  function selectView(mode: '2d' | '3d' | 'graph') { setView({ modelId: id, mode }); }
   const [camera, setCamera] = useState(0);
   const [reducedModeActive, setReducedModeActive] = useState(false);
 
@@ -307,17 +309,17 @@ export function Lab({
           Interactive laboratory
         </div>
         <div className="segmented">
-          <button type="button" className={view === '2d' ? 'active' : ''} aria-pressed={view === '2d'} onClick={() => setView('2d')}>
+          {supportsTeaching2D(id) && <button type="button" className={activeView === '2d' ? 'active' : ''} aria-pressed={activeView === '2d'} onClick={() => selectView('2d')}>
             <Sparkles size={12} />
             {id === 'circuits' || id === 'microcontroller' ? 'Workbench' : 'Live 2D'}
-          </button>
+          </button>}
           {supportsSpatial3D(id) && (
-            <button type="button" className={view === '3d' && !reducedModeActive ? 'active' : ''} aria-pressed={view === '3d' && !reducedModeActive} onClick={() => { setReducedModeActive(false); setView('3d'); }}>
+            <button type="button" className={activeView === '3d' && !reducedModeActive ? 'active' : ''} aria-pressed={activeView === '3d' && !reducedModeActive} onClick={() => { setReducedModeActive(false); selectView('3d'); }}>
               <Box size={12} />
               Spatial 3D
             </button>
           )}
-          <button type="button" className={view === 'graph' ? 'active' : ''} aria-pressed={view === 'graph'} onClick={() => setView('graph')}>
+          <button type="button" className={activeView === 'graph' ? 'active' : ''} aria-pressed={activeView === 'graph'} onClick={() => selectView('graph')}>
             <ChartNoAxesCombined size={12} />
             Graph & data
           </button>
@@ -326,11 +328,11 @@ export function Lab({
 
       <div className="lab-content">
         <div className="experiment-viewport lab-canvas-frame">
-          {view === '2d' ? (
+          {activeView === '2d' && supportsTeaching2D(id) ? (
             id === 'circuits' || id === 'microcontroller'
               ? <ElectronicsWorkbench modelId={id} parameters={parameters} state={state} onChange={update}/>
               : <Physics2D modelId={id} parameters={parameters} state={state} trajectory={trajectory}/>
-          ) : view === '3d' && supportsSpatial3D(id) && !reducedModeActive ? (
+          ) : activeView === '3d' && supportsSpatial3D(id) && !reducedModeActive ? (
             <>
               <SimulationBoundary
                 key={id + ':' + camera}

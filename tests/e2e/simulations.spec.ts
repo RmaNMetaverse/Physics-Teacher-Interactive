@@ -54,12 +54,21 @@ test.describe('Mission simulations across the original physics course set', () =
       // Verify simulate step header and prompt
       await expect(page.getByText('Interactive simulation')).toBeVisible();
       await expect(page.getByText('Interactive laboratory')).toBeVisible();
-      const live2d = page.getByTestId('physics-2d');
-      await expect(live2d).toBeVisible();
-      await expect(page.getByRole('button', { name: /Live 2D/i })).toHaveAttribute('aria-pressed', 'true');
+      const essential2d = ['vectors', 'projectile', 'forces', 'energy', 'collisions', 'gravity', 'spring', 'pendulum', 'motion'].includes(modelId);
+      const experiment = essential2d ? page.getByTestId('physics-2d') : page.locator('.graph-view');
+      await expect(experiment).toBeVisible();
+      if (essential2d) {
+        await expect(page.getByRole('button', { name: /Live 2D/i })).toHaveAttribute('aria-pressed', 'true');
+      } else {
+        await expect(page.getByRole('button', { name: /Live 2D/i })).toHaveCount(0);
+        await expect(page.getByTestId('physics-2d')).toHaveCount(0);
+        await expect(page.getByRole('button', { name: 'Graph & data' })).toHaveAttribute('aria-pressed', 'true');
+        await expect(page.getByRole('table', { name: 'Live measurements' })).toBeVisible();
+      }
       await page.setViewportSize({ width: 390, height: 844 });
-      await expect(live2d).toBeVisible();
-      const markup = await live2d.innerHTML();
+      await expect(experiment).toBeVisible();
+      // Inspect drawing coordinates; optics legitimately labels an "Infinity" quantity in its selector.
+      const markup = await experiment.locator('svg').innerHTML();
       expect(markup).not.toMatch(/NaN|Infinity/);
       await expect(page.locator('.hud-play-btn')).toHaveAttribute('aria-label', 'Pause');
       if (!['vectors', 'measurement'].includes(modelId)) await expect(page.getByTestId('simulation-time')).not.toHaveText('0');
@@ -143,7 +152,7 @@ test.describe('Mission simulations across the original physics course set', () =
   });
 });
 
-test('caps high-DPI phone rendering and keeps the scene inside a 320px viewport', async ({ browser }) => {
+test('keeps the data-first experiment inside a high-DPI 320px viewport', async ({ browser }) => {
   const context = await browser.newContext({ viewport: { width: 320, height: 700 }, deviceScaleFactor: 3 });
   const page = await context.newPage();
   await page.addInitScript(() => {
@@ -153,9 +162,10 @@ test('caps high-DPI phone rendering and keeps the scene inside a 320px viewport'
     }));
   });
   await page.goto('/#/mission/quantum/quantum-light-quanta');
-  const live2d = page.getByTestId('physics-2d');
-  await expect(live2d).toBeVisible();
-  const box = await live2d.boundingBox();
+  const graph = page.locator('.graph-view');
+  await expect(graph).toBeVisible();
+  await expect(page.getByRole('button', { name: /Live 2D/i })).toHaveCount(0);
+  const box = await graph.boundingBox();
   expect(box?.width).toBeLessThanOrEqual(320);
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(320);
   await context.close();

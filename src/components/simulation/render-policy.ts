@@ -4,7 +4,21 @@ const SPATIAL_3D_MODELS = new Set<ModelId>([
   'gravity', 'electromagnetism', 'atomic', 'condensed', 'astrophysics',
 ]);
 
-/** 2D is the teaching default; 3D is offered only when depth carries meaning. */
+const TEACHING_2D_MODELS = new Set<ModelId>([
+  'vectors', 'motion', 'forces', 'energy', 'collisions', 'gravity', 'oscillations',
+  'circuits', 'microcontroller',
+]);
+
+/** Only retain spatial views tied to calculated bodies or an interactive circuit. */
+export function supportsTeaching2D(modelId: ModelId): boolean {
+  return TEACHING_2D_MODELS.has(modelId);
+}
+
+export function defaultSimulationView(modelId: ModelId): '2d' | 'graph' {
+  return supportsTeaching2D(modelId) ? '2d' : 'graph';
+}
+
+/** 3D is offered only when depth carries meaning. */
 export function supportsSpatial3D(modelId: ModelId): boolean {
   return SPATIAL_3D_MODELS.has(modelId);
 }

@@ -26,11 +26,11 @@ The interface uses a responsive Apple-inspired Liquid Glass visual system with a
 ![Foundations course path](docs/assets/app-course-path.png)
 
 
-### 3D simulation gallery
+### Simulation labs
 
-Mission laboratories include interactive 3D scenes with adjustable parameters, camera controls, and live scientific readouts.
+Keep the experiment focused: vector, motion, force, energy, collision, orbit and oscillator lessons use model-driven 2D diagrams. Other labs open on graphs and live measurements. Spatial 3D views are available where depth helps explain the topic.
 
-![Measurement laboratory simulation](docs/assets/simulation-measurement.png)
+![Model-driven orbit diagram](docs/assets/orbit-teaching.png)
 
 ### Electronics workbenches
 
@@ -56,6 +56,7 @@ Run the app locally with `npm run dev` to explore the live simulations and respo
 - Expand optional detailed proofs for the intermediate math, starting assumptions, and limits behind every lesson formula and background math tutorial.
 - Keep a shared daily practice streak across devices when signed in. Offline practice merges on reconnection, with one common UTC day boundary.
 - Change values in interactive experiments and see the physics respond immediately.
+- Use focused 2D diagrams and electronics workbenches; compare actual model measurements without generic decorative animations.
 - See bounded, model-derived 3D scenes with responsive materials, lighting, particle systems, scientific readouts, graphs, accessible data tables, and autoplaying lesson simulations.
 - Track XP, streaks, daily goals, course mastery, activity, checkpoint badges, and backup/restore data in the Progress report dashboard.
 - Use anonymous localStorage mode or create an account with email/password, Google, or GitHub through Supabase Auth.

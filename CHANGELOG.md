@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-10-08 — Focused teaching simulations
+
+- Removed generic 2D particle clouds, rotating field lines, decorative star scenes, illustrative lens rays, and unrelated wave/probability animations. These labs now open on model-driven graphs and live measurements with all experiment controls and observation recording retained.
+- Kept essential vector, motion, force, energy, collision, orbit, and oscillator diagrams plus electronics and microcontroller workbenches. Vector arrows, pendulum strings, spring motion, and orbit paths now use calculated model positions, with equal axis scales fixed throughout each trial.
+- Added experiment-specific guidance, clarified schematic body sizes and velocity-direction arrows, and checked the rendering policy and course-wide simulation flows on mobile.
+
 ## 2026-10-06 — Optional detailed proofs and shared daily streaks
 
 - Fixed the navbar browser check to inspect recorded intermediate style values when the browser batches animation mutations, so a busy frame cannot hide the passing highlight from the assertion.
