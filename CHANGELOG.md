@@ -4,6 +4,7 @@
 
 - Moved the curriculum and Math Workspace changes onto main for GitHub Pages deployment.
 - Separated worker download/initialization from the eight-second calculation limit. Slow cold loads now receive a bounded startup window before computation begins, fixing the first mobile graph failing permanently on CI.
+- Changed release browser journeys to serve the validated production build, matching Pages and avoiding development dependency-optimization reloads that cancel the first graph on mobile.
 
 ## 2026-10-10 — Curriculum expansion infrastructure and learner notebooks
 
