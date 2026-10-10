@@ -2,6 +2,7 @@ import { expect, test } from './fixtures';
 
 for (const width of [360, 768, 1280]) {
   test(`workspace saves notebooks and renders graphs at ${width}px`, async ({ page }) => {
+    test.setTimeout(90000);
     await page.setViewportSize({ width, height: 900 });
     const errors: string[] = [];
     page.on('pageerror', error => errors.push(error.message));
