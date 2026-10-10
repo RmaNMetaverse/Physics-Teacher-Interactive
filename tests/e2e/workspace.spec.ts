@@ -11,7 +11,9 @@ for (const width of [360, 768, 1280]) {
     await page.getByLabel('Notebook title', { exact: true }).fill('Saved experiment');
     await expect(page.getByRole('status').first()).toHaveText('Saved on this device.');
     await page.locator('.workspace-board').scrollIntoViewIfNeeded();
-    await expect(page.locator('.workspace-board svg')).toBeVisible({ timeout: 20000 });
+    // The first cold Compute Engine/JSXGraph worker can take longer while the
+    // full CI suite is also exercising WebGL in a second browser worker.
+    await expect(page.locator('.workspace-board svg')).toBeVisible({ timeout: 60000 });
     if (width === 360) await page.screenshot({ path: 'test-results/workspace-mobile.png', fullPage: true });
     await page.reload();
     await expect(page.getByLabel('Notebook title', { exact: true })).toHaveValue('Saved experiment');

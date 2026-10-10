@@ -9,6 +9,7 @@
 - Replaced automatic explanation truncation with authored introductions and expandable full explanations across existing missions. Added nine contrasting foundation examples and misconception explanations while preserving historical progress.
 - Published a validated Stage 1 objective manifest for measurement, vectors, and motion. It enforces closed prerequisites, proof and notation records, two examples, concept/calculation/evidence variants, supplementary Physics Classroom/Khan mappings, and lesson-specific investigation contracts without changing learner completion IDs.
 - Added domain-aware expression comparison to the Math Workspace. It preserves removable holes and elementary real-domain restrictions, accepts supported symbolic identities, uses counterexamples only to disprove claims, and reports unsupported equivalence claims as unproven instead of trusting matching samples.
+- Allowed the first mobile workspace graph enough time for a cold math/plotting worker on shared CI runners, preventing a remote-only timeout while retaining the rendering assertion.
 
 ## 2026-10-08 — Focused teaching simulations
 
