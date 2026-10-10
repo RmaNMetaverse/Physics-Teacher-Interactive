@@ -10,6 +10,7 @@ The approved target is a self-contained path from basic mathematics through the 
 - Version-1 notebooks persist in IndexedDB independently of legacy progress. Manual signed-in notebook synchronization uses separate rows, revision-checked writes and recoverable conflict copies. It requires the new SQL migration; production database installation and live multi-account verification remain pending.
 - The 99 existing mission introductions now use their authored summaries. Complete explanations are expandable in the Explain step, without automatic sentence truncation.
 - The nine measurement/vector/motion lessons have additional contrasting worked examples and misconception explanations. Existing mission IDs, URLs, completion, XP, badges and streaks are unchanged. The new supplementary objective identifiers do not award completion credit.
+- Those nine lessons now also have a machine-validated objective manifest. It records a closed prerequisite graph, required math, full proof metadata, notation and units, two examples, concept/calculation/evidence practice variants, misconception feedback, source mappings, and a distinct investigation contract for each lesson. The build test rejects regressions in these release requirements.
 - New content contracts and validation cover objective prerequisite closure/cycles, notation/units, derivations, two worked examples, three assessment kinds and practice variants, experiment correspondence and reciprocal lecture mappings. These are expansion contracts; the old starter catalog has **not** been certified against the expanded standard.
 
 ## Source inventory and unresolved review
@@ -20,13 +21,13 @@ Known gaps: the official 2007 Relativity index omits lecture number 3; the 2011 
 
 All current records are **indexed**, not content-reviewed or covered. Objective mappings, derivation inventories, verified timestamps and archive deduplication require actual lecture review. An empty mapping is an unresolved item, never implicit coverage. Do not edit generated metadata to pretend review occurred; keep authored lecture review records separately when implementing the next increment.
 
-Foundational source review also remains incomplete: The Physics Classroom tutorial blocks automated page access with HTTP 403, and the Khan physics landing page does not expose its full lesson inventory in the fetched HTML. Review accessible official course pages and the current Khan course successors before declaring these sources exhausted. Existing OpenStax citations continue to support the released foundations.
+Foundational source review also remains incomplete. The Stage 1 objective manifest now maps accessible official Physics Classroom 1-D kinematics and vectors/projectiles pages and current Khan measurement/motion pages alongside the existing OpenStax citations. The full Physics Classroom and Khan catalogs still require unit-by-unit reconciliation before either source is declared exhausted.
 
 ## Remaining acceptance work
 
 | Stage | Remaining delivery |
 | --- | --- |
-| 1 | Full topic/derivation manifests and mappings; objective-level foundation assessment variants and investigation completion; expression-domain grading; workspace capabilities below. |
+| 1 | Complete remaining foundational topic/derivation mappings beyond the released measurement/vector/motion slice; expression-domain grading; workspace capabilities below. |
 | 2 | Substantive force, energy, momentum, rotation and gravity units; supporting calculus; distinct pulley, lever and rotating-body investigations. |
 | 3 | Complete fluids, thermal, oscillation, wave and sound units; fluid columns, buoyancy, pistons, resonance and standing-wave experiments. |
 | 4 | Electricity, magnetism, induction, circuits and optics; field maps, ray tracing and interference; applied electronics prerequisite integration. |

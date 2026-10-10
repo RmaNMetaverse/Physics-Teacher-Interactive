@@ -58,6 +58,7 @@ export function validateExpandedCurriculum(objectives: CurriculumObjective[], ex
     for (const kind of ['concept','calculation','evidence']) if (!content.assessments.some(a => a.kind === kind && a.prompt && a.answer && a.explanation && a.variants.length)) errors.push(`${objective.id}: missing ${kind} assessment and practice variants.`);
     if (!content.sourceUrls.length || content.sourceUrls.some(url => !url.startsWith('https://'))) errors.push(`${objective.id}: missing sources.`);
     if (!content.misconceptions.length) errors.push(`${objective.id}: missing misconception feedback.`);
+    if (!content.formulas.length) errors.push(`${objective.id}: missing formula record.`);
     for (const formula of content.formulas) {
       if (!formula.id || !formula.latex || !formula.notation.length || formula.notation.some(n => !n.symbol || !n.meaning || !n.unit)) errors.push(`${objective.id}: unexplained formula notation or units.`);
       if (!formula.assumptions.length || !formula.derivation.length || !formula.detailedProof.startingPoint || !formula.detailedProof.steps.length || !formula.detailedProof.limits.length) errors.push(`${objective.id}: missing derivation or assumptions.`);

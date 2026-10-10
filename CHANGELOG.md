@@ -7,6 +7,7 @@
 - Indexed 193 lecture records across 21 Susskind course editions. Exposed review status and missing source numbering, without treating metadata as completed curriculum coverage.
 - Introduced expansion contracts for prerequisites, notation, proofs, examples, assessments, experiment alignment and source mappings. Documented unresolved lecture review and the remaining staged delivery scope.
 - Replaced automatic explanation truncation with authored introductions and expandable full explanations across existing missions. Added nine contrasting foundation examples and misconception explanations while preserving historical progress.
+- Published a validated Stage 1 objective manifest for measurement, vectors, and motion. It enforces closed prerequisites, proof and notation records, two examples, concept/calculation/evidence variants, supplementary Physics Classroom/Khan mappings, and lesson-specific investigation contracts without changing learner completion IDs.
 
 ## 2026-10-08 — Focused teaching simulations
 
