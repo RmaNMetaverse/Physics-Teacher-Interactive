@@ -16,3 +16,8 @@
 @import './styles/simulation.css';
 @import './styles/electronics.css';
 @import './styles/responsive.css';
+/* Entry points remain styled before the lazily loaded workspace is opened. */
+.learning-tools { display: flex; flex-wrap: wrap; gap: .75rem; margin-bottom: 1.5rem; }
+.foundation-enrichment { display: grid; gap: 1rem; margin-top: 1.5rem; }
+.foundation-enrichment details[open] > * + * { margin-top: 1rem; }
+.foundation-enrichment li + li { margin-top: .75rem; }

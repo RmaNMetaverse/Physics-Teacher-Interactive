@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-10-10 — Curriculum expansion infrastructure and learner notebooks
+
+- Added a lazily loaded Math Workspace with MathLive entry, bounded worker calculations, JSXGraph plots, numerical fits/residuals, accessible samples and notebook/CSV/SVG/PNG exports. Kept the three main tabs and added lesson-context handoff with a return link.
+- Added IndexedDB notebook persistence and optional explicit Supabase synchronization with revision checks and recoverable conflict copies. Included a separate RLS-protected migration; live database verification requires installing it.
+- Indexed 193 lecture records across 21 Susskind course editions. Exposed review status and missing source numbering, without treating metadata as completed curriculum coverage.
+- Introduced expansion contracts for prerequisites, notation, proofs, examples, assessments, experiment alignment and source mappings. Documented unresolved lecture review and the remaining staged delivery scope.
+- Replaced automatic explanation truncation with authored introductions and expandable full explanations across existing missions. Added nine contrasting foundation examples and misconception explanations while preserving historical progress.
+
 ## 2026-10-08 — Focused teaching simulations
 
 - Removed generic 2D particle clouds, rotating field lines, decorative star scenes, illustrative lens rays, and unrelated wave/probability animations. These labs now open on model-driven graphs and live measurements with all experiment controls and observation recording retained.

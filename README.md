@@ -49,6 +49,8 @@ Run the app locally with `npm run dev` to explore the live simulations and respo
 ## What you can do
 
 - Follow a complete Physics Foundations course from measurement and vectors through mechanics and oscillations.
+- Open **Math Workspace** from Explore or a lesson formula: write mathematics, calculate supported expressions, graph curves, fit experiment data, and save/export notebooks locally. Optional notebook cloud sync requires the new notebook migration.
+- Browse the Stanford lecture inventory. Its 21 course editions are indexed; full lecture review and the expanded advanced curriculum are still in progress. See the [delivery ledger](docs/CURRICULUM_EXPANSION.md) for exact coverage and remaining work.
 - Explore 16 released course paths with 99 normal missions and 15 checkpoints, including Electronics and a separate Arduino/ESP32 beginner lab after Electromagnetism.
 - Read circuit schematics and breadboard-style diagrams, compare series and parallel resistor networks, switch an LED loop, and try guided Blink, button, PWM, and analog-sensor board examples.
 - Learn with bite-sized missions built around **Observe → Predict → Simulate → Explain → Check**.

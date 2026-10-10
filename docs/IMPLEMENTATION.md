@@ -1,5 +1,7 @@
 # Physics Teacher Interactive: approved implementation
 
+The 2026-10-10 approved expansion supersedes the earlier first-release ceiling below. See [the expansion delivery ledger](CURRICULUM_EXPANSION.md) for the complete advanced target, implemented increments, and unresolved source/acceptance work. The original release record is retained for historical context.
+
 Build a static English React/TypeScript/Vite application with Three.js experiments, authored guidance, KaTeX equations, accessible mathematics, and local progress. Dark scientific laboratory with light reading theme. Desktop, tablet and phone support. User approved 2026-09-09.
 
 ## Deliverables

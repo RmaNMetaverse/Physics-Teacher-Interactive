@@ -1,0 +1,25 @@
+.learning-tools { display:flex; flex-wrap:wrap; gap:.75rem; margin: 0 0 1.5rem; }
+.math-workspace { max-width:1000px; margin:auto; display:grid; gap:1.5rem; min-width:0; }
+.math-workspace header, .workspace-cell, .workspace-help { display:grid; gap:1rem; min-width:0; }
+.math-workspace p { line-height:1.75; margin:0; }
+.math-workspace h1, .math-workspace h2 { margin:0; }
+.workspace-cell, .workspace-help { padding:clamp(1rem,3vw,1.8rem); border:1px solid var(--line); border-radius:1.25rem; background:var(--panel); }
+.workspace-cell > header { display:flex; align-items:center; justify-content:space-between; gap:1rem; }
+.workspace-cell h2 { font-size:1.1rem; }
+.math-workspace label { display:grid; gap:.5rem; min-width:0; font-weight:600; }
+.math-workspace input:not([type=range]), .math-workspace textarea, .math-workspace select, .math-workspace button { min-width:0; max-width:100%; border:1px solid var(--line); border-radius:.6rem; padding:.7rem; background:var(--raised); color:var(--text,#e2e8f0); font:inherit; }
+.math-workspace textarea { width:100%; resize:vertical; }
+.workspace-actions, .workspace-fields { display:flex; flex-wrap:wrap; gap:.8rem; align-items:end; }
+.workspace-fields > label { flex:1 1 120px; }
+.workspace-actions button { cursor:pointer; }
+.workspace-help summary { cursor:pointer; font-weight:700; }
+.workspace-help[open] > * + * { margin-top:.75rem; }
+.workspace-board { height:360px; width:100%; min-width:0; border-radius:.75rem; background:#f8fafc; touch-action:none; overflow:hidden; }
+.workspace-graph { display:grid; gap:1rem; min-width:0; }
+.math-workspace math-field { display:block; max-width:100%; min-width:0; width:100%; padding:.75rem; font-size:1.2rem; background:#f8fafc; color:#172033; border-radius:.75rem; --caret-color:#7c3aed; --selection-background-color:#ddd6fe; }
+.math-workspace math-field::part(container) { overflow-x:auto; }
+.workspace-notice { border-left:3px solid #a78bfa; padding-left:.8rem; }
+.math-workspace table { border-collapse:collapse; width:100%; }
+.math-workspace td, .math-workspace th { padding:.5rem; text-align:left; border-bottom:1px solid #64748b66; }
+.workspace-import input { width:210px; }
+@media(max-width:500px) { .workspace-board { height:280px; } .workspace-cell > header { align-items:start; } .workspace-actions > * { flex:1 1 130px; } }

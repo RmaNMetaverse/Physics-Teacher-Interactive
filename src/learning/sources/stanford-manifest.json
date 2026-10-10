@@ -1,0 +1,2793 @@
+{
+  "version": 1,
+  "indexedAt": "2026-10-10T12:50:10.775419+00:00",
+  "channelUrl": "https://www.youtube.com/@stanford/playlists",
+  "channelReconciliation": "pending-video-owner-verification",
+  "note": "Metadata inventory only. Topic coverage, derivations and video ownership still require review.",
+  "issues": [],
+  "courses": [
+    {
+      "id": "statistical-mechanics-2013-spring",
+      "title": "Statistical Mechanics",
+      "edition": "2013/spring",
+      "section": "core",
+      "url": "https://theoreticalminimum.com/courses/statistical-mechanics/2013/spring",
+      "playlistIds": [
+        "PLpi18tMShZSAQFNTb8Ji7EgCFP9lXbkOe"
+      ],
+      "lectures": [
+        {
+          "id": "statistical-mechanics-2013-spring-lecture-1",
+          "url": "https://theoreticalminimum.com/courses/statistical-mechanics/2013/spring/lecture-1",
+          "title": "Entropy and conservation of information",
+          "order": 1,
+          "videoIds": [
+            "D1RzvXDXyqA"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "statistical-mechanics-2013-spring-lecture-2",
+          "url": "https://theoreticalminimum.com/courses/statistical-mechanics/2013/spring/lecture-2",
+          "title": "Temperature",
+          "order": 2,
+          "videoIds": [
+            "MCRHXHskWnE"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "statistical-mechanics-2013-spring-lecture-3",
+          "url": "https://theoreticalminimum.com/courses/statistical-mechanics/2013/spring/lecture-3",
+          "title": "Maximizing entropy",
+          "order": 3,
+          "videoIds": [
+            "EmM1jOV1uSY"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "statistical-mechanics-2013-spring-lecture-4",
+          "url": "https://theoreticalminimum.com/courses/statistical-mechanics/2013/spring/lecture-4",
+          "title": "The Boltzmann distribution",
+          "order": 4,
+          "videoIds": [
+            "rhFkYjaM5kE"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "statistical-mechanics-2013-spring-lecture-5",
+          "url": "https://theoreticalminimum.com/courses/statistical-mechanics/2013/spring/lecture-5",
+          "title": "Pressure of an ideal gas and fluctuations",
+          "order": 5,
+          "videoIds": [
+            "2BJYXuZZK3c"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "statistical-mechanics-2013-spring-lecture-6",
+          "url": "https://theoreticalminimum.com/courses/statistical-mechanics/2013/spring/lecture-6",
+          "title": "Weakly interacting gases, heat, and work",
+          "order": 6,
+          "videoIds": [
+            "bW30Rj6w8VI"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "statistical-mechanics-2013-spring-lecture-7",
+          "url": "https://theoreticalminimum.com/courses/statistical-mechanics/2013/spring/lecture-7",
+          "title": "Entropy vs. reversibility",
+          "order": 7,
+          "videoIds": [
+            "sg15UClUY48"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "statistical-mechanics-2013-spring-lecture-8",
+          "url": "https://theoreticalminimum.com/courses/statistical-mechanics/2013/spring/lecture-8",
+          "title": "Entropy, reversibility, and magnetism",
+          "order": 8,
+          "videoIds": [
+            "3hh0lJZbUfo"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "statistical-mechanics-2013-spring-lecture-9",
+          "url": "https://theoreticalminimum.com/courses/statistical-mechanics/2013/spring/lecture-9",
+          "title": "Tbe Ising model",
+          "order": 9,
+          "videoIds": [
+            "AT4_S9vQJgc"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "statistical-mechanics-2013-spring-lecture-10",
+          "url": "https://theoreticalminimum.com/courses/statistical-mechanics/2013/spring/lecture-10",
+          "title": "Liquid-gas phase transition",
+          "order": 10,
+          "videoIds": [
+            "IWtcFAP3ju4"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        }
+      ],
+      "reviewStatus": "indexed",
+      "unresolvedLectureNumbers": []
+    },
+    {
+      "id": "classical-mechanics-2011-fall",
+      "title": "Classical Mechanics",
+      "edition": "2011/fall",
+      "section": "core",
+      "url": "https://theoreticalminimum.com/courses/classical-mechanics/2011/fall",
+      "playlistIds": [
+        "PL47F408D36D4CF129"
+      ],
+      "lectures": [
+        {
+          "id": "classical-mechanics-2011-fall-lecture-1",
+          "url": "https://theoreticalminimum.com/courses/classical-mechanics/2011/fall/lecture-1",
+          "title": "State diagrams and the nature of physical laws",
+          "order": 1,
+          "videoIds": [
+            "ApUFtLCrU90"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "classical-mechanics-2011-fall-lecture-2",
+          "url": "https://theoreticalminimum.com/courses/classical-mechanics/2011/fall/lecture-2",
+          "title": "Newton's law, phase space, momentum and energy",
+          "order": 2,
+          "videoIds": [
+            "mYDrufxpW9E"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "classical-mechanics-2011-fall-lecture-3",
+          "url": "https://theoreticalminimum.com/courses/classical-mechanics/2011/fall/lecture-3",
+          "title": "Lagrangian, least action, Euler-Lagrange equations",
+          "order": 3,
+          "videoIds": [
+            "3apIZCpmdls"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "classical-mechanics-2011-fall-lecture-4",
+          "url": "https://theoreticalminimum.com/courses/classical-mechanics/2011/fall/lecture-4",
+          "title": "Symmetry and conservation laws",
+          "order": 4,
+          "videoIds": [
+            "ojEwHlyty4Q"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "classical-mechanics-2011-fall-lecture-5",
+          "url": "https://theoreticalminimum.com/courses/classical-mechanics/2011/fall/lecture-5",
+          "title": "The Hamiltonian",
+          "order": 5,
+          "videoIds": [
+            "lW9GJ0aiaNc"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "classical-mechanics-2011-fall-lecture-6",
+          "url": "https://theoreticalminimum.com/courses/classical-mechanics/2011/fall/lecture-6",
+          "title": "Hamilton's equations",
+          "order": 6,
+          "videoIds": [
+            "7SiW_x3cUBo"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "classical-mechanics-2011-fall-lecture-7",
+          "url": "https://theoreticalminimum.com/courses/classical-mechanics/2011/fall/lecture-7",
+          "title": "Liouville s theorem",
+          "order": 7,
+          "videoIds": [
+            "lQIbcV6dQzw"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "classical-mechanics-2011-fall-lecture-8",
+          "url": "https://theoreticalminimum.com/courses/classical-mechanics/2011/fall/lecture-8",
+          "title": "Poisson brackets",
+          "order": 8,
+          "videoIds": [
+            "oePbj7yrzUQ"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "classical-mechanics-2011-fall-lecture-9",
+          "url": "https://theoreticalminimum.com/courses/classical-mechanics/2011/fall/lecture-9",
+          "title": "Electric and magnetic fields 1",
+          "order": 9,
+          "videoIds": [
+            "WJn6h-6MMa8"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "classical-mechanics-2011-fall-lecture-10",
+          "url": "https://theoreticalminimum.com/courses/classical-mechanics/2011/fall/lecture-10",
+          "title": "Electric and magnetic fields 2",
+          "order": 10,
+          "videoIds": [
+            "bn5lKYHenSQ"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        }
+      ],
+      "reviewStatus": "indexed",
+      "unresolvedLectureNumbers": []
+    },
+    {
+      "id": "quantum-mechanics-2012-winter",
+      "title": "Quantum Mechanics",
+      "edition": "2012/winter",
+      "section": "core",
+      "url": "https://theoreticalminimum.com/courses/quantum-mechanics/2012/winter",
+      "playlistIds": [
+        "PL701CD168D02FF56F"
+      ],
+      "lectures": [
+        {
+          "id": "quantum-mechanics-2012-winter-lecture-1",
+          "url": "https://theoreticalminimum.com/courses/quantum-mechanics/2012/winter/lecture-1",
+          "title": "Introduction to quantum mechanics",
+          "order": 1,
+          "videoIds": [
+            "iJfw6lDlTuA"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "quantum-mechanics-2012-winter-lecture-2",
+          "url": "https://theoreticalminimum.com/courses/quantum-mechanics/2012/winter/lecture-2",
+          "title": "The basic logic of quantum mechanics",
+          "order": 2,
+          "videoIds": [
+            "a6ANMKRBjA8"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "quantum-mechanics-2012-winter-lecture-3",
+          "url": "https://theoreticalminimum.com/courses/quantum-mechanics/2012/winter/lecture-3",
+          "title": "Vector spaces and operators",
+          "order": 3,
+          "videoIds": [
+            "-GO3SL5n30k"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "quantum-mechanics-2012-winter-lecture-4",
+          "url": "https://theoreticalminimum.com/courses/quantum-mechanics/2012/winter/lecture-4",
+          "title": "Time evolution of a quantum system",
+          "order": 4,
+          "videoIds": [
+            "tRWBoossG0Y"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "quantum-mechanics-2012-winter-lecture-5",
+          "url": "https://theoreticalminimum.com/courses/quantum-mechanics/2012/winter/lecture-5",
+          "title": "Uncertainty, unitary evolution, and the Schrödinger equation",
+          "order": 5,
+          "videoIds": [
+            "sgQafF7tLSo"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "quantum-mechanics-2012-winter-lecture-6",
+          "url": "https://theoreticalminimum.com/courses/quantum-mechanics/2012/winter/lecture-6",
+          "title": "Entanglement",
+          "order": 6,
+          "videoIds": [
+            "1cLZsUEzUDs"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "quantum-mechanics-2012-winter-lecture-7",
+          "url": "https://theoreticalminimum.com/courses/quantum-mechanics/2012/winter/lecture-7",
+          "title": "Entanglement and the nature of reality",
+          "order": 7,
+          "videoIds": [
+            "QuW24mTDB8s"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "quantum-mechanics-2012-winter-lecture-8",
+          "url": "https://theoreticalminimum.com/courses/quantum-mechanics/2012/winter/lecture-8",
+          "title": "Particles moving in one dimension and their operators",
+          "order": 8,
+          "videoIds": [
+            "x0m2sQuAr34"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "quantum-mechanics-2012-winter-lecture-9",
+          "url": "https://theoreticalminimum.com/courses/quantum-mechanics/2012/winter/lecture-9",
+          "title": "Fourier analysis applied to quantum mechanics and the uncertainty principle",
+          "order": 9,
+          "videoIds": [
+            "fTRKMAj5q_4"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "quantum-mechanics-2012-winter-lecture-10",
+          "url": "https://theoreticalminimum.com/courses/quantum-mechanics/2012/winter/lecture-10",
+          "title": "The uncertainty principle and classical analogs",
+          "order": 10,
+          "videoIds": [
+            "dYtyslPtK8Y"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        }
+      ],
+      "reviewStatus": "indexed",
+      "unresolvedLectureNumbers": []
+    },
+    {
+      "id": "special-relativity-and-electrodynamics-2012-spring",
+      "title": "Special Relativity and Electrodynamics",
+      "edition": "2012/spring",
+      "section": "core",
+      "url": "https://theoreticalminimum.com/courses/special-relativity-and-electrodynamics/2012/spring",
+      "playlistIds": [
+        "PLD9DDFBDC338226CA"
+      ],
+      "lectures": [
+        {
+          "id": "special-relativity-and-classical-field-theory-2012-spring-lecture-1",
+          "url": "https://theoreticalminimum.com/courses/special-relativity-and-classical-field-theory/2012/spring/lecture-1",
+          "title": "The Lorentz transformation",
+          "order": 1,
+          "videoIds": [
+            "toGH5BdgRZ4"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "special-relativity-and-classical-field-theory-2012-spring-lecture-2",
+          "url": "https://theoreticalminimum.com/courses/special-relativity-and-classical-field-theory/2012/spring/lecture-2",
+          "title": "Adding velocities",
+          "order": 2,
+          "videoIds": [
+            "qfTJP7Soto4"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "special-relativity-and-classical-field-theory-2012-spring-lecture-3",
+          "url": "https://theoreticalminimum.com/courses/special-relativity-and-classical-field-theory/2012/spring/lecture-3",
+          "title": "Relativistic laws of motion and E = mc^2^",
+          "order": 3,
+          "videoIds": [
+            "_R6J8Wb1Xek"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "special-relativity-and-classical-field-theory-2012-spring-lecture-4",
+          "url": "https://theoreticalminimum.com/courses/special-relativity-and-classical-field-theory/2012/spring/lecture-4",
+          "title": "Classical field theory",
+          "order": 4,
+          "videoIds": [
+            "Z8ace3NbXAA"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "special-relativity-and-classical-field-theory-2012-spring-lecture-5",
+          "url": "https://theoreticalminimum.com/courses/special-relativity-and-classical-field-theory/2012/spring/lecture-5",
+          "title": "Particles and fields",
+          "order": 5,
+          "videoIds": [
+            "_DtwlC5e8J8"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "special-relativity-and-classical-field-theory-2012-spring-lecture-6",
+          "url": "https://theoreticalminimum.com/courses/special-relativity-and-classical-field-theory/2012/spring/lecture-6",
+          "title": "The Lorentz force law",
+          "order": 6,
+          "videoIds": [
+            "aA88mND-9v4"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "special-relativity-and-classical-field-theory-2012-spring-lecture-7",
+          "url": "https://theoreticalminimum.com/courses/special-relativity-and-classical-field-theory/2012/spring/lecture-7",
+          "title": "The fundamental principles of physical laws",
+          "order": 7,
+          "videoIds": [
+            "ozhRFi77TP8"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "special-relativity-and-classical-field-theory-2012-spring-lecture-8",
+          "url": "https://theoreticalminimum.com/courses/special-relativity-and-classical-field-theory/2012/spring/lecture-8",
+          "title": "Maxwell's equations",
+          "order": 8,
+          "videoIds": [
+            "LnsZaOcF1Bo"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "special-relativity-and-classical-field-theory-2012-spring-lecture-9",
+          "url": "https://theoreticalminimum.com/courses/special-relativity-and-classical-field-theory/2012/spring/lecture-9",
+          "title": "Lagrangian for Maxwell's equations",
+          "order": 9,
+          "videoIds": [
+            "sGyXdCb0l50"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "special-relativity-and-classical-field-theory-2012-spring-lecture-10",
+          "url": "https://theoreticalminimum.com/courses/special-relativity-and-classical-field-theory/2012/spring/lecture-10",
+          "title": "Connection between classical mechanics and field theory",
+          "order": 10,
+          "videoIds": [
+            "maqbS8sSxYA"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        }
+      ],
+      "reviewStatus": "indexed",
+      "unresolvedLectureNumbers": []
+    },
+    {
+      "id": "general-relativity-2012-fall",
+      "title": "General Relativity",
+      "edition": "2012/fall",
+      "section": "core",
+      "url": "https://theoreticalminimum.com/courses/general-relativity/2012/fall",
+      "playlistIds": [
+        "PLpGHT1n4-mAvcXwzOIz3dHnGZaQP1LEib"
+      ],
+      "lectures": [
+        {
+          "id": "general-relativity-2012-fall-lecture-1",
+          "url": "https://theoreticalminimum.com/courses/general-relativity/2012/fall/lecture-1",
+          "title": "The equivalence principle and tensor analysis",
+          "order": 1,
+          "videoIds": [
+            "JRZgW1YjCKk"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "general-relativity-2012-fall-lecture-2",
+          "url": "https://theoreticalminimum.com/courses/general-relativity/2012/fall/lecture-2",
+          "title": "Tensor mathematics",
+          "order": 2,
+          "videoIds": [
+            "5VKyRVLMMQ4"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "general-relativity-2012-fall-lecture-3",
+          "url": "https://theoreticalminimum.com/courses/general-relativity/2012/fall/lecture-3",
+          "title": "Flatness and curvature",
+          "order": 3,
+          "videoIds": [
+            "cyW0LWEACfI"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "general-relativity-2012-fall-lecture-4",
+          "url": "https://theoreticalminimum.com/courses/general-relativity/2012/fall/lecture-4",
+          "title": "Geodesics and gravity",
+          "order": 4,
+          "videoIds": [
+            "YdnLcYNdTzE"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "general-relativity-2012-fall-lecture-5",
+          "url": "https://theoreticalminimum.com/courses/general-relativity/2012/fall/lecture-5",
+          "title": "Metric for a gravitational field",
+          "order": 5,
+          "videoIds": [
+            "quWN1V9jOf0"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "general-relativity-2012-fall-lecture-6",
+          "url": "https://theoreticalminimum.com/courses/general-relativity/2012/fall/lecture-6",
+          "title": "Black holes",
+          "order": 6,
+          "videoIds": [
+            "yv2-KPagCQs"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "general-relativity-2012-fall-lecture-7",
+          "url": "https://theoreticalminimum.com/courses/general-relativity/2012/fall/lecture-7",
+          "title": "Falling in to a black hole",
+          "order": 7,
+          "videoIds": [
+            "BdYtfYkdGDk"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "general-relativity-2012-fall-lecture-8",
+          "url": "https://theoreticalminimum.com/courses/general-relativity/2012/fall/lecture-8",
+          "title": "Formation of a black hole",
+          "order": 8,
+          "videoIds": [
+            "q6j180O9H84"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "general-relativity-2012-fall-lecture-9",
+          "url": "https://theoreticalminimum.com/courses/general-relativity/2012/fall/lecture-9",
+          "title": "Einstein field equations",
+          "order": 9,
+          "videoIds": [
+            "umdC_KD458g"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "general-relativity-2012-fall-lecture-10",
+          "url": "https://theoreticalminimum.com/courses/general-relativity/2012/fall/lecture-10",
+          "title": "Gravity waves",
+          "order": 10,
+          "videoIds": [
+            "SwhOffh0kEE"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        }
+      ],
+      "reviewStatus": "indexed",
+      "unresolvedLectureNumbers": []
+    },
+    {
+      "id": "cosmology-2013-winter",
+      "title": "Cosmology",
+      "edition": "2013/winter",
+      "section": "core",
+      "url": "https://theoreticalminimum.com/courses/cosmology/2013/winter",
+      "playlistIds": [
+        "PLpGHT1n4-mAuVGJ2E1uF9GSwLsx7p1xtm"
+      ],
+      "lectures": [
+        {
+          "id": "cosmology-2013-winter-lecture-1",
+          "url": "https://theoreticalminimum.com/courses/cosmology/2013/winter/lecture-1",
+          "title": "The expanding (Newtonian) universe",
+          "order": 1,
+          "videoIds": [
+            "P-medYaqVak"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "cosmology-2013-winter-lecture-2",
+          "url": "https://theoreticalminimum.com/courses/cosmology/2013/winter/lecture-2",
+          "title": "Matter and radiation dominated universes",
+          "order": 2,
+          "videoIds": [
+            "938_TNP4aUs"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "cosmology-2013-winter-lecture-3",
+          "url": "https://theoreticalminimum.com/courses/cosmology/2013/winter/lecture-3",
+          "title": "Geometries of space: flat, spherical, hyperbolic",
+          "order": 3,
+          "videoIds": [
+            "nJlWYDcGr8U"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "cosmology-2013-winter-lecture-4",
+          "url": "https://theoreticalminimum.com/courses/cosmology/2013/winter/lecture-4",
+          "title": "Cosmological thermodynamics",
+          "order": 4,
+          "videoIds": [
+            "UpFRJ4g3S0M"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "cosmology-2013-winter-lecture-5",
+          "url": "https://theoreticalminimum.com/courses/cosmology/2013/winter/lecture-5",
+          "title": "Vacuum energy",
+          "order": 5,
+          "videoIds": [
+            "GgKGPyFL-TM"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "cosmology-2013-winter-lecture-6",
+          "url": "https://theoreticalminimum.com/courses/cosmology/2013/winter/lecture-6",
+          "title": "Dark matter and allocation of energy density",
+          "order": 6,
+          "videoIds": [
+            "eOOtl8DTmhQ"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "cosmology-2013-winter-lecture-7",
+          "url": "https://theoreticalminimum.com/courses/cosmology/2013/winter/lecture-7",
+          "title": "Temperature history of the universe",
+          "order": 7,
+          "videoIds": [
+            "GvhxamzVpN8"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "cosmology-2013-winter-lecture-8",
+          "url": "https://theoreticalminimum.com/courses/cosmology/2013/winter/lecture-8",
+          "title": "Baryogenesis",
+          "order": 8,
+          "videoIds": [
+            "gdFldkitkJA"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "cosmology-2013-winter-lecture-9",
+          "url": "https://theoreticalminimum.com/courses/cosmology/2013/winter/lecture-9",
+          "title": "Inflation",
+          "order": 9,
+          "videoIds": [
+            "hADOY0TzLic"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "cosmology-2013-winter-lecture-10",
+          "url": "https://theoreticalminimum.com/courses/cosmology/2013/winter/lecture-10",
+          "title": "Inhomogeneities and quantum fluctuations",
+          "order": 10,
+          "videoIds": [
+            "NZ_CvI9Ying"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        }
+      ],
+      "reviewStatus": "indexed",
+      "unresolvedLectureNumbers": []
+    },
+    {
+      "id": "advanced-quantum-mechanics-2013-fall",
+      "title": "Advanced Quantum Mechanics",
+      "edition": "2013/fall",
+      "section": "supplemental",
+      "url": "https://theoreticalminimum.com/courses/advanced-quantum-mechanics/2013/fall",
+      "playlistIds": [
+        "PLpGHT1n4-mAsmMxmSX0LCaXIXT2PmU85m"
+      ],
+      "lectures": [
+        {
+          "id": "advanced-quantum-mechanics-2013-fall-lecture-1",
+          "url": "https://theoreticalminimum.com/courses/advanced-quantum-mechanics/2013/fall/lecture-1",
+          "title": "Review of quantum mechanics and introduction to symmetry",
+          "order": 1,
+          "videoIds": [
+            "8mi0PoPvLvs"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "advanced-quantum-mechanics-2013-fall-lecture-2",
+          "url": "https://theoreticalminimum.com/courses/advanced-quantum-mechanics/2013/fall/lecture-2",
+          "title": "Symmetry groups and degeneracy",
+          "order": 2,
+          "videoIds": [
+            "7O1NhGP07Xo"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "advanced-quantum-mechanics-2013-fall-lecture-3",
+          "url": "https://theoreticalminimum.com/courses/advanced-quantum-mechanics/2013/fall/lecture-3",
+          "title": "Atomic orbits and harmonic oscillators",
+          "order": 3,
+          "videoIds": [
+            "LKYs_xwWKY4"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "advanced-quantum-mechanics-2013-fall-lecture-4",
+          "url": "https://theoreticalminimum.com/courses/advanced-quantum-mechanics/2013/fall/lecture-4",
+          "title": "Spin",
+          "order": 4,
+          "videoIds": [
+            "ATxq2IEekk4"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "advanced-quantum-mechanics-2013-fall-lecture-5",
+          "url": "https://theoreticalminimum.com/courses/advanced-quantum-mechanics/2013/fall/lecture-5",
+          "title": "Fermions:  a tale of two minus signs",
+          "order": 5,
+          "videoIds": [
+            "A7PZftS7uOA"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "advanced-quantum-mechanics-2013-fall-lecture-6",
+          "url": "https://theoreticalminimum.com/courses/advanced-quantum-mechanics/2013/fall/lecture-6",
+          "title": "Quantum field theory",
+          "order": 6,
+          "videoIds": [
+            "D36VXLx0hOc"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "advanced-quantum-mechanics-2013-fall-lecture-7",
+          "url": "https://theoreticalminimum.com/courses/advanced-quantum-mechanics/2013/fall/lecture-7",
+          "title": "Quantum field theory 2",
+          "order": 7,
+          "videoIds": [
+            "l6vR825BR3c"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "advanced-quantum-mechanics-2013-fall-lecture-8",
+          "url": "https://theoreticalminimum.com/courses/advanced-quantum-mechanics/2013/fall/lecture-8",
+          "title": "Second quantization",
+          "order": 8,
+          "videoIds": [
+            "7G4C7scQX3A"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "advanced-quantum-mechanics-2013-fall-lecture-9",
+          "url": "https://theoreticalminimum.com/courses/advanced-quantum-mechanics/2013/fall/lecture-9",
+          "title": "Quantum field Hamiltonian",
+          "order": 9,
+          "videoIds": [
+            "7a1hon7NJ1M"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "advanced-quantum-mechanics-2013-fall-lecture-10",
+          "url": "https://theoreticalminimum.com/courses/advanced-quantum-mechanics/2013/fall/lecture-10",
+          "title": "Fermions and the Dirac equation",
+          "order": 10,
+          "videoIds": [
+            "DQUJpT_iz8U"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        }
+      ],
+      "reviewStatus": "indexed",
+      "unresolvedLectureNumbers": []
+    },
+    {
+      "id": "higgs-boson-2012-summer",
+      "title": "Higgs Boson",
+      "edition": "2012/summer",
+      "section": "supplemental",
+      "url": "https://theoreticalminimum.com/courses/higgs-boson/2012/summer",
+      "playlistIds": [],
+      "lectures": [
+        {
+          "id": "higgs-boson-2012-summer-lecture-1",
+          "url": "https://theoreticalminimum.com/courses/higgs-boson/2012/summer/lecture-1",
+          "title": "Demystifying the Higgs Boson",
+          "order": 1,
+          "videoIds": [
+            "JqNg819PiZY"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        }
+      ],
+      "reviewStatus": "indexed",
+      "unresolvedLectureNumbers": []
+    },
+    {
+      "id": "quantum-entanglement-2006-fall",
+      "title": "Quantum Entanglement",
+      "edition": "2006/fall",
+      "section": "supplemental",
+      "url": "https://theoreticalminimum.com/courses/quantum-entanglement/2006/fall",
+      "playlistIds": [],
+      "lectures": [
+        {
+          "id": "quantum-entanglements-2006-fall-lecture-1",
+          "url": "https://theoreticalminimum.com/courses/quantum-entanglements/2006/fall/lecture-1",
+          "title": "Lecture #1",
+          "order": 1,
+          "videoIds": [
+            "0Eeuqh9QfNI"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "quantum-entanglements-2006-fall-lecture-2",
+          "url": "https://theoreticalminimum.com/courses/quantum-entanglements/2006/fall/lecture-2",
+          "title": "Lecture #2",
+          "order": 2,
+          "videoIds": [
+            "VtBRKw1Ab7E"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "quantum-entanglements-2006-fall-lecture-3",
+          "url": "https://theoreticalminimum.com/courses/quantum-entanglements/2006/fall/lecture-3",
+          "title": "Lecture #3",
+          "order": 3,
+          "videoIds": [
+            "CaTF4QZ94Fk"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "quantum-entanglements-2006-fall-lecture-4",
+          "url": "https://theoreticalminimum.com/courses/quantum-entanglements/2006/fall/lecture-4",
+          "title": "Lecture #4",
+          "order": 4,
+          "videoIds": [
+            "5vfo512fvlE"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "quantum-entanglements-2006-fall-lecture-5",
+          "url": "https://theoreticalminimum.com/courses/quantum-entanglements/2006/fall/lecture-5",
+          "title": "Lecture #5",
+          "order": 5,
+          "videoIds": [
+            "XlLsTaJn9AQ"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "quantum-entanglements-2006-fall-lecture-6",
+          "url": "https://theoreticalminimum.com/courses/quantum-entanglements/2006/fall/lecture-6",
+          "title": "Lecture #6",
+          "order": 6,
+          "videoIds": [
+            "xXBx8_19nyw"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "quantum-entanglements-2006-fall-lecture-7",
+          "url": "https://theoreticalminimum.com/courses/quantum-entanglements/2006/fall/lecture-7",
+          "title": "Lecture #7",
+          "order": 7,
+          "videoIds": [
+            "F3viANPhfD0"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "quantum-entanglements-2006-fall-lecture-8",
+          "url": "https://theoreticalminimum.com/courses/quantum-entanglements/2006/fall/lecture-8",
+          "title": "Lecture #8",
+          "order": 8,
+          "videoIds": [
+            "C1erB9p5414"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "quantum-entanglements-2006-fall-lecture-9",
+          "url": "https://theoreticalminimum.com/courses/quantum-entanglements/2006/fall/lecture-9",
+          "title": "Lecture #9",
+          "order": 9,
+          "videoIds": [
+            "qg-95d6OJJM"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        }
+      ],
+      "reviewStatus": "indexed",
+      "unresolvedLectureNumbers": []
+    },
+    {
+      "id": "relativity-2007-spring",
+      "title": "Relativity",
+      "edition": "2007/spring",
+      "section": "supplemental",
+      "url": "https://theoreticalminimum.com/courses/relativity/2007/spring",
+      "playlistIds": [],
+      "lectures": [
+        {
+          "id": "quantum-entanglements-2007-spring-lecture-1",
+          "url": "https://theoreticalminimum.com/courses/quantum-entanglements/2007/spring/lecture-1",
+          "title": "Lecture #1",
+          "order": 1,
+          "videoIds": [
+            "3ZEYa7SRRsU"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "quantum-entanglements-2007-spring-lecture-2",
+          "url": "https://theoreticalminimum.com/courses/quantum-entanglements/2007/spring/lecture-2",
+          "title": "Lecture #2",
+          "order": 2,
+          "videoIds": [
+            "3mfNey1Z53k"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "quantum-entanglements-2007-spring-lecture-4",
+          "url": "https://theoreticalminimum.com/courses/quantum-entanglements/2007/spring/lecture-4",
+          "title": "Lecture #4",
+          "order": 4,
+          "videoIds": [
+            "hmoLr5hHPN8"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "quantum-entanglements-2007-spring-lecture-5",
+          "url": "https://theoreticalminimum.com/courses/quantum-entanglements/2007/spring/lecture-5",
+          "title": "Lecture #5",
+          "order": 5,
+          "videoIds": [
+            "niHEq9i3B-4"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "quantum-entanglements-2007-spring-lecture-6",
+          "url": "https://theoreticalminimum.com/courses/quantum-entanglements/2007/spring/lecture-6",
+          "title": "Lecture #6",
+          "order": 6,
+          "videoIds": [
+            "YTGvPL2qbFI"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "quantum-entanglements-2007-spring-lecture-7",
+          "url": "https://theoreticalminimum.com/courses/quantum-entanglements/2007/spring/lecture-7",
+          "title": "Lecture #7",
+          "order": 7,
+          "videoIds": [
+            "LLzRyBX1wF0"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "quantum-entanglements-2007-spring-lecture-8",
+          "url": "https://theoreticalminimum.com/courses/quantum-entanglements/2007/spring/lecture-8",
+          "title": "Lecture #8",
+          "order": 8,
+          "videoIds": [
+            "6gRhmeTjadw"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "quantum-entanglements-2007-spring-lecture-9",
+          "url": "https://theoreticalminimum.com/courses/quantum-entanglements/2007/spring/lecture-9",
+          "title": "Lecture #9",
+          "order": 9,
+          "videoIds": [
+            "Jm0sT3t-rb0"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        }
+      ],
+      "reviewStatus": "indexed",
+      "unresolvedLectureNumbers": [
+        3
+      ]
+    },
+    {
+      "id": "particle-physics-1-basic-concepts-2009-fall",
+      "title": "Particle Physics 1: Basic Concepts",
+      "edition": "2009/fall",
+      "section": "supplemental",
+      "url": "https://theoreticalminimum.com/courses/particle-physics-1-basic-concepts/2009/fall",
+      "playlistIds": [],
+      "lectures": [
+        {
+          "id": "new-revolutions-particle-physics-basic-concepts-2009-fall-lecture-1",
+          "url": "https://theoreticalminimum.com/courses/new-revolutions-particle-physics-basic-concepts/2009/fall/lecture-1",
+          "title": "Particles and light",
+          "order": 1,
+          "videoIds": [
+            "2eFvVzNF24g"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "new-revolutions-particle-physics-basic-concepts-2009-fall-lecture-2",
+          "url": "https://theoreticalminimum.com/courses/new-revolutions-particle-physics-basic-concepts/2009/fall/lecture-2",
+          "title": "Quantum field theory",
+          "order": 2,
+          "videoIds": [
+            "oT7bTr5YEO4"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "new-revolutions-particle-physics-basic-concepts-2009-fall-lecture-3",
+          "url": "https://theoreticalminimum.com/courses/new-revolutions-particle-physics-basic-concepts/2009/fall/lecture-3",
+          "title": "Quantum fields and particles",
+          "order": 3,
+          "videoIds": [
+            "UgPBUJRrYz8"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "new-revolutions-particle-physics-basic-concepts-2009-fall-lecture-4",
+          "url": "https://theoreticalminimum.com/courses/new-revolutions-particle-physics-basic-concepts/2009/fall/lecture-4",
+          "title": "More quantum field theory",
+          "order": 4,
+          "videoIds": [
+            "eA8X8IU_fWY"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "new-revolutions-particle-physics-basic-concepts-2009-fall-lecture-5",
+          "url": "https://theoreticalminimum.com/courses/new-revolutions-particle-physics-basic-concepts/2009/fall/lecture-5",
+          "title": "Energy conservation and waves",
+          "order": 5,
+          "videoIds": [
+            "TshXa3lGqQ8"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "new-revolutions-particle-physics-basic-concepts-2009-fall-lecture-6",
+          "url": "https://theoreticalminimum.com/courses/new-revolutions-particle-physics-basic-concepts/2009/fall/lecture-6",
+          "title": "Dirac equation and Higgs particles",
+          "order": 6,
+          "videoIds": [
+            "wUySvFEwmj8"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "new-revolutions-particle-physics-basic-concepts-2009-fall-lecture-7",
+          "url": "https://theoreticalminimum.com/courses/new-revolutions-particle-physics-basic-concepts/2009/fall/lecture-7",
+          "title": "Angular momentum",
+          "order": 7,
+          "videoIds": [
+            "e22G9U7OlOc"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "new-revolutions-particle-physics-basic-concepts-2009-fall-lecture-8",
+          "url": "https://theoreticalminimum.com/courses/new-revolutions-particle-physics-basic-concepts/2009/fall/lecture-8",
+          "title": "Spin",
+          "order": 8,
+          "videoIds": [
+            "Xt09jVssi7k"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "new-revolutions-particle-physics-basic-concepts-2009-fall-lecture-9",
+          "url": "https://theoreticalminimum.com/courses/new-revolutions-particle-physics-basic-concepts/2009/fall/lecture-9",
+          "title": "Equations of motion of particles and fields",
+          "order": 9,
+          "videoIds": [
+            "D7yXoNAg3J8"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "new-revolutions-particle-physics-basic-concepts-2009-fall-lecture-10",
+          "url": "https://theoreticalminimum.com/courses/new-revolutions-particle-physics-basic-concepts/2009/fall/lecture-10",
+          "title": "Field Lagrangians and path integrals",
+          "order": 10,
+          "videoIds": [
+            "q-QaaKCvDUs"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        }
+      ],
+      "reviewStatus": "indexed",
+      "unresolvedLectureNumbers": []
+    },
+    {
+      "id": "particle-physics-2-standard-model-2010-winter",
+      "title": "Particle Physics 2: Standard Model",
+      "edition": "2010/winter",
+      "section": "supplemental",
+      "url": "https://theoreticalminimum.com/courses/particle-physics-2-standard-model/2010/winter",
+      "playlistIds": [],
+      "lectures": [
+        {
+          "id": "particle-physics-2-standard-model-2010-winter-lecture-1",
+          "url": "https://theoreticalminimum.com/courses/particle-physics-2-standard-model/2010/winter/lecture-1",
+          "title": "Particles fields and forces",
+          "order": 1,
+          "videoIds": [
+            "Igl8hE3Eac0"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "particle-physics-2-standard-model-2010-winter-lecture-2",
+          "url": "https://theoreticalminimum.com/courses/particle-physics-2-standard-model/2010/winter/lecture-2",
+          "title": "Quantum chromodynamics",
+          "order": 2,
+          "videoIds": [
+            "yy989li6xgY"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "particle-physics-2-standard-model-2010-winter-lecture-3",
+          "url": "https://theoreticalminimum.com/courses/particle-physics-2-standard-model/2010/winter/lecture-3",
+          "title": "Group theory – part 1",
+          "order": 3,
+          "videoIds": [
+            "DIEDkY2Y49s"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "particle-physics-2-standard-model-2010-winter-lecture-4",
+          "url": "https://theoreticalminimum.com/courses/particle-physics-2-standard-model/2010/winter/lecture-4",
+          "title": "Group theory – part 2",
+          "order": 4,
+          "videoIds": [
+            "n88Qe-aAAYE"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "particle-physics-2-standard-model-2010-winter-lecture-5",
+          "url": "https://theoreticalminimum.com/courses/particle-physics-2-standard-model/2010/winter/lecture-5",
+          "title": "Gauge fields and symmetry",
+          "order": 5,
+          "videoIds": [
+            "3g6RtyGjX3o"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "particle-physics-2-standard-model-2010-winter-lecture-6",
+          "url": "https://theoreticalminimum.com/courses/particle-physics-2-standard-model/2010/winter/lecture-6",
+          "title": "The weak interaction",
+          "order": 6,
+          "videoIds": [
+            "5rytN74EOi0"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "particle-physics-2-standard-model-2010-winter-lecture-7",
+          "url": "https://theoreticalminimum.com/courses/particle-physics-2-standard-model/2010/winter/lecture-7",
+          "title": "Spontaneous symmetry breaking and Goldstone bosons",
+          "order": 7,
+          "videoIds": [
+            "7cKvhkFhXDk"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "particle-physics-2-standard-model-2010-winter-lecture-8",
+          "url": "https://theoreticalminimum.com/courses/particle-physics-2-standard-model/2010/winter/lecture-8",
+          "title": "The Higgs field",
+          "order": 8,
+          "videoIds": [
+            "fw4K3sgza04"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "particle-physics-2-standard-model-2010-winter-lecture-9",
+          "url": "https://theoreticalminimum.com/courses/particle-physics-2-standard-model/2010/winter/lecture-9",
+          "title": "The Higgs field and fermions",
+          "order": 9,
+          "videoIds": [
+            "qzGY-BrCUgA"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "particle-physics-2-standard-model-2010-winter-lecture-10",
+          "url": "https://theoreticalminimum.com/courses/particle-physics-2-standard-model/2010/winter/lecture-10",
+          "title": "Renormalization and the running of coupling constants",
+          "order": 10,
+          "videoIds": [
+            "QD8SEcoFyAw"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        }
+      ],
+      "reviewStatus": "indexed",
+      "unresolvedLectureNumbers": []
+    },
+    {
+      "id": "particle-physics-3-supersymmetry-and-grand-unification-2010-spring",
+      "title": "Particle Physics 3: Supersymmetry and Grand Unification",
+      "edition": "2010/spring",
+      "section": "supplemental",
+      "url": "https://theoreticalminimum.com/courses/particle-physics-3-supersymmetry-and-grand-unification/2010/spring",
+      "playlistIds": [
+        "PLpi18tMShZSBKLugjxRsN8U5MmILu1nBo"
+      ],
+      "lectures": [
+        {
+          "id": "particle-physics-3-supersymmetry-and-grand-unification-2010-spring-lecture-1",
+          "url": "https://theoreticalminimum.com/courses/particle-physics-3-supersymmetry-and-grand-unification/2010/spring/lecture-1",
+          "title": "Renormalization concepts, and dimensional analysis",
+          "order": 1,
+          "videoIds": [
+            "W6srShxBCrk"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "particle-physics-3-supersymmetry-and-grand-unification-2010-spring-lecture-2",
+          "url": "https://theoreticalminimum.com/courses/particle-physics-3-supersymmetry-and-grand-unification/2010/spring/lecture-2",
+          "title": "Fermions and bosons",
+          "order": 2,
+          "videoIds": [
+            "-nBOCF0sPgU"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "particle-physics-3-supersymmetry-and-grand-unification-2010-spring-lecture-3",
+          "url": "https://theoreticalminimum.com/courses/particle-physics-3-supersymmetry-and-grand-unification/2010/spring/lecture-3",
+          "title": "Propagators and renormalization of mass",
+          "order": 3,
+          "videoIds": [
+            "GzoncJBqeNk"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "particle-physics-3-supersymmetry-and-grand-unification-2010-spring-lecture-4",
+          "url": "https://theoreticalminimum.com/courses/particle-physics-3-supersymmetry-and-grand-unification/2010/spring/lecture-4",
+          "title": "Symmetry and Grassmann numbers",
+          "order": 4,
+          "videoIds": [
+            "o_gafEasmvE"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "particle-physics-3-supersymmetry-and-grand-unification-2010-spring-lecture-5",
+          "url": "https://theoreticalminimum.com/courses/particle-physics-3-supersymmetry-and-grand-unification/2010/spring/lecture-5",
+          "title": "A first supersymmetric model",
+          "order": 5,
+          "videoIds": [
+            "HbGrH1ES8Ok"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "particle-physics-3-supersymmetry-and-grand-unification-2010-spring-lecture-6",
+          "url": "https://theoreticalminimum.com/courses/particle-physics-3-supersymmetry-and-grand-unification/2010/spring/lecture-6",
+          "title": "Supersymmetry building blocks",
+          "order": 6,
+          "videoIds": [
+            "FU5SKmVTxIw"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "particle-physics-3-supersymmetry-and-grand-unification-2010-spring-lecture-7",
+          "url": "https://theoreticalminimum.com/courses/particle-physics-3-supersymmetry-and-grand-unification/2010/spring/lecture-7",
+          "title": "Lagrangians that preserve supersymmetry",
+          "order": 7,
+          "videoIds": [
+            "VBBD5FStmwQ"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "particle-physics-3-supersymmetry-and-grand-unification-2010-spring-lecture-8",
+          "url": "https://theoreticalminimum.com/courses/particle-physics-3-supersymmetry-and-grand-unification/2010/spring/lecture-8",
+          "title": "Generalizing supersymmetry to 3+1 spacetime, and QFT",
+          "order": 8,
+          "videoIds": [
+            "F0Ogxub_nGA"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "particle-physics-3-supersymmetry-and-grand-unification-2010-spring-lecture-9",
+          "url": "https://theoreticalminimum.com/courses/particle-physics-3-supersymmetry-and-grand-unification/2010/spring/lecture-9",
+          "title": "Supersymmetry breaking and an introduction to grand unified theories",
+          "order": 9,
+          "videoIds": [
+            "zhm4ieMbOuU"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "particle-physics-3-supersymmetry-and-grand-unification-2010-spring-lecture-10",
+          "url": "https://theoreticalminimum.com/courses/particle-physics-3-supersymmetry-and-grand-unification/2010/spring/lecture-10",
+          "title": "GUTs, the SU(5) representation, proton decay",
+          "order": 10,
+          "videoIds": [
+            "4a6P9g7koq4"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        }
+      ],
+      "reviewStatus": "indexed",
+      "unresolvedLectureNumbers": []
+    },
+    {
+      "id": "string-theory-2010-fall",
+      "title": "String Theory",
+      "edition": "2010/fall",
+      "section": "supplemental",
+      "url": "https://theoreticalminimum.com/courses/string-theory/2010/fall",
+      "playlistIds": [],
+      "lectures": [
+        {
+          "id": "string-theory-and-m-theory-2010-fall-lecture-1",
+          "url": "https://theoreticalminimum.com/courses/string-theory-and-m-theory/2010/fall/lecture-1",
+          "title": "The historical origins of string theory",
+          "order": 1,
+          "videoIds": [
+            "25haxRuZQUk"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "string-theory-and-m-theory-2010-fall-lecture-2",
+          "url": "https://theoreticalminimum.com/courses/string-theory-and-m-theory/2010/fall/lecture-2",
+          "title": "Mathematics of string motion",
+          "order": 2,
+          "videoIds": [
+            "-BleG7PBwEA"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "string-theory-and-m-theory-2010-fall-lecture-3",
+          "url": "https://theoreticalminimum.com/courses/string-theory-and-m-theory/2010/fall/lecture-3",
+          "title": "The energy spectrum of strings",
+          "order": 3,
+          "videoIds": [
+            "gCyImLu0HSI"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "string-theory-and-m-theory-2010-fall-lecture-4",
+          "url": "https://theoreticalminimum.com/courses/string-theory-and-m-theory/2010/fall/lecture-4",
+          "title": "Closed strings and the level matching rule",
+          "order": 4,
+          "videoIds": [
+            "CdgDLaxe2Q4"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "string-theory-and-m-theory-2010-fall-lecture-5",
+          "url": "https://theoreticalminimum.com/courses/string-theory-and-m-theory/2010/fall/lecture-5",
+          "title": "Bosonic strings",
+          "order": 5,
+          "videoIds": [
+            "-I7PjKyCnI0"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "string-theory-and-m-theory-2010-fall-lecture-6",
+          "url": "https://theoreticalminimum.com/courses/string-theory-and-m-theory/2010/fall/lecture-6",
+          "title": "Strings with spin",
+          "order": 6,
+          "videoIds": [
+            "qllX-dkGfYI"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "string-theory-and-m-theory-2010-fall-lecture-7",
+          "url": "https://theoreticalminimum.com/courses/string-theory-and-m-theory/2010/fall/lecture-7",
+          "title": "Fermionic strings and path integrals",
+          "order": 7,
+          "videoIds": [
+            "V8XBsPIPKDg"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "string-theory-and-m-theory-2010-fall-lecture-8",
+          "url": "https://theoreticalminimum.com/courses/string-theory-and-m-theory/2010/fall/lecture-8",
+          "title": "Conformal mapping and string scattering",
+          "order": 8,
+          "videoIds": [
+            "s43SMaZHa50"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "string-theory-and-m-theory-2010-fall-lecture-9",
+          "url": "https://theoreticalminimum.com/courses/string-theory-and-m-theory/2010/fall/lecture-9",
+          "title": "Strings in compact dimensions",
+          "order": 9,
+          "videoIds": [
+            "Tsav_xnegTk"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "string-theory-and-m-theory-2010-fall-lecture-10",
+          "url": "https://theoreticalminimum.com/courses/string-theory-and-m-theory/2010/fall/lecture-10",
+          "title": "T-duality, D-branes and modeling field theories",
+          "order": 10,
+          "videoIds": [
+            "L1_3Xp3rT3c"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        }
+      ],
+      "reviewStatus": "indexed",
+      "unresolvedLectureNumbers": []
+    },
+    {
+      "id": "cosmology-and-black-holes-2011-winter",
+      "title": "Cosmology and Black Holes",
+      "edition": "2011/winter",
+      "section": "supplemental",
+      "url": "https://theoreticalminimum.com/courses/cosmology-and-black-holes/2011/winter",
+      "playlistIds": [
+        "PL3E633552E58EB230"
+      ],
+      "lectures": [
+        {
+          "id": "topics-string-theory-2011-winter-lecture-2",
+          "url": "https://theoreticalminimum.com/courses/topics-string-theory/2011/winter/lecture-2",
+          "title": "Special relativity and string theory",
+          "order": 2,
+          "videoIds": [
+            "dmS5J6xM5s0"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "topics-string-theory-2011-winter-lecture-3",
+          "url": "https://theoreticalminimum.com/courses/topics-string-theory/2011/winter/lecture-3",
+          "title": "Black holes",
+          "order": 3,
+          "videoIds": [
+            "i1s5eOJ3V6k"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "topics-string-theory-2011-winter-lecture-4",
+          "url": "https://theoreticalminimum.com/courses/topics-string-theory/2011/winter/lecture-4",
+          "title": "Black hole horizons",
+          "order": 4,
+          "videoIds": [
+            "SkEvsxg5Tu4"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "topics-string-theory-2011-winter-lecture-5",
+          "url": "https://theoreticalminimum.com/courses/topics-string-theory/2011/winter/lecture-5",
+          "title": "Black holes and light",
+          "order": 5,
+          "videoIds": [
+            "EJrgKI8aXgQ"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "topics-string-theory-2011-winter-lecture-6",
+          "url": "https://theoreticalminimum.com/courses/topics-string-theory/2011/winter/lecture-6",
+          "title": "Black hole entropy",
+          "order": 6,
+          "videoIds": [
+            "5p4PvLUHH88"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "topics-string-theory-2011-winter-lecture-7",
+          "url": "https://theoreticalminimum.com/courses/topics-string-theory/2011/winter/lecture-7",
+          "title": "Black hole entropy 2",
+          "order": 7,
+          "videoIds": [
+            "kL0Bnf7RMUQ"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "topics-string-theory-2011-winter-lecture-8",
+          "url": "https://theoreticalminimum.com/courses/topics-string-theory/2011/winter/lecture-8",
+          "title": "Horizons",
+          "order": 8,
+          "videoIds": [
+            "ieHX2bGTMQg"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "topics-string-theory-2011-winter-lecture-9",
+          "url": "https://theoreticalminimum.com/courses/topics-string-theory/2011/winter/lecture-9",
+          "title": "More black holes and horizons",
+          "order": 9,
+          "videoIds": [
+            "jnItLp3NR5I"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        }
+      ],
+      "reviewStatus": "indexed",
+      "unresolvedLectureNumbers": [
+        1
+      ]
+    },
+    {
+      "id": "classical-mechanics-2007-fall",
+      "title": "Classical Mechanics",
+      "edition": "2007/fall",
+      "section": "archive",
+      "url": "https://theoreticalminimum.com/courses/classical-mechanics/2007/fall",
+      "playlistIds": [],
+      "lectures": [
+        {
+          "id": "classical-mechanics-2007-fall-lecture-1",
+          "url": "https://theoreticalminimum.com/courses/classical-mechanics/2007/fall/lecture-1",
+          "title": "State diagrams and the nature of physical laws",
+          "order": 1,
+          "videoIds": [
+            "pyX8kQ-JzHI"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "classical-mechanics-2007-fall-lecture-2",
+          "url": "https://theoreticalminimum.com/courses/classical-mechanics/2007/fall/lecture-2",
+          "title": "Newton's laws, principle of least action",
+          "order": 2,
+          "videoIds": [
+            "h96SW0PfQcg"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "classical-mechanics-2007-fall-lecture-3",
+          "url": "https://theoreticalminimum.com/courses/classical-mechanics/2007/fall/lecture-3",
+          "title": "Euler-Lagrange equations, symmetry and conservation laws",
+          "order": 3,
+          "videoIds": [
+            "3YARPNZrcIY"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "classical-mechanics-2007-fall-lecture-4",
+          "url": "https://theoreticalminimum.com/courses/classical-mechanics/2007/fall/lecture-4",
+          "title": "Symmetry and conservation Laws",
+          "order": 4,
+          "videoIds": [
+            "FZDy_Dccv4s"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "classical-mechanics-2007-fall-lecture-5",
+          "url": "https://theoreticalminimum.com/courses/classical-mechanics/2007/fall/lecture-5",
+          "title": "Lagrangians and Hamiltonians",
+          "order": 5,
+          "videoIds": [
+            "ZpRpI0D7P7Y"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "classical-mechanics-2007-fall-lecture-6",
+          "url": "https://theoreticalminimum.com/courses/classical-mechanics/2007/fall/lecture-6",
+          "title": "Hamilton's equations",
+          "order": 6,
+          "videoIds": [
+            "14Yhzbn96Bc"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "classical-mechanics-2007-fall-lecture-7",
+          "url": "https://theoreticalminimum.com/courses/classical-mechanics/2007/fall/lecture-7",
+          "title": "Liouville’s theorem",
+          "order": 7,
+          "videoIds": [
+            "0mcxUD53rrM"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "classical-mechanics-2007-fall-lecture-8",
+          "url": "https://theoreticalminimum.com/courses/classical-mechanics/2007/fall/lecture-8",
+          "title": "Motion in an electromagnetic field",
+          "order": 8,
+          "videoIds": [
+            "gUUbl444r74"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "classical-mechanics-2007-fall-lecture-9",
+          "url": "https://theoreticalminimum.com/courses/classical-mechanics/2007/fall/lecture-9",
+          "title": "Poisson brackets formulation",
+          "order": 9,
+          "videoIds": [
+            "NhNBW8a8-lI"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        }
+      ],
+      "reviewStatus": "indexed",
+      "unresolvedLectureNumbers": []
+    },
+    {
+      "id": "quantum-mechanics-2008-winter",
+      "title": "Quantum Mechanics",
+      "edition": "2008/winter",
+      "section": "archive",
+      "url": "https://theoreticalminimum.com/courses/quantum-mechanics/2008/winter",
+      "playlistIds": [],
+      "lectures": [
+        {
+          "id": "quantum-mechanics-2008-winter-lecture-1",
+          "url": "https://theoreticalminimum.com/courses/quantum-mechanics/2008/winter/lecture-1",
+          "title": "Lecture #1",
+          "order": 1,
+          "videoIds": [
+            "JzhlfbWBuQ8"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "quantum-mechanics-2008-winter-lecture-2",
+          "url": "https://theoreticalminimum.com/courses/quantum-mechanics/2008/winter/lecture-2",
+          "title": "Lecture #2",
+          "order": 2,
+          "videoIds": [
+            "KokditqpAJg"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "quantum-mechanics-2008-winter-lecture-3",
+          "url": "https://theoreticalminimum.com/courses/quantum-mechanics/2008/winter/lecture-3",
+          "title": "Lecture #3",
+          "order": 3,
+          "videoIds": [
+            "epzh76hNl8I"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "quantum-mechanics-2008-winter-lecture-4",
+          "url": "https://theoreticalminimum.com/courses/quantum-mechanics/2008/winter/lecture-4",
+          "title": "Lecture #4",
+          "order": 4,
+          "videoIds": [
+            "oWe9brUwO0Q"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "quantum-mechanics-2008-winter-lecture-5",
+          "url": "https://theoreticalminimum.com/courses/quantum-mechanics/2008/winter/lecture-5",
+          "title": "Lecture #5",
+          "order": 5,
+          "videoIds": [
+            "LBFBQr_xKEM"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "quantum-mechanics-2008-winter-lecture-6",
+          "url": "https://theoreticalminimum.com/courses/quantum-mechanics/2008/winter/lecture-6",
+          "title": "Lecture #6",
+          "order": 6,
+          "videoIds": [
+            "tKbzlOU_ETk"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "quantum-mechanics-2008-winter-lecture-7",
+          "url": "https://theoreticalminimum.com/courses/quantum-mechanics/2008/winter/lecture-7",
+          "title": "Lecture #7",
+          "order": 7,
+          "videoIds": [
+            "ktcMKnNHTt4"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "quantum-mechanics-2008-winter-lecture-8",
+          "url": "https://theoreticalminimum.com/courses/quantum-mechanics/2008/winter/lecture-8",
+          "title": "Lecture #8",
+          "order": 8,
+          "videoIds": [
+            "tiXP6dND6SY"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "quantum-mechanics-2008-winter-lecture-9",
+          "url": "https://theoreticalminimum.com/courses/quantum-mechanics/2008/winter/lecture-9",
+          "title": "Lecture #9",
+          "order": 9,
+          "videoIds": [
+            "7vzKUoBfWUY"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "quantum-mechanics-2008-winter-lecture-10",
+          "url": "https://theoreticalminimum.com/courses/quantum-mechanics/2008/winter/lecture-10",
+          "title": "Lecture #10",
+          "order": 10,
+          "videoIds": [
+            "JIuU3xnOx7g"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        }
+      ],
+      "reviewStatus": "indexed",
+      "unresolvedLectureNumbers": []
+    },
+    {
+      "id": "special-relativity-and-electrodynamics-2008-spring",
+      "title": "Special Relativity and Electrodynamics",
+      "edition": "2008/spring",
+      "section": "archive",
+      "url": "https://theoreticalminimum.com/courses/special-relativity-and-electrodynamics/2008/spring",
+      "playlistIds": [],
+      "lectures": [
+        {
+          "id": "special-relativity-2008-spring-lecture-1",
+          "url": "https://theoreticalminimum.com/courses/special-relativity/2008/spring/lecture-1",
+          "title": "Inertial reference frames",
+          "order": 1,
+          "videoIds": [
+            "BAurgxtOdxY"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "special-relativity-2008-spring-lecture-2",
+          "url": "https://theoreticalminimum.com/courses/special-relativity/2008/spring/lecture-2",
+          "title": "Principle of least action",
+          "order": 2,
+          "videoIds": [
+            "AbrSKDvRTro"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "special-relativity-2008-spring-lecture-3",
+          "url": "https://theoreticalminimum.com/courses/special-relativity/2008/spring/lecture-3",
+          "title": "Invariance of the laws of nature",
+          "order": 3,
+          "videoIds": [
+            "z4xwBcdk-5Q"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "special-relativity-2008-spring-lecture-4",
+          "url": "https://theoreticalminimum.com/courses/special-relativity/2008/spring/lecture-4",
+          "title": "Lagrangian mechanics",
+          "order": 4,
+          "videoIds": [
+            "BjUJra50bcY"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "special-relativity-2008-spring-lecture-5",
+          "url": "https://theoreticalminimum.com/courses/special-relativity/2008/spring/lecture-5",
+          "title": "Conservation of charge and momentum",
+          "order": 5,
+          "videoIds": [
+            "vvCeOncgSoA"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "special-relativity-2008-spring-lecture-6",
+          "url": "https://theoreticalminimum.com/courses/special-relativity/2008/spring/lecture-6",
+          "title": "Relativistic wave equation and conservation laws",
+          "order": 6,
+          "videoIds": [
+            "mIx_3veuTok"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "special-relativity-2008-spring-lecture-7",
+          "url": "https://theoreticalminimum.com/courses/special-relativity/2008/spring/lecture-7",
+          "title": "Invariance under gauge transformations",
+          "order": 7,
+          "videoIds": [
+            "t2drgkIuJGU"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "special-relativity-2008-spring-lecture-8",
+          "url": "https://theoreticalminimum.com/courses/special-relativity/2008/spring/lecture-8",
+          "title": "Gauge theory",
+          "order": 8,
+          "videoIds": [
+            "R3rcfXSqsZM"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        }
+      ],
+      "reviewStatus": "indexed",
+      "unresolvedLectureNumbers": []
+    },
+    {
+      "id": "general-relativity-2008-fall",
+      "title": "General Relativity",
+      "edition": "2008/fall",
+      "section": "archive",
+      "url": "https://theoreticalminimum.com/courses/general-relativity/2008/fall",
+      "playlistIds": [],
+      "lectures": [
+        {
+          "id": "einsteins-general-theory-relativity-2008-fall-lecture-1",
+          "url": "https://theoreticalminimum.com/courses/einsteins-general-theory-relativity/2008/fall/lecture-1",
+          "title": "Newtonian Gravity and the equivalence principle",
+          "order": 1,
+          "videoIds": [
+            "hbmf0bB38h0"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "einsteins-general-theory-relativity-2008-fall-lecture-2",
+          "url": "https://theoreticalminimum.com/courses/einsteins-general-theory-relativity/2008/fall/lecture-2",
+          "title": "Tidal forces and curvature",
+          "order": 2,
+          "videoIds": [
+            "s8UrYIZhm60"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "einsteins-general-theory-relativity-2008-fall-lecture-3",
+          "url": "https://theoreticalminimum.com/courses/einsteins-general-theory-relativity/2008/fall/lecture-3",
+          "title": "Essential tools:  tensors and the metric",
+          "order": 3,
+          "videoIds": [
+            "hR7fWF_qBZI"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "einsteins-general-theory-relativity-2008-fall-lecture-4",
+          "url": "https://theoreticalminimum.com/courses/einsteins-general-theory-relativity/2008/fall/lecture-4",
+          "title": "Tensor mechanics",
+          "order": 4,
+          "videoIds": [
+            "ttMI0dmmkrE"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "einsteins-general-theory-relativity-2008-fall-lecture-5",
+          "url": "https://theoreticalminimum.com/courses/einsteins-general-theory-relativity/2008/fall/lecture-5",
+          "title": "Covariant differentiation and geodesics",
+          "order": 5,
+          "videoIds": [
+            "WtPtxz3ef8U"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "einsteins-general-theory-relativity-2008-fall-lecture-6",
+          "url": "https://theoreticalminimum.com/courses/einsteins-general-theory-relativity/2008/fall/lecture-6",
+          "title": "The flat space of special relativity",
+          "order": 6,
+          "videoIds": [
+            "Pm5ROyoaMZA"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "einsteins-general-theory-relativity-2008-fall-lecture-7",
+          "url": "https://theoreticalminimum.com/courses/einsteins-general-theory-relativity/2008/fall/lecture-7",
+          "title": "The Riemannian curvature tensor",
+          "order": 7,
+          "videoIds": [
+            "xOzVmC-4gpw"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "einsteins-general-theory-relativity-2008-fall-lecture-8",
+          "url": "https://theoreticalminimum.com/courses/einsteins-general-theory-relativity/2008/fall/lecture-8",
+          "title": "Equations of motion in curved space",
+          "order": 8,
+          "videoIds": [
+            "AC3TMizGpB8"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "einsteins-general-theory-relativity-2008-fall-lecture-9",
+          "url": "https://theoreticalminimum.com/courses/einsteins-general-theory-relativity/2008/fall/lecture-9",
+          "title": "Gravitation in the Newtonian approximation",
+          "order": 9,
+          "videoIds": [
+            "XG02Yw7u2mc"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "einsteins-general-theory-relativity-2008-fall-lecture-10",
+          "url": "https://theoreticalminimum.com/courses/einsteins-general-theory-relativity/2008/fall/lecture-10",
+          "title": "Energy-momentum tensor and Einstein's equations",
+          "order": 10,
+          "videoIds": [
+            "VCRG1uzc9xg"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "einsteins-general-theory-relativity-2008-fall-lecture-11",
+          "url": "https://theoreticalminimum.com/courses/einsteins-general-theory-relativity/2008/fall/lecture-11",
+          "title": "Accelerated coordinates",
+          "order": 11,
+          "videoIds": [
+            "6vdXlwDRRR8"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "einsteins-general-theory-relativity-2008-fall-lecture-12",
+          "url": "https://theoreticalminimum.com/courses/einsteins-general-theory-relativity/2008/fall/lecture-12",
+          "title": "World lines and Schwarzschild solution",
+          "order": 12,
+          "videoIds": [
+            "fVqYlSNqSQk"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        }
+      ],
+      "reviewStatus": "indexed",
+      "unresolvedLectureNumbers": []
+    },
+    {
+      "id": "cosmology-2009-winter",
+      "title": "Cosmology",
+      "edition": "2009/winter",
+      "section": "archive",
+      "url": "https://theoreticalminimum.com/courses/cosmology/2009/winter",
+      "playlistIds": [],
+      "lectures": [
+        {
+          "id": "cosmology-2009-winter-lecture-1",
+          "url": "https://theoreticalminimum.com/courses/cosmology/2009/winter/lecture-1",
+          "title": "Geometry of the expanding universe",
+          "order": 1,
+          "videoIds": [
+            "32wIKaLkvc4"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "cosmology-2009-winter-lecture-2",
+          "url": "https://theoreticalminimum.com/courses/cosmology/2009/winter/lecture-2",
+          "title": "Newtonian and Friedmann-Robertson-Walker cosmology",
+          "order": 2,
+          "videoIds": [
+            "ERjkSbdn6-4"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "cosmology-2009-winter-lecture-3",
+          "url": "https://theoreticalminimum.com/courses/cosmology/2009/winter/lecture-3",
+          "title": "Structure of the universe",
+          "order": 3,
+          "videoIds": [
+            "rYQTAJ50A44"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "cosmology-2009-winter-lecture-4",
+          "url": "https://theoreticalminimum.com/courses/cosmology/2009/winter/lecture-4",
+          "title": "Background microwave radiation",
+          "order": 4,
+          "videoIds": [
+            "KdBrQMkkDz8"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "cosmology-2009-winter-lecture-5",
+          "url": "https://theoreticalminimum.com/courses/cosmology/2009/winter/lecture-5",
+          "title": "Cosmological curvature",
+          "order": 5,
+          "videoIds": [
+            "H3D5HGZIP4s"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "cosmology-2009-winter-lecture-6",
+          "url": "https://theoreticalminimum.com/courses/cosmology/2009/winter/lecture-6",
+          "title": "Surface of last scattering",
+          "order": 6,
+          "videoIds": [
+            "di8egIk4cWY"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "cosmology-2009-winter-lecture-7",
+          "url": "https://theoreticalminimum.com/courses/cosmology/2009/winter/lecture-7",
+          "title": "Cosmological inflation",
+          "order": 7,
+          "videoIds": [
+            "KATSfJjZGVQ"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "cosmology-2009-winter-lecture-8",
+          "url": "https://theoreticalminimum.com/courses/cosmology/2009/winter/lecture-8",
+          "title": "Big omega",
+          "order": 8,
+          "videoIds": [
+            "9R57sdG61tA"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        }
+      ],
+      "reviewStatus": "indexed",
+      "unresolvedLectureNumbers": []
+    },
+    {
+      "id": "statistical-mechanics-2009-spring",
+      "title": "Statistical Mechanics",
+      "edition": "2009/spring",
+      "section": "archive",
+      "url": "https://theoreticalminimum.com/courses/statistical-mechanics/2009/spring",
+      "playlistIds": [],
+      "lectures": [
+        {
+          "id": "statistical-mechanics-2009-spring-lecture-1",
+          "url": "https://theoreticalminimum.com/courses/statistical-mechanics/2009/spring/lecture-1",
+          "title": "Conservation of information, energy, entropy, and temperature",
+          "order": 1,
+          "videoIds": [
+            "H1Zbp6__uNw"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "statistical-mechanics-2009-spring-lecture-2",
+          "url": "https://theoreticalminimum.com/courses/statistical-mechanics/2009/spring/lecture-2",
+          "title": "The mathematics of statistical mechanics",
+          "order": 2,
+          "videoIds": [
+            "UeVm6U3tMFM"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "statistical-mechanics-2009-spring-lecture-3",
+          "url": "https://theoreticalminimum.com/courses/statistical-mechanics/2009/spring/lecture-3",
+          "title": "The Boltzman distribution and fluctuations",
+          "order": 3,
+          "videoIds": [
+            "SmmGDn8OnTA"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "statistical-mechanics-2009-spring-lecture-4",
+          "url": "https://theoreticalminimum.com/courses/statistical-mechanics/2009/spring/lecture-4",
+          "title": "Helmholtz free energy and the partition function",
+          "order": 4,
+          "videoIds": [
+            "jny9W7NtlK4"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "statistical-mechanics-2009-spring-lecture-5",
+          "url": "https://theoreticalminimum.com/courses/statistical-mechanics/2009/spring/lecture-5",
+          "title": "Diatomic molecules and black hole thermodynamics",
+          "order": 5,
+          "videoIds": [
+            "uEZWml2XYeo"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "statistical-mechanics-2009-spring-lecture-6",
+          "url": "https://theoreticalminimum.com/courses/statistical-mechanics/2009/spring/lecture-6",
+          "title": "Second law of thermodynamics",
+          "order": 6,
+          "videoIds": [
+            "DaDeF21kmMo"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "statistical-mechanics-2009-spring-lecture-7",
+          "url": "https://theoreticalminimum.com/courses/statistical-mechanics/2009/spring/lecture-7",
+          "title": "Harmonic oscillators and quantum states",
+          "order": 7,
+          "videoIds": [
+            "cU7bj4dNMwY"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "statistical-mechanics-2009-spring-lecture-8",
+          "url": "https://theoreticalminimum.com/courses/statistical-mechanics/2009/spring/lecture-8",
+          "title": "Magnets",
+          "order": 8,
+          "videoIds": [
+            "830_4EVNu5M"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "statistical-mechanics-2009-spring-lecture-9",
+          "url": "https://theoreticalminimum.com/courses/statistical-mechanics/2009/spring/lecture-9",
+          "title": "Phase transitions and chemical potential",
+          "order": 9,
+          "videoIds": [
+            "ViKa9xZoMfo"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        },
+        {
+          "id": "statistical-mechanics-2009-spring-lecture-10",
+          "url": "https://theoreticalminimum.com/courses/statistical-mechanics/2009/spring/lecture-10",
+          "title": "Thermal radiation and inflation",
+          "order": 10,
+          "videoIds": [
+            "YeS_eRfKSpU"
+          ],
+          "reviewStatus": "indexed",
+          "objectiveIds": [],
+          "derivations": [],
+          "verifiedTimestamps": []
+        }
+      ],
+      "reviewStatus": "indexed",
+      "unresolvedLectureNumbers": []
+    }
+  ]
+}

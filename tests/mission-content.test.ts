@@ -65,6 +65,7 @@ describe('Foundations mission content', () => {
       expect(mission.limitations, legacy.id).toEqual(legacy.assumptions);
       expect(mission.steps.some(step => step.kind === 'simulate' && step.modelId === legacy.family && step.preset === legacy.preset), legacy.id).toBe(true);
       const quickExplanation = mission.steps.find(step => step.kind === 'explain')?.body.join(' ') ?? '';
+      expect(quickExplanation, 'Use the authored introduction, not automatically cut prose').toBe(legacy.summary);
       expect(quickExplanation.split(/\s+/).length, legacy.id).toBeLessThanOrEqual(32);
       expect(mission.detailedExplanation, legacy.id).toEqual(legacy.explanation);
       expect(mission.steps.flatMap(step => step.kind === 'predict' || step.kind === 'check' ? [step.assessment] : step.kind === 'math' ? [step.layer.foundation.check] : []), legacy.id).toEqual(legacy.assessments);

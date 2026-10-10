@@ -2,7 +2,6 @@ import { mathTutorials } from '../../content/math';
 import { modelDefaults } from '../../physics';
 import type { Assessment, Parameters } from '../../types';
 import type { CourseDefinition, CourseGroup, ModelId, NormalMissionDefinition, ScienceStatus, SourceReference } from '../types';
-import { biteSizedExplanation } from '../concise';
 export const reviewedAt = '2026-09-09';
 export const source = (label: string, url: string): SourceReference => ({
     label, url
@@ -93,7 +92,7 @@ export function starterCourse(course: StarterCourse): CourseDefinition {
                     }
                 },
                 {
-                    id: `${id}-explain`, kind: 'explain', title: 'Connect the evidence', body: biteSizedExplanation(draft.body, draft.summary)
+                    id: `${id}-explain`, kind: 'explain', title: 'Connect the evidence', body: [draft.summary]
                 },
                 {
                     id: stepId, kind: 'math', title: `Calculate: ${draft.title.toLowerCase()}`, layer: {

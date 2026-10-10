@@ -2,6 +2,10 @@ import { describe, expect, it } from 'vitest';
 import { isSupabaseAuthHash, isValidAppHash, parseHash, toHash } from '../src/app/router';
 
 describe('hash router', () => {
+  it('opens learner tools without adding a fourth navigation tab', () => {
+    expect(parseHash('#/workspace')).toEqual({ page: 'workspace' });
+    expect(parseHash('#/stanford')).toEqual({ page: 'stanford' });
+  });
   it.each(['', '#', '#/', '#/explore'])(
     'opens Explore for the first-visit hash %j',
     hash => expect(parseHash(hash)).toEqual({ page: 'explore' }),

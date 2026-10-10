@@ -77,6 +77,8 @@ export function ExplorePage({ courses, progress }: ExplorePageProps) {
       </div>
     </header>
 
+    <div className="learning-tools" aria-label="Learning tools"><a className="secondary-button" href="#/workspace">Math Workspace</a><a className="secondary-button" href="#/stanford">Follow the Stanford lectures</a></div>
+
     <section className="continue-hero" aria-label="Continue learning">
       <div className="continue-hero-info">
         <div className="continue-hero-meta">

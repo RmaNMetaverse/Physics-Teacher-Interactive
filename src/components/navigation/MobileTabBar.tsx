@@ -69,7 +69,7 @@ const TABS: readonly TabDefinition[] = [
     label: 'Explore',
     getHref: () => '#/explore',
     icon: Compass,
-    isActive: (route) => route.page === 'explore',
+    isActive: (route) => ['explore', 'workspace', 'stanford'].includes(route.page),
   },
   {
     id: 'learn',

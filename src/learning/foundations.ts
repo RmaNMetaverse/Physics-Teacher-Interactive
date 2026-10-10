@@ -4,7 +4,6 @@ import { laterLessons } from '../content/later';
 import { mathTutorials } from '../content/math';
 import type { Assessment, LessonDefinition } from '../types';
 import type { CourseDefinition, MathLayer, MissionDefinition, MissionStep } from './types';
-import { biteSizedExplanation } from './concise';
 
 const legacyLessons = [...firstLessons, ...laterLessons, ...finalLessons];
 const tutorialsById = new Map(mathTutorials.map(tutorial => [tutorial.id, tutorial]));
@@ -74,7 +73,7 @@ function adaptLesson(lesson: LessonDefinition): MissionDefinition {
       { id: `${lesson.id}-observe`, kind: 'observe', title: 'Observe the question', body: [lesson.summary] },
       { id: `${lesson.id}-predict`, kind: 'predict', assessment: requireAssessment(lesson, 0) },
       { id: `${lesson.id}-simulate`, kind: 'simulate', modelId: lesson.family, prompt: lesson.experiment.join(' '), preset: lesson.preset },
-      { id: `${lesson.id}-explain`, kind: 'explain', title: 'Explain the evidence', body: biteSizedExplanation(lesson.explanation, lesson.summary) },
+      { id: `${lesson.id}-explain`, kind: 'explain', title: 'Explain the evidence', body: [lesson.summary] },
       mathStep,
       { id: `${lesson.id}-experiment-check`, kind: 'check', assessment: requireAssessment(lesson, 2) },
       { id: `${lesson.id}-recap`, kind: 'recap', takeaways: lesson.objectives },

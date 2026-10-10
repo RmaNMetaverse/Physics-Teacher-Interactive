@@ -61,7 +61,7 @@ export function AppShell({
   const [isAccountGateOpen, setIsAccountGateOpen] = useState(false);
   const [accountReminder, setAccountReminder] = useState('');
   const initialAccountResolved = useRef(false);
-  const current = route.page === 'course' || route.page === 'mission' ? 'learn' : route.page;
+  const current = route.page === 'course' || route.page === 'mission' ? 'learn' : route.page === 'progress' ? 'progress' : 'explore';
   const activeTabIndex = current === 'explore' ? 0 : current === 'learn' ? 1 : 2;
 
   const activeSettings = settings ?? progress?.settings ?? DEFAULT_SETTINGS;

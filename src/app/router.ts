@@ -2,6 +2,8 @@ import { courseCatalog } from '../learning/catalog';
 
 export type AppRoute =
   | { page: 'explore' }
+  | { page: 'workspace' }
+  | { page: 'stanford' }
   | { page: 'course'; courseId: string }
   | { page: 'mission'; courseId: string; missionId: string }
   | { page: 'progress' };
@@ -27,7 +29,7 @@ function routeParts(hash: string): string[] {
 export function isValidAppHash(hash: string): boolean {
   if (exploreHashes.has(hash)) return true;
   const parts = routeParts(hash);
-  if (parts.length === 1 && parts[0] === 'progress') return true;
+  if (parts.length === 1 && ['progress', 'workspace', 'stanford'].includes(parts[0])) return true;
   if (parts.length === 2 && parts[0] === 'course') {
     return courseCatalog.ids.courses.has(parts[1]);
   }
@@ -41,6 +43,7 @@ export function isValidAppHash(hash: string): boolean {
 export function parseHash(hash: string): AppRoute {
   if (!isValidAppHash(hash) || exploreHashes.has(hash)) return { page: 'explore' };
   const parts = routeParts(hash);
+  if (parts[0] === 'workspace' || parts[0] === 'stanford') return { page: parts[0] };
   if (parts[0] === 'course') return { page: 'course', courseId: parts[1] };
   if (parts[0] === 'mission') {
     return { page: 'mission', courseId: parts[1], missionId: parts[2] };
@@ -51,6 +54,8 @@ export function parseHash(hash: string): AppRoute {
 export function toHash(route: AppRoute): string {
   switch (route.page) {
     case 'explore': return '#/explore';
+    case 'workspace': return '#/workspace';
+    case 'stanford': return '#/stanford';
     case 'course': return `#/course/${route.courseId}`;
     case 'mission': return `#/mission/${route.courseId}/${route.missionId}`;
     case 'progress': return '#/progress';

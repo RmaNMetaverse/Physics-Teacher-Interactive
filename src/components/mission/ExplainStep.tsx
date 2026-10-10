@@ -5,6 +5,8 @@ import { Equation } from '../Equation';
 import { FormattedText } from '../FormattedText';
 import { FormulaReasoning } from './FormulaReasoning';
 import { formulaReasoning } from '../../learning/formula-reasoning';
+import { openWorkspace } from '../../math-workspace/context';
+import { FoundationEnrichment } from './FoundationEnrichment';
 
 interface ExplainStepProps {
   step: Extract<MissionStep, { kind: 'explain' }>;
@@ -42,6 +44,7 @@ export function ExplainStep({ step, mission }: ExplainStepProps) {
 
           <div className="equation-container">
             <Equation value={mission.equation} label={`Key formula for ${mission.title}`} />
+            <button type="button" className="secondary-button" onClick={() => openWorkspace({ title: mission.title, latex: mission.equation, symbols: mission.symbols, returnHash: window.location.hash })}>Open in workspace</button>
           </div>
 
           {symbols && (
@@ -85,6 +88,7 @@ export function ExplainStep({ step, mission }: ExplainStepProps) {
               )}
             </div>
           )}
+          <FoundationEnrichment missionId={mission.id} />
         </section>
       )}
 
@@ -93,6 +97,7 @@ export function ExplainStep({ step, mission }: ExplainStepProps) {
         {step.body.map((paragraph, index) => (
           <FormattedText key={index} text={paragraph} as="p" />
         ))}
+        {mission?.kind === 'mission' && mission.detailedExplanation && <details className="formula-reasoning-help"><summary>Read the complete explanation</summary>{mission.detailedExplanation.map((paragraph, index) => <FormattedText key={index} text={paragraph} as="p" />)}</details>}
       </div>
     </article>
   );

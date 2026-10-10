@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { AppShell } from './app/AppShell';
 import { isSupabaseAuthHash, isValidAppHash, parseHash, toHash, type AppRoute } from './app/router';
 import { courseCatalog, courses } from './learning/catalog';
@@ -10,6 +10,8 @@ import { MissionPage } from './pages/MissionPage';
 import { ProgressPage } from './pages/ProgressPage';
 import { applyAppearanceSettings } from './appearance';
 import { useCloudAccount } from './cloud/useCloudAccount';
+const WorkspacePage = lazy(() => import('./math-workspace/WorkspacePage'));
+const StanfordPage = lazy(() => import('./pages/StanfordPage'));
 
 function learnHash(progress: LearnerProgressV2): string {
   const course = courseCatalog.courses.get(progress.selectedCourseId) ?? courses[0];
@@ -102,6 +104,8 @@ export function App() {
 
   let page;
   if (route.page === 'explore') page = <ExplorePage courses={courses} progress={progress} />;
+  else if (route.page === 'workspace') page = <Suspense fallback={<p role="status">Opening mathematics tools…</p>}><WorkspacePage userId={account.user?.id} /></Suspense>;
+  else if (route.page === 'stanford') page = <Suspense fallback={<p role="status">Opening lecture inventory…</p>}><StanfordPage /></Suspense>;
   else if (route.page === 'course') page = <CoursePathPage course={courseCatalog.getCourse(route.courseId)} progress={progress} />;
   else if (route.page === 'mission') {
     const course = courseCatalog.getCourse(route.courseId);
