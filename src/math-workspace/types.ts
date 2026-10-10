@@ -1,6 +1,6 @@
 export type AngleUnit = 'rad' | 'deg';
-export type MathOperation = 'evaluate' | 'approximate' | 'simplify' | 'solve' | 'differentiate' | 'integrate';
-export interface Calculation { operation: MathOperation; latex: string; variable?: string; angleUnit?: AngleUnit }
+export type MathOperation = 'evaluate' | 'approximate' | 'simplify' | 'solve' | 'differentiate' | 'integrate' | 'compare';
+export interface Calculation { operation: MathOperation; latex: string; comparisonLatex?: string; variable?: string; angleUnit?: AngleUnit }
 export interface CalculationResult { latex: string; explanation: string }
 export interface GraphSpec {
   kind: 'function' | 'parametric' | 'polar' | 'implicit' | 'inequality';

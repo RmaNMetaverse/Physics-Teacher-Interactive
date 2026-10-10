@@ -32,6 +32,31 @@ function parse(latex: string, angleUnit: AngleUnit = 'rad') {
   return { ce, expression, raw };
 }
 
+function domainRestrictions(node: unknown, ce: ComputeEngine): Map<string, string> {
+  const restrictions = new Map<string, string>();
+  const add = (kind: string, value: unknown, description: string) => restrictions.set(`${kind}:${JSON.stringify(value)}`, description);
+  const latex = (value: unknown) => ce.box(value as never).latex;
+  const containsSymbol = (value: unknown): boolean => typeof value === 'string'
+    ? !['Pi', 'ExponentialE', 'ImaginaryUnit'].includes(value)
+    : Array.isArray(value) ? value.slice(1).some(containsSymbol) : false;
+  const visit = (value: unknown): void => {
+    if (!Array.isArray(value)) return;
+    const [operator, first, second] = value;
+    if ((operator === 'Divide' || operator === 'Rational') && containsSymbol(second)) add('nonzero', second, `${latex(second)} must be nonzero`);
+    if (operator === 'Power' && typeof second === 'number' && second < 0) add('nonzero', first, `${latex(first)} must be nonzero`);
+    if (operator === 'Sqrt') add('nonnegative', first, `${latex(first)} must be nonnegative`);
+    if (operator === 'Root' && typeof second === 'number' && second % 2 === 0) add('nonnegative', first, `${latex(first)} must be nonnegative`);
+    if (operator === 'Ln' || operator === 'Log' || operator === 'Log10') add('positive', first, `${latex(first)} must be positive`);
+    if (operator === 'Tan') {
+      const cosine = ['Cos', first];
+      add('nonzero', cosine, `${latex(cosine)} must be nonzero`);
+    }
+    value.slice(1).forEach(visit);
+  };
+  visit(node);
+  return restrictions;
+}
+
 export function calculate(request: Calculation): CalculationResult {
   const { ce, expression } = parse(request.latex, request.angleUnit);
   const variable = request.variable || 'x';
@@ -43,7 +68,44 @@ export function calculate(request: Calculation): CalculationResult {
     solve: `Solve for ${variable}. These are candidate roots: substitute into the original expression to check domain restrictions. An expression without = is set equal to zero.`,
     differentiate: `Differentiate with respect to ${variable}, holding other variables fixed. Power, product and chain rules describe local rate of change. Trigonometric derivatives use radians.`,
     integrate: `Find a supported antiderivative with respect to ${variable}; add an arbitrary constant C. An unevaluated integral means no supported result was found.`,
+    compare: 'Compare by supported symbolic transformations while preserving restrictions from both original expressions. Numerical spot checks are never accepted as proof.',
   };
+  if (request.operation === 'compare') {
+    if (!request.comparisonLatex?.trim()) throw new Error('Enter a second expression to compare.');
+    const right = parse(request.comparisonLatex, request.angleUnit);
+    const leftDomain = domainRestrictions(ce.parse(request.latex, { form: 'raw' }).json, ce);
+    const rightDomain = domainRestrictions(ce.parse(request.comparisonLatex, { form: 'raw' }).json, ce);
+    const leftKeys = [...leftDomain.keys()].sort(), rightKeys = [...rightDomain.keys()].sort();
+    const restrictions = [...new Set([...leftDomain.values(), ...rightDomain.values()])];
+    if (JSON.stringify(leftKeys) !== JSON.stringify(rightKeys)) return {
+      latex: '\\text{not\\ equivalent on the same domain}',
+      explanation: `The original domains differ${restrictions.length ? `: ${restrictions.join('; ')}.` : '.'} Simplifying cannot restore excluded inputs.`,
+    };
+    const leftCanonical = expression.simplify(), rightCanonical = right.expression.simplify();
+    const difference = ce.box(['Subtract', leftCanonical, rightCanonical]).simplify();
+    const sameCanonicalForm = JSON.stringify(leftCanonical.json) === JSON.stringify(rightCanonical.json);
+    if (sameCanonicalForm || difference.json === 0 || (typeof difference.json === 'object' && !Array.isArray(difference.json) && difference.json && 'num' in difference.json && Number(difference.json.num) === 0)) return {
+      latex: '\\text{equivalent on the recorded domain}',
+      explanation: `${explanations.compare}${restrictions.length ? ` Domain: ${restrictions.join('; ')}.` : ' Both expressions are defined on the same recorded real domain.'}`,
+    };
+    const containsVariable = (node: unknown): boolean => typeof node === 'string'
+      ? !['Pi', 'ExponentialE', 'ImaginaryUnit'].includes(node)
+      : Array.isArray(node) ? node.slice(1).some(containsVariable) : false;
+    const constantDifference = !containsVariable(difference.json) ? compileExpression(difference.latex, request.angleUnit)({}) : NaN;
+    if ((Number.isFinite(constantDifference) && Math.abs(constantDifference) > 1e-12) || typeof difference.json === 'number' || (typeof difference.json === 'object' && !Array.isArray(difference.json) && difference.json && 'num' in difference.json)) return {
+      latex: '\\text{not\\ equivalent}', explanation: 'Their symbolic difference is a nonzero constant, so the expressions cannot agree throughout their common domain.',
+    };
+    try {
+      const leftValue = compileExpression(request.latex, request.angleUnit), rightValue = compileExpression(request.comparisonLatex, request.angleUnit);
+      for (const sample of [-2, -1, 0, 1, 2]) {
+        const a = leftValue({ [variable]: sample }), b = rightValue({ [variable]: sample });
+        if (Number.isFinite(a) && Number.isFinite(b) && Math.abs(a - b) > 1e-9 * Math.max(1, Math.abs(a), Math.abs(b))) return {
+          latex: '\\text{not\\ equivalent}', explanation: `A counterexample disproves equivalence: at ${variable}=${sample}, the expressions give ${a} and ${b}. Numerical agreement would not have proved equivalence.`,
+        };
+      }
+    } catch { /* Unsupported scalar evaluation leaves the result unproven. */ }
+    return { latex: '\\text{not\\ established}', explanation: `${explanations.compare} The supported symbolic rules did not reduce their difference to zero; keep the claim unproven or provide a derivation.` };
+  }
   if (request.operation === 'solve') {
     // Inspect the unsimplified syntax: a removable singularity is still excluded.
     const original = ce.parse(request.latex, { form: 'raw' }).json;

@@ -6,6 +6,7 @@ The approved target is a self-contained path from basic mathematics through the 
 
 - Branch: `codex/complete-physics-curriculum`.
 - Math Workspace: Explore entry and lesson formula handoff; MathLive entry, supported Compute Engine calculations in cancellable workers, JSXGraph function/parametric/polar/implicit/region plots, one parameter slider, accessible coordinate samples, linear/quadratic/log-linear exponential fits and residuals, notebook/CSV/SVG/PNG exports.
+- Expression comparison preserves recorded denominator, root, logarithm, and tangent restrictions. It can certify supported canonical symbolic identities or disprove a claim with a counterexample; inconclusive comparisons remain explicitly unproven. Matching numerical samples are never presented as proof.
 - Locally bundled fonts and libraries; workspace code loads on demand. Graph calculations start near the viewport and stop when it leaves. Input size, AST depth, graph sampling, notebook size and worker time are bounded, with at most two calculation workers running across a notebook. Learner expressions are interpreted through an operator allowlist, never passed to JSXGraph's scripting parser or compiled as JavaScript.
 - Version-1 notebooks persist in IndexedDB independently of legacy progress. Manual signed-in notebook synchronization uses separate rows, revision-checked writes and recoverable conflict copies. It requires the new SQL migration; production database installation and live multi-account verification remain pending.
 - The 99 existing mission introductions now use their authored summaries. Complete explanations are expandable in the Explain step, without automatic sentence truncation.
@@ -27,7 +28,7 @@ Foundational source review also remains incomplete. The Stage 1 objective manife
 
 | Stage | Remaining delivery |
 | --- | --- |
-| 1 | Complete remaining foundational topic/derivation mappings beyond the released measurement/vector/motion slice; expression-domain grading; workspace capabilities below. |
+| 1 | Complete remaining foundational topic/derivation mappings beyond the released measurement/vector/motion slice; workspace capabilities below. |
 | 2 | Substantive force, energy, momentum, rotation and gravity units; supporting calculus; distinct pulley, lever and rotating-body investigations. |
 | 3 | Complete fluids, thermal, oscillation, wave and sound units; fluid columns, buoyancy, pistons, resonance and standing-wave experiments. |
 | 4 | Electricity, magnetism, induction, circuits and optics; field maps, ray tracing and interference; applied electronics prerequisite integration. |

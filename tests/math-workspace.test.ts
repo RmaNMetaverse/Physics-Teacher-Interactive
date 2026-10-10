@@ -28,6 +28,14 @@ describe('learner mathematical workspace', () => {
     expect(Number.isNaN(compileExpression('x/x')({ x:0 }))).toBe(true);
     expect(Number.isNaN(compileExpression('\\frac{x^2-1}{x-1}')({ x:1 }))).toBe(true);
   });
+  it('compares expressions symbolically without erasing their original domains', () => {
+    expect(calculate({ operation: 'compare', latex: 'x^2', comparisonLatex: 'x\\cdot x', variable: 'x' }).latex).toContain('equivalent');
+    expect(calculate({ operation: 'compare', latex: '\\frac{1}{2}', comparisonLatex: '0.5', variable: 'x' }).latex).toContain('equivalent');
+    const hole = calculate({ operation: 'compare', latex: '\\frac{x^2-1}{x-1}', comparisonLatex: 'x+1', variable: 'x' });
+    expect(hole.latex).toContain('not\\ equivalent');
+    expect(hole.explanation).toMatch(/x-1.*nonzero/i);
+    expect(calculate({ operation: 'compare', latex: 'x+1', comparisonLatex: 'x+2', variable: 'x' }).latex).toContain('not\\ equivalent');
+  });
   it('does not mistake an implicit pole for a zero contour', () => {
     const graph = sampleGraph({ kind:'implicit', latex:'1/(x-0.03)', secondary:'', min:-1, max:1, yMin:-1, yMax:1, angleUnit:'rad', parameters:{} });
     expect(graph.segments).toEqual([]);

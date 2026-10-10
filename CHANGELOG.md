@@ -8,6 +8,7 @@
 - Introduced expansion contracts for prerequisites, notation, proofs, examples, assessments, experiment alignment and source mappings. Documented unresolved lecture review and the remaining staged delivery scope.
 - Replaced automatic explanation truncation with authored introductions and expandable full explanations across existing missions. Added nine contrasting foundation examples and misconception explanations while preserving historical progress.
 - Published a validated Stage 1 objective manifest for measurement, vectors, and motion. It enforces closed prerequisites, proof and notation records, two examples, concept/calculation/evidence variants, supplementary Physics Classroom/Khan mappings, and lesson-specific investigation contracts without changing learner completion IDs.
+- Added domain-aware expression comparison to the Math Workspace. It preserves removable holes and elementary real-domain restrictions, accepts supported symbolic identities, uses counterexamples only to disprove claims, and reports unsupported equivalence claims as unproven instead of trusting matching samples.
 
 ## 2026-10-08 — Focused teaching simulations
 
