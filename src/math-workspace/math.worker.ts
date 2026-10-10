@@ -8,3 +8,4 @@ self.onmessage = (event: MessageEvent<MathJob>) => {
     self.postMessage({ result });
   } catch (error) { self.postMessage({ error: error instanceof Error ? error.message : 'Unable to calculate this expression.' }); }
 };
+self.postMessage({ ready: true });

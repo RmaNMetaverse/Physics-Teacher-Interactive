@@ -4,7 +4,7 @@ The approved target is a self-contained path from basic mathematics through the 
 
 ## First implementation increment
 
-- Branch: `codex/complete-physics-curriculum`.
+- Release branch: `main` (the initial curriculum branch has been incorporated at the owner's request).
 - Math Workspace: Explore entry and lesson formula handoff; MathLive entry, supported Compute Engine calculations in cancellable workers, JSXGraph function/parametric/polar/implicit/region plots, one parameter slider, accessible coordinate samples, linear/quadratic/log-linear exponential fits and residuals, notebook/CSV/SVG/PNG exports.
 - Expression comparison preserves recorded denominator, root, logarithm, and tangent restrictions. It can certify supported canonical symbolic identities or disprove a claim with a counterexample; inconclusive comparisons remain explicitly unproven. Matching numerical samples are never presented as proof.
 - Locally bundled fonts and libraries; workspace code loads on demand. Graph calculations start near the viewport and stop when it leaves. Input size, AST depth, graph sampling, notebook size and worker time are bounded, with at most two calculation workers running across a notebook. Learner expressions are interpreted through an operator allowlist, never passed to JSXGraph's scripting parser or compiled as JavaScript.

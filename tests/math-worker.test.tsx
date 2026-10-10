@@ -4,6 +4,25 @@ import { afterEach, expect, it, vi } from 'vitest';
 import { useMathJob } from '../src/math-workspace/useMathJob';
 
 afterEach(() => { vi.useRealTimers(); vi.unstubAllGlobals(); });
+it('allows cold worker startup before beginning the bounded calculation timer', () => {
+  vi.useFakeTimers();
+  const workers: FakeWorker[] = [];
+  class FakeWorker {
+    terminate = vi.fn(); postMessage = vi.fn(); onmessage?: (event: { data: unknown }) => void;
+    constructor() { workers.push(this); }
+  }
+  vi.stubGlobal('Worker', FakeWorker);
+  const { result, unmount } = renderHook(() => useMathJob({ kind: 'calculate', input: { operation: 'evaluate', latex: '2+3' } }));
+  act(() => vi.advanceTimersByTime(10000));
+  expect(result.current.busy).toBe(true);
+  expect(workers[0].postMessage).not.toHaveBeenCalled();
+  act(() => workers[0].onmessage?.({ data: { ready: true } }));
+  expect(workers[0].postMessage).toHaveBeenCalledOnce();
+  act(() => workers[0].onmessage?.({ data: { result: { latex: '5' } } }));
+  expect(result.current.result).toEqual({ latex: '5' });
+  expect(result.current.busy).toBe(false);
+  unmount();
+});
 it('limits simultaneous calculation workers across a notebook', () => {
   vi.useFakeTimers();
   const workers: Array<{ terminate: ReturnType<typeof vi.fn> }> = [];

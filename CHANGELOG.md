@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-10-10 — Main branch release and reliable math worker startup
+
+- Moved the curriculum and Math Workspace changes onto main for GitHub Pages deployment.
+- Separated worker download/initialization from the eight-second calculation limit. Slow cold loads now receive a bounded startup window before computation begins, fixing the first mobile graph failing permanently on CI.
+
 ## 2026-10-10 — Curriculum expansion infrastructure and learner notebooks
 
 - Added a lazily loaded Math Workspace with MathLive entry, bounded worker calculations, JSXGraph plots, numerical fits/residuals, accessible samples and notebook/CSV/SVG/PNG exports. Kept the three main tabs and added lesson-context handoff with a return link.

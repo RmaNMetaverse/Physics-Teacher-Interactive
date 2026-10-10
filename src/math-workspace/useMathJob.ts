@@ -21,10 +21,16 @@ export function useMathJob<T>(job: MathJob | null) {
         };
         try {
           worker = new Worker(new URL('./math.worker.ts', import.meta.url), { type: 'module' });
-          worker.onmessage = event => finish(event.data);
+          worker.onmessage = event => {
+            if (!active) return;
+            if (event.data.ready === true) {
+              window.clearTimeout(timeout);
+              timeout = window.setTimeout(() => finish({ error: 'Calculation exceeded the time limit. Simplify the expression or narrow the domain.' }), 8000);
+              worker?.postMessage(JSON.parse(serialized));
+            } else finish(event.data);
+          };
           worker.onerror = () => finish({ error: 'The calculation worker could not load. Retry after reconnecting.' });
-          timeout = window.setTimeout(() => finish({ error: 'Calculation exceeded the time limit. Simplify the expression or narrow the domain.' }), 8000);
-          worker.postMessage(JSON.parse(serialized));
+          timeout = window.setTimeout(() => finish({ error: 'The calculation worker took too long to load. Retry after reconnecting.' }), 45000);
         } catch { finish({ error: 'Calculation workers are unavailable in this browser. Your notebook remains editable.' }); }
         return () => { window.clearTimeout(timeout); worker?.terminate(); };
       });

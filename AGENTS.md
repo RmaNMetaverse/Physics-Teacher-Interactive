@@ -3,6 +3,7 @@
 Build Physics Teacher Interactive according to docs/IMPLEMENTATION.md. The first release is a complete foundations course; advanced courses are explicitly planned.
 
 ## Authorized source control workflow
+The owner now requests development and releases directly on `main`. Do not create a separate development branch unless subsequently requested.
 The owner explicitly requested automatic commits and pushes after changes. After each coherent, validated change set, update CHANGELOG.md, commit and push to https://github.com/RmaNMetaverse/Physics-Teacher-Interactive.git. This authorization persists for future work in this project. Do not commit secrets, generated build files, unrelated user edits, or failing work. Never force-push. Resolve remote changes without discarding work. Report authentication or push failures honestly.
 
 ## Engineering
