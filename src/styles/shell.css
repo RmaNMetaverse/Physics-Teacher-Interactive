@@ -353,6 +353,45 @@ summary:focus-visible,
   background: var(--line);
 }
 
+/* Install PWA Button */
+.install-pwa-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 38px;
+  min-height: 38px;
+  padding: 0 12px;
+  border-radius: var(--radius-full);
+  border: 1px solid color-mix(in srgb, var(--accent) 50%, var(--line));
+  background: color-mix(in srgb, var(--accent) 15%, var(--panel));
+  color: var(--accent);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.install-pwa-button:hover {
+  background: color-mix(in srgb, var(--accent) 25%, var(--panel));
+  border-color: var(--accent);
+  color: var(--text);
+  box-shadow: 0 2px 8px color-mix(in srgb, var(--accent) 20%, transparent);
+}
+
+.install-pwa-button svg {
+  width: 16px;
+  height: 16px;
+}
+
+@media (max-width: 640px) {
+  .install-pwa-button {
+    padding: 0 8px;
+  }
+  .install-pwa-label {
+    display: none;
+  }
+}
+
 /* Appearance Palette Toggle Button */
 .appearance-toggle-button {
   display: inline-flex;

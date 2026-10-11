@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type MouseEvent, type ReactNode, type RefObject } from 'react';
-import { Atom, ChartNoAxesColumn, Cloud, Compass, Flame, Map, Palette, Trophy, UserRound } from 'lucide-react';
+import { Atom, ChartNoAxesColumn, Cloud, Compass, Download, Flame, Map, Palette, Trophy, UserRound } from 'lucide-react';
 import type { AppRoute } from './router';
 import { parseHash, toHash } from './router';
 import type { LearnerProgressV2 } from '../progress/types';
@@ -8,6 +8,7 @@ import { MobileTabBar } from '../components/navigation/MobileTabBar';
 import { LiquidTabBubble } from '../components/navigation/LiquidTabBubble';
 import { AccountPopover } from '../components/navigation/AccountPopover';
 import type { CloudAccount } from '../cloud/useCloudAccount';
+import { usePWAInstall } from '../usePWAInstall';
 
 export interface AppShellProps {
   route: AppRoute;
@@ -61,6 +62,7 @@ export function AppShell({
   const [isAccountGateOpen, setIsAccountGateOpen] = useState(false);
   const [accountReminder, setAccountReminder] = useState('');
   const initialAccountResolved = useRef(false);
+  const { isInstallable, installApp } = usePWAInstall();
   const current = route.page === 'course' || route.page === 'mission' ? 'learn' : route.page === 'progress' ? 'progress' : 'explore';
   const activeTabIndex = current === 'explore' ? 0 : current === 'learn' ? 1 : 2;
 
@@ -187,6 +189,19 @@ export function AppShell({
               <span>{streakCount} day streak</span>
             </span>
           </a>
+
+          {isInstallable && (
+            <button
+              type="button"
+              className="install-pwa-button"
+              aria-label="Install App"
+              title="Install Physics Teacher Interactive"
+              onClick={installApp}
+            >
+              <Download size={18} aria-hidden="true" />
+              <span className="install-pwa-label">Install</span>
+            </button>
+          )}
 
           <button
             type="button"

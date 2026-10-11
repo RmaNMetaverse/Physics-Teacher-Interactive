@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-10-11 — Progressive Web App (PWA) installation and offline caching
+
+- Added standard web app manifest (`manifest.webmanifest`) configured with `display: standalone`, high-resolution icons (192x192, 512x512, regular and maskable), and apple touch icon for native installation support.
+- Implemented Service Worker (`sw.js`) with cache-first / stale-while-revalidate offline support and network-first navigation fallback for seamless offline operation.
+- Added native install prompt integration via `usePWAInstall` hook and an install action button in the desktop/mobile header bar that reveals when the browser fires `beforeinstallprompt`.
+- Added mobile and iOS PWA meta tags (`apple-mobile-web-app-capable`, status-bar styling, theme-color) to allow direct Home Screen and standalone launches.
+- Added comprehensive unit tests for PWA installation events and lifecycle.
+
 ## 2026-10-10 — Main branch release and reliable math worker startup
 
 - Moved the curriculum and Math Workspace changes onto main for GitHub Pages deployment.

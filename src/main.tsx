@@ -3,7 +3,10 @@ import ReactDOM from 'react-dom/client';
 import { App } from './App';
 import { applyAppearanceSettings } from './appearance';
 import { PROGRESS_V2_STORAGE_KEY } from './progress/progress';
+import { registerServiceWorker } from './pwa';
 import './styles.css';
+
+registerServiceWorker();
 
 const root = document.getElementById('root');
 if (!root) throw new Error('Application root is unavailable.');
@@ -15,3 +18,4 @@ try {
   applyAppearanceSettings({ theme: 'dark' });
 }
 ReactDOM.createRoot(root).render(<React.StrictMode><App /></React.StrictMode>);
+
